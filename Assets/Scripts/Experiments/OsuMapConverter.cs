@@ -13,11 +13,12 @@ public class OsuMapConverter : MonoBehaviour
         bool start = false;
         BeatmapModel model = new BeatmapModel
         {
-            Difficulty = "5.9"
+            DifficultyValue = -1,
+            Illustrator = "Unknown"
         };
         model.BPMList.Add(new BeatmapModel.BPMData
         {
-            BPM = 100.0f,
+            BPM = 600.0f,
             From = 0f,
             To = Audio.clip.length
         });
@@ -65,8 +66,8 @@ public class OsuMapConverter : MonoBehaviour
                     {
                         BPM = 0,
                         Line = int.Parse(t[0]) / 64 / 2,
-                        From = model.ConvertByBPM(from),
-                        To = model.ConvertByBPM(to)
+                        From = model.ConvertByBPM(from, 64),
+                        To = model.ConvertByBPM(to, 64)
                     });
                 }
                 else if(t.Length == 7)
@@ -80,8 +81,8 @@ public class OsuMapConverter : MonoBehaviour
                     {
                         BPM = 0,
                         Line = int.Parse(t[4]) / 4,
-                        From = model.ConvertByBPM(from),
-                        To = model.ConvertByBPM(to)
+                        From = model.ConvertByBPM(from, 64),
+                        To = model.ConvertByBPM(to, 64)
                     });
                 }
                 else
@@ -97,7 +98,11 @@ public class OsuMapConverter : MonoBehaviour
             if (line.StartsWith("Creator:"))
                 model.Beatmapper = line.Split(':')[1];
             if (line.StartsWith("Source:"))
-                model.Illustrator = line.Split(':')[1];
+                model.Source = line.Split(':')[1];
+            if (line.StartsWith("Version:"))
+                model.Difficulty = line.Split(':')[1];
+            if (line.StartsWith("AudioFilename:"))
+                model.AudioFile = line.Split(':')[1].Trim();
         }
 
         model.Export("D:\\test.json");

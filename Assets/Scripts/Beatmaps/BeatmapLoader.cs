@@ -5,18 +5,20 @@ using UnityEngine;
 public class BeatmapLoader : MonoBehaviour
 {
     public AudioSource Audio;
+    List<LineController> lines = new List<LineController>();
+    
     public void Load(BeatmapModel map)
     {
         GameObject line = Resources.Load<GameObject>("Line"),
                    tap = Resources.Load<GameObject>("Tap"),
                    hold = Resources.Load<GameObject>("Hold");
-        List<LineController> lines = new List<LineController>();
         foreach (BeatmapModel.LineData l in map.LineList)
         {
             GameObject go = Instantiate(line);
             LineController controller = go.GetComponent<LineController>();
             controller.FlowSpeed = l.FlowSpeed;
             controller.Direction = l.Direction;
+            controller.KeyOverride = l.KeyOverride;
             if (l.Direction == BeatmapModel.LineDirection.Right)
                 go.transform.localEulerAngles = new Vector3(0, 0, 0);
             else if (l.Direction == BeatmapModel.LineDirection.Up)

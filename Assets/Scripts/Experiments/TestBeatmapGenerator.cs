@@ -33,8 +33,8 @@ public class TestBeatmapGenerator : MonoBehaviour
             model.NoteList.Add(new BeatmapModel.NoteData
             {
                 Line = 0,
-                From = model.ConvertByBPM(Audio.time),
-                To = model.ConvertByBPM(Audio.time),
+                From = model.ConvertByBPM(Audio.time, 64),
+                To = model.ConvertByBPM(Audio.time, 64),
                 BPM = model.DetermineBPM(Audio.time)
             });
         }
@@ -43,13 +43,13 @@ public class TestBeatmapGenerator : MonoBehaviour
             model.NoteList.Add(new BeatmapModel.NoteData
             {
                 Line = 0,
-                From = model.ConvertByBPM(Audio.time),
+                From = model.ConvertByBPM(Audio.time, 64),
                 BPM = model.DetermineBPM(Audio.time)
             });
         }
         if (Input.GetKeyUp(KeyCode.X))
         {
-            model.NoteList[model.NoteList.Count - 1].To = model.ConvertByBPM(Audio.time);
+            model.NoteList[model.NoteList.Count - 1].To = model.ConvertByBPM(Audio.time, 64);
         }
         if (Input.GetKeyUp(KeyCode.P))
         {

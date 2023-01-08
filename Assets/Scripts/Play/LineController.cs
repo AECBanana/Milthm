@@ -6,6 +6,7 @@ public class LineController : MonoBehaviour
 {
     public const float MoveArea = 50f;
     public float FlowSpeed;
+    public KeyCode KeyOverride = KeyCode.None;
     public BeatmapModel.LineDirection Direction;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
     public List<(SpriteRenderer, SpriteRenderer)> ObjectRenders = new List<(SpriteRenderer, SpriteRenderer)>();

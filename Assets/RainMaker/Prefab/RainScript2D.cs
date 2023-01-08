@@ -192,6 +192,8 @@ namespace DigitalRuby.RainMaker
         {
             base.Update();
 
+            if (Camera == null) return;
+
             cameraMultiplier = (Camera.orthographicSize * 0.25f);
             visibleBounds.min = Camera.main.ViewportToWorldPoint(Vector3.zero);
             visibleBounds.max = Camera.main.ViewportToWorldPoint(Vector3.one);

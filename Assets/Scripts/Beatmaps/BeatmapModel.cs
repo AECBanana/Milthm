@@ -18,6 +18,9 @@ public class BeatmapModel
     public string Beatmapper;
     public string BeatmapUID = Guid.NewGuid().ToString();
     public string Difficulty;
+    public double DifficultyValue;
+    public string AudioFile;
+    public string Source;
     #endregion
 
     #region BPMÊý¾Ý
@@ -35,9 +38,23 @@ public class BeatmapModel
     public class NoteData
     {
         public int Line;
-        public int From, To;
+        public int[] From, To;
         public int BPM;
         public KeyCode SpecificKey = KeyCode.None;
+        public float FromBeat
+        {
+            get
+            {
+                return From[0] + From[1] * 1.0f / From[2];
+            }
+        }
+        public float ToBeat
+        {
+            get
+            {
+                return To[0] + To[1] * 1.0f / To[2];
+            }
+        }
     }
     public List<NoteData> NoteList = new List<NoteData>();
     #endregion
@@ -52,6 +69,7 @@ public class BeatmapModel
     {
         public LineDirection Direction;
         public float FlowSpeed;
+        public KeyCode KeyOverride = KeyCode.None;
     }
     public List<LineData> LineList = new List<LineData>();
     #endregion
@@ -86,15 +104,21 @@ public class BeatmapModel
         => BPMList.FindIndex(x => x.From <= time && x.To >= time);
 
 
-    public int ConvertByBPM(float time)
+    public int[] ConvertByBPM(float time, int beat)
     {
         BPMData BPM = BPMList[DetermineBPM(time)];
-        return (int)(Math.Ceiling((time - BPM.From) / (60.0 / BPM.BPM / 16)));
+        float beattime = 60.0f / BPM.BPM;
+        int basebeat = (int)(Math.Floor((time - BPM.From) / beattime));
+        return new int[]{
+            basebeat,
+            (int)(Math.Round((time - BPM.From - basebeat * beattime) / (beattime / beat))),
+            beat
+        };
     }
 
     public (float, float) ToRealTime(NoteData note)
     {
-        return (BPMList[note.BPM].From + note.From * (60.0f / BPMList[note.BPM].BPM / 16), BPMList[note.BPM].From + note.To * (60.0f / BPMList[note.BPM].BPM / 16));
+        return (BPMList[note.BPM].From + note.FromBeat * (60.0f / BPMList[note.BPM].BPM), BPMList[note.BPM].From + note.ToBeat * (60.0f / BPMList[note.BPM].BPM));
     }
 
     public static BeatmapModel Read(string Path)
