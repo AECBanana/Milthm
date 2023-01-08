@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BeatmapLoader : MonoBehaviour
@@ -12,6 +13,7 @@ public class BeatmapLoader : MonoBehaviour
         GameObject line = Resources.Load<GameObject>("Line"),
                    tap = Resources.Load<GameObject>("Tap"),
                    hold = Resources.Load<GameObject>("Hold");
+        float x = -3f;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
             GameObject go = Instantiate(line);
@@ -27,12 +29,17 @@ public class BeatmapLoader : MonoBehaviour
                 go.transform.localEulerAngles = new Vector3(0, 0, 180);
             else if (l.Direction == BeatmapModel.LineDirection.Down)
                 go.transform.localEulerAngles = new Vector3(0, 0, 270);
+
+            go.transform.localEulerAngles = new Vector3(0, 0, 90);
+            go.transform.localPosition = new Vector3(x, -4f, 0);
+            x += (6f) / 3;
+
             go.SetActive(true);
             lines.Add(controller);
         }
         foreach(BeatmapModel.NoteData note in map.NoteList)
         {
-            if (note.From == note.To)
+            if (note.FromBeat == note.ToBeat)
             {
                 GameObject go = Instantiate(tap, lines[note.Line].transform);
                 TapController controller = go.GetComponent<TapController>();

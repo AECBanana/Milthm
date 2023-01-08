@@ -59,6 +59,7 @@ public class TestBeatmapGenerator : MonoBehaviour
         {
             model = BeatmapModel.Read("D:\\test.json");
             GetComponent<BeatmapLoader>().Load(model);
+            Audio.Play();
         }
     }
 }

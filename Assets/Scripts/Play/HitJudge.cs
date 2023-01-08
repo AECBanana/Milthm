@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HitJudge : MonoBehaviour
 {
+    public const string HitSnd = "hit";
     static GameObject Perfect, Good, Miss;
     public static Animator Judge(Transform AniParent)
     {

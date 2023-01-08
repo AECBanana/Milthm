@@ -41,7 +41,7 @@ public class HoldController : MonoBehaviour
             KeyTip.localEulerAngles = new Vector3(0, 0, -1 * Line.transform.localEulerAngles.z);
         if (!HeadHit && x == -1.66f)
         {
-            SndPlayer.Play("hit");
+            SndPlayer.Play(HitJudge.HitSnd);
             HitAni = HitJudge.Judge(transform.parent);
             HitAni.Play("HoldAni", 0, 0.0f);
             HeadHit = true;

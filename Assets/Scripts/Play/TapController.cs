@@ -36,7 +36,7 @@ public class TapController : MonoBehaviour
             if (!Hit)
             {
                 Hit = true;
-                SndPlayer.Play("hit");
+                SndPlayer.Play(HitJudge.HitSnd);
                 HitJudge.Judge(transform.parent);
                 Destroy(gameObject);
             }
