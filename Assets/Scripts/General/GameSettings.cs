@@ -8,6 +8,6 @@ public class GameSettings : MonoBehaviour
     private void Awake()
     {
         Cursor.SetCursor(CursorTexture, Vector2.zero, CursorMode.Auto);
-        Application.targetFrameRate = 144;
+        Application.targetFrameRate = -1;
     }
 }

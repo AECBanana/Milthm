@@ -189,3 +189,4 @@ MonoBehaviour:
   HeadHit: 0
   EndHit: 0
   HitAni: {fileID: 0}
+  Key: 0

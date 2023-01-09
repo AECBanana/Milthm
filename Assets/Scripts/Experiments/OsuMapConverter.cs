@@ -66,8 +66,8 @@ public class OsuMapConverter : MonoBehaviour
                     {
                         BPM = 0,
                         Line = int.Parse(t[0]) / 64 / 2,
-                        From = model.ConvertByBPM(from, 64),
-                        To = model.ConvertByBPM(to, 64)
+                        From = model.ConvertByBPM(from, 100),
+                        To = model.ConvertByBPM(to, 100)
                     });
                 }
                 else if(t.Length == 7)
@@ -81,8 +81,8 @@ public class OsuMapConverter : MonoBehaviour
                     {
                         BPM = 0,
                         Line = int.Parse(t[4]) / 4,
-                        From = model.ConvertByBPM(from, 64),
-                        To = model.ConvertByBPM(to, 64)
+                        From = model.ConvertByBPM(from, 100),
+                        To = model.ConvertByBPM(to, 100)
                     });
                 }
                 else

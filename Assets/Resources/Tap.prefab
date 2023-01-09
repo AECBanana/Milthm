@@ -102,6 +102,7 @@ MonoBehaviour:
   Time: 0
   DoubleSprite: {fileID: 21300000, guid: 7fc843ad16738ed48a6f0f78f98465a0, type: 3}
   Hit: 0
+  Key: 0
 --- !u!1 &8456410451168627676
 GameObject:
   m_ObjectHideFlags: 0

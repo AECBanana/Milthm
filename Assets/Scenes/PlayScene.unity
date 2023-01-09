@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OsuChart: {fileID: 4900000, guid: 82d922538799cc04b81b3e03402cd03e, type: 3}
   Audio: {fileID: 2067816748}
-  FlowSpeed: 10
+  FlowSpeed: 5
 --- !u!4 &410644737
 Transform:
   m_ObjectHideFlags: 0

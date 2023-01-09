@@ -13,7 +13,7 @@ public class AnykeyStart : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             SndPlayer.Play("UI_Buttons_Pack2\\Button_2_Pack2");
-            played = false;
+            played = true;
             animator.Play("StartGame", 0, 0.0f);
         }
     }

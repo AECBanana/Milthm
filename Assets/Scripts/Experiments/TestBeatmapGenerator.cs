@@ -6,6 +6,7 @@ public class TestBeatmapGenerator : MonoBehaviour
 {
     public AudioSource Audio;
     BeatmapModel model;
+    bool loaded = false;
     private void Awake()
     {
         model = new BeatmapModel
@@ -55,10 +56,11 @@ public class TestBeatmapGenerator : MonoBehaviour
         {
             model.Export("D:\\test.json");
         }
-        if (Input.GetKeyUp(KeyCode.L))
+        if (Input.GetKeyUp(KeyCode.L) && !loaded)
         {
             model = BeatmapModel.Read("D:\\test.json");
             GetComponent<BeatmapLoader>().Load(model);
+            loaded = true;
             Audio.Play();
         }
     }
