@@ -14,14 +14,16 @@ Base Game Mechanics：
 
 Beatmap：
 
-* Support importing beatmaps from Osu!Mania, Osu!Taiko(Just for fun, we will include their original information including creator and note they are from Osu! clearly, **we will delete this function if this hurt Osu!'s rights**) 
+* Original beatmap format
+
+* Also support importing beatmaps from Osu!Mania, Osu!Taiko(Just for fun, we will include their original information including creator and note they are from Osu! clearly, **we will delete this function if this hurt Osu!'s rights**) 
 
 # Project Progress
 
 - [x] Title UI
 - [ ] Song Select UI
 - [ ] Game Settlement UI
-- [ ] Beatmap Loader and Playing
+- [x] Beatmap Loader and Game Play
 - [ ] Beatmap Editor
 - [ ] Beatmap Online Disscussion
 - [ ] Account System
@@ -34,13 +36,13 @@ Beatmap：
 * ±30ms：Perfect+
 * ±60ms：Perfect
 * ±120ms：Good
-* ±150ms：Bad
+* ±135ms：Bad
 
 The visual effects of `Perfect+` and `Perfect` are the same.
 
-Score = (`Max Combo` / `Full Combo`) * 100000 + ((`Perfect+` * 1.1 + `Perfect`) / `Full Combo` + `Good` / `Full Combo` * 0.6 + `Bad` / `Full Combo` * 0.3) * 900000
+Score = (`Max Combo` / `Full Combo`) * 100000 + ((`Perfect+` * 1.1 + `Perfect`) / `Full Combo` + `Good` / `Full Combo` * 0.4 + `Bad` / `Full Combo` * 0.1) * 900000
 
-Accuracy = ((`Perfect+` + `Perfect`) / `Full Combo` + `Good`  / `Full Combo` * 0.6 + `Bad`  / `Full Combo` * 0.3) * 100%
+Accuracy = ((`Perfect+` + `Perfect`) / `Full Combo` + `Good`  / `Full Combo` * 0.75 + `Bad`  / `Full Combo` * 0.5) * 100%
 
 More details are still considering.
 
