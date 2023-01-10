@@ -2,7 +2,7 @@
 
 [简体中文](https://github.com/buger404/Milthm/blob/master/README.md) | **English**
 
-<img src="D:\Projects\Milthm\Icon.png" alt="Milthm" style="zoom:50%;" />
+<img src="Icon.png" alt="Milthm" style="zoom:50%;" />
 
 **Mil**k Rhy**thm**，a simple rhythm game ~~made for fun~~ for PC.
 
@@ -23,7 +23,7 @@ Beatmap：
 - [ ] Game Settlement UI
 - [ ] Beatmap Loader and Playing
 - [ ] Beatmap Editor
-- [ ] Beatmap Disscussion Online
+- [ ] Beatmap Online Disscussion
 - [ ] Account System
 - [ ] More Animations
 - [ ] Beatmap Show
@@ -36,7 +36,7 @@ Beatmap：
 * ±120ms：Good
 * ±150ms：Bad
 
-The visual effects of Perfect+ and Perfect are the same.
+The visual effects of `Perfect+` and `Perfect` are the same.
 
 Score = (`Max Combo` / `Full Combo`) * 100000 + ((`Perfect+` * 1.1 + `Perfect`) / `Full Combo` + `Good` / `Full Combo` * 0.6 + `Bad` / `Full Combo` * 0.3) * 900000
 

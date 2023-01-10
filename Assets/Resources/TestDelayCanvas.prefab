@@ -299,10 +299,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 523bb2bc3ee0a3b4d8fd7c7830cc018e, type: 3}
-    m_FontSize: 48
+    m_FontSize: 45
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 3
     m_MaxSize: 64
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -310,7 +310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "( \u2022\u0300 \u03C9 \u2022\u0301 )y\u8C03\u5B9A\u5B8C\u6BD5\uFF0C\u6309Z\u952E\u5173\u95ED~"
+  m_Text: "( \u2022\u0300 \u03C9 \u2022\u0301 )y\u8C03\u5B9A\u5B8C\u6BD5\uFF0C\u6309<b>Z</b>\u952E\u5173\u95ED\uFF0C\u6309<b>R</b>\u91CD\u65B0\u5F00\u59CB~"
 --- !u!95 &1524652824
 Animator:
   serializedVersion: 4

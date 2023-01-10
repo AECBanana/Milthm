@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +11,43 @@ public class LineController : MonoBehaviour
     public BeatmapModel.LineDirection Direction;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
     public List<(SpriteRenderer, SpriteRenderer)> ObjectRenders = new List<(SpriteRenderer, SpriteRenderer)>();
+    public Transform Line, KeyTip;
+    public KeyCode Key
+    {
+        get
+        {
+            if (KeyOverride != KeyCode.None)
+            {
+                return KeyOverride;
+            }
+            else
+            {
+                if (Direction == BeatmapModel.LineDirection.Left)
+                    return KeyCode.LeftArrow;
+                else if (Direction == BeatmapModel.LineDirection.Right)
+                    return KeyCode.RightArrow;
+                else if (Direction == BeatmapModel.LineDirection.Up)
+                    return KeyCode.UpArrow;
+                else if (Direction == BeatmapModel.LineDirection.Down)
+                    return KeyCode.DownArrow;
+            }
+            return KeyCode.None;
+        }
+    }
+
 
     private void Update()
     {
-        for(int i = 0; i < HitObjects.Count; i++)
+        if (KeyTip.localEulerAngles.z != -1 * transform.localEulerAngles.z)
+            KeyTip.localEulerAngles = new Vector3(0, 0, -1 * transform.localEulerAngles.z);
+        if (HitJudge.Result.Dead)
+        {
+            float pass = (float)(DateTime.Now - HitJudge.Result.DeadTime).TotalSeconds / 1f;
+            if (pass > 1f) pass = 1f;
+            GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
+            Line.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
+        }
+        for (int i = 0; i < HitObjects.Count; i++)
         {
             if (i >= HitObjects.Count) break;
             if (!HitObjects[i].gameObject.activeSelf)

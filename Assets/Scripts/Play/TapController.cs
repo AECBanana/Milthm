@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class TapController : MonoBehaviour
     public Sprite DoubleSprite;
     public bool Hit = false;
     public KeyCode Key;
+    public int Index;
+    bool Missed = false;
     SpriteRenderer Renderer;
     Transform KeyTip;
     private void Awake()
@@ -19,7 +22,7 @@ public class TapController : MonoBehaviour
     }
     private void Update()
     {
-        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * 5;
+        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * 5, y = 0;
         if (x > LineController.MoveArea)
         {
             if (Renderer.color.a != 0)
@@ -28,23 +31,41 @@ public class TapController : MonoBehaviour
         }
         if (Renderer.color.a == 0)
             Renderer.color = new Color(1f, 1f, 1f, 1f);
-        transform.localPosition = new Vector3(x, 0, 0);
+        if (HitJudge.Result.Dead)
+        {
+            Missed = true;
+            float pass = (float)(DateTime.Now - HitJudge.Result.DeadTime).TotalSeconds;
+            x -= pass * (10 + (Time - AudioUpdate.Time) * 10f);
+            y -= pass * (Index % 2 == 0 ? 1 : -1);
+            transform.localEulerAngles = new Vector3(0, 0, pass * 30 * (Index % 2 == 0 ? 1 : -1));
+        }
+        transform.localPosition = new Vector3(x, y, 0);
         if (KeyTip.localEulerAngles.z != -1 * Line.transform.localEulerAngles.z)
             KeyTip.localEulerAngles = new Vector3(0, 0, -1 * Line.transform.localEulerAngles.z);
-        if (x < 0)
+        if (AudioUpdate.Time - Time > GameSettings.Bad && !Missed)
         {
-            if (!Hit)
+            HitJudge.JudgeMiss(transform.parent, this);
+            Missed = true;
+            Destroy(gameObject);
+        }
+        if (!Missed && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
+        {
+            KeyCode key = Key;
+            if (key == KeyCode.None)
+                key = Line.Key;
+            if (HitJudge.IsPress(key, this))
             {
+                HitJudge.CaptureOnce.Add(key);
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
                 Hit = true;
-                SndPlayer.Play(HitJudge.HitSnd);
-                HitJudge.Judge(transform.parent);
                 Destroy(gameObject);
             }
-            float d = -1 * x / 1f;
+        }
+        if (x < 0)
+        {
+            float d = -1 * x / 2f;
             if (d > 1f) d = 1f;
             Renderer.color = new Color(1f, 1f, 1f, 1f - d);
-            if (d >= 1f)
-                Destroy(gameObject);
         }
     }
 }

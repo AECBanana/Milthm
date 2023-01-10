@@ -52,7 +52,7 @@ public class DebugInfo : MonoBehaviour
                         v = "<color=green>" + nv + "</color> " + v;
                     else if (nv < lv)
                         v = "<color=red>" + nv + "</color> " + v;
-                    if (v.Length > 400)
+                    if (v.Length > 200)
                     {
                         for (int i = v.Length - 1;i >= 0; i--)
                         {

@@ -12,4 +12,10 @@ public class Vanish : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    public void Delete()
+        => AniCallback();
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
 }

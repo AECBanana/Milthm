@@ -25,22 +25,26 @@ public class OsuMapConverter : MonoBehaviour
         model.LineList.Add(new BeatmapModel.LineData
         {
             Direction = BeatmapModel.LineDirection.Right,
-            FlowSpeed = FlowSpeed
+            FlowSpeed = FlowSpeed,
+            KeyOverride = KeyCode.S
         });
         model.LineList.Add(new BeatmapModel.LineData
         {
             Direction = BeatmapModel.LineDirection.Left,
-            FlowSpeed = FlowSpeed
+            FlowSpeed = FlowSpeed,
+            KeyOverride = KeyCode.D
         });
         model.LineList.Add(new BeatmapModel.LineData
         {
             Direction = BeatmapModel.LineDirection.Up,
-            FlowSpeed = FlowSpeed
+            FlowSpeed = FlowSpeed,
+            KeyOverride = KeyCode.J
         });
         model.LineList.Add(new BeatmapModel.LineData
         {
             Direction = BeatmapModel.LineDirection.Down,
-            FlowSpeed = FlowSpeed
+            FlowSpeed = FlowSpeed,
+            KeyOverride = KeyCode.K
         });
         foreach (string line in data)
         {
