@@ -21,6 +21,8 @@ public class BeatmapModel
     public double DifficultyValue;
     public string AudioFile;
     public string Source;
+    public string GameSource;
+    public float PreviewTime = -1f;
     #endregion
 
     #region BPMÊý¾Ý

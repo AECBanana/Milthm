@@ -42,4 +42,25 @@ public class SndPlayer : MonoBehaviour
         ActiveSndPlayer.PlayOneShot(snd);
         DebugInfo.Tick("Audio Clips/s");
     }
+
+    public AudioSource BGM;
+    public void PlaySnd(string snd)
+    {
+        SndPlayer.Play(snd);   
+    }
+    public void PlaySummarySnd()
+    {
+        if (HitJudge.Result.Dead)
+            SndPlayer.Play("Fail");
+        else
+            SndPlayer.Play("UI_Buttons_Pack2\\Button_11_Pack2");
+        HitJudge.Result.DeadTime = new System.DateTime(0);
+    }
+    public void PlaySummaryBGM()
+    {
+        BGM.clip = BeatmapLoader.Instance.Audio.clip;
+        BGM.Play();
+        if (BeatmapLoader.Playing.PreviewTime != -1)
+            BGM.time = BeatmapLoader.Playing.PreviewTime;
+    }
 }

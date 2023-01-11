@@ -70,7 +70,7 @@ Perfect+与Perfect的视觉效果一致。
 
 * 音乐
 
-  主界面：Sadness in the Rain - Jim Paterson(改编)
+  主界面：Sadness in the Rain - Jim Paterson(编辑过)
 
 # 制作人员名单
 

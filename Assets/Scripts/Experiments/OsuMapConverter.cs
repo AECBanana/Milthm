@@ -14,7 +14,8 @@ public class OsuMapConverter : MonoBehaviour
         BeatmapModel model = new BeatmapModel
         {
             DifficultyValue = -1,
-            Illustrator = "Unknown"
+            Illustrator = "Unknown",
+            GameSource = "Osu!Mania"
         };
         model.BPMList.Add(new BeatmapModel.BPMData
         {
@@ -107,6 +108,15 @@ public class OsuMapConverter : MonoBehaviour
                 model.Difficulty = line.Split(':')[1];
             if (line.StartsWith("AudioFilename:"))
                 model.AudioFile = line.Split(':')[1].Trim();
+            if (line.StartsWith("PreviewTime:"))
+                model.PreviewTime = float.Parse(line.Split(':')[1].Trim()) / 1000f;
+            if (line.StartsWith("Mode:"))
+            {
+                if (line.Split(':')[1].Trim() != "3")
+                {
+                    Debug.LogError("无法转换，不是Mania谱面。");
+                }
+            }
         }
 
         model.Export("D:\\test.json");

@@ -12,6 +12,7 @@ public class LineController : MonoBehaviour
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
     public List<(SpriteRenderer, SpriteRenderer)> ObjectRenders = new List<(SpriteRenderer, SpriteRenderer)>();
     public Transform Line, KeyTip;
+    bool hide = false;
     public KeyCode Key
     {
         get
@@ -42,10 +43,21 @@ public class LineController : MonoBehaviour
             KeyTip.localEulerAngles = new Vector3(0, 0, -1 * transform.localEulerAngles.z);
         if (HitJudge.Result.Dead)
         {
+            if (HitJudge.Result.DeadTime.Year == 0)
+            {
+                Destroy(gameObject);
+                return;
+            }
             float pass = (float)(DateTime.Now - HitJudge.Result.DeadTime).TotalSeconds / 1f;
             if (pass > 1f) pass = 1f;
             GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
             Line.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
+            transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
+        }
+        if (transform.childCount == 2 && !hide)
+        {
+            hide = true;
+            GetComponent<Animator>().Play("LineHide", 0, 0.0f);
         }
         for (int i = 0; i < HitObjects.Count; i++)
         {

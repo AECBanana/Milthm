@@ -7,12 +7,57 @@ public class HitJudge : MonoBehaviour
 {
     public class ResultData
     {
+        private long mHP = 100;
+        private bool danger_hiding = false;
         public int MissContinious = 0;
         public int FullCombo;
         public int Perfect2, Perfect, Good, Bad, Miss;
         public int MaxCombo, Combo, Hit;
         public int Early, Late;
-        public bool Dead = false;
+        public long HP
+        {
+            get
+            {
+                return mHP;
+            }
+            set
+            {
+                mHP = value;
+                if (mHP > 100)
+                    mHP = 100;
+                if (value < 50)
+                {
+                    if (!GamePlayLoops.Instance.DangerAni.gameObject.activeSelf)
+                        GamePlayLoops.Instance.DangerAni.gameObject.SetActive(true);
+                }
+                else
+                {
+                    if (GamePlayLoops.Instance.DangerAni.gameObject.activeSelf)
+                    {
+                        if (!danger_hiding)
+                            GamePlayLoops.Instance.DangerAni.Play("HideDanger", 0, 0.0f);
+                        danger_hiding = true;
+                    }
+                    else
+                    {
+                        danger_hiding = false;
+                    }  
+                }
+                if (value <= 0 && !Dead)
+                {
+                    Dead = true;
+                    DeadTime = DateTime.Now;
+                    if (!danger_hiding)
+                        GamePlayLoops.Instance.DangerAni.Play("HideDanger", 0, 0.0f);
+                    SndPlayer.Play("Fail");
+                    GamePlayLoops.Instance.SummaryInfo.UpdateInfo();
+                    BeatmapLoader.Instance.Audio.Pause();
+                    GamePlayLoops.Instance.SummaryAni.Play("DeadShow", 0, 0.0f);
+                    mHP = 0;
+                }
+            }
+        }
+        public bool Dead = false, Win = false;
         public DateTime DeadTime;
         public long Score
         {
@@ -72,16 +117,19 @@ public class HitJudge : MonoBehaviour
         {
             effect = Perfect;
             Result.Perfect2++;
+            Result.HP += 3;
         }
         else if (deltaTime <= GameSettings.Perect)
         {
             effect = Perfect;
             Result.Perfect++;
+            Result.HP += 2;
         }
         else if (deltaTime <= GameSettings.Good)
         {
             effect = Good;
             Result.Good++;
+            Result.HP += 1;
             if (orTime > 0)
             {
                 Result.Late++;
@@ -122,6 +170,7 @@ public class HitJudge : MonoBehaviour
             miss = true;
             Result.Miss++;
             Result.MissContinious++;
+            Result.HP -= 10;
             if (orTime > 0)
                 Result.Late++;
             else
@@ -163,18 +212,7 @@ public class HitJudge : MonoBehaviour
         Result.Combo = 0;
         Result.Late++;
         MoveNext(note);
-        if (Result.MissContinious >= 5 && !BeatmapLoader.Instance.DangerAni.gameObject.activeSelf)
-        {
-            BeatmapLoader.Instance.DangerAni.gameObject.SetActive(true);
-        }
-        if (Result.MissContinious >= 10)
-        {
-            Result.Dead = true;
-            Result.DeadTime = DateTime.Now;
-            SndPlayer.Play("Fail");
-            BeatmapLoader.Instance.Audio.Pause();
-            BeatmapLoader.Instance.DeadScreen.SetActive(true);
-        }
+        Result.HP -= 10;
         GameObject go = Instantiate(Miss, AniParent);
         go.transform.localPosition = new Vector3(4.1f, 0, 0);
         go.SetActive(true);

@@ -7,9 +7,8 @@ public class BeatmapLoader : MonoBehaviour
 {
     public static BeatmapLoader Instance;
     public static float Delay = 0f;
-    public Animator DangerAni;
-    public GameObject DeadScreen;
     public AudioSource Audio;
+    public static BeatmapModel Playing;
     List<LineController> lines = new List<LineController>();
 
     private void Awake()
@@ -19,6 +18,7 @@ public class BeatmapLoader : MonoBehaviour
 
     public void Load(BeatmapModel map)
     {
+        Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;
         DebugInfo.Output("Delay", Delay.ToString() + "s");
         GameObject line = Resources.Load<GameObject>("Line"),
@@ -141,5 +141,8 @@ public class BeatmapLoader : MonoBehaviour
         }
 
         Debug.Log("´ý»÷´òÁÐ±í£º" + HitJudge.HitList.Count);
+
+        Audio.Play();
+        Audio.time = 0;
     }
 }
