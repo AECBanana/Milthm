@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class GamePlayLoops : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GamePlayLoops : MonoBehaviour
     public Text Score, Combo, Accuracy, Pitch;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
+    public GameObject BlackScreen, PauseScreen, CountDown, Rain;
+    public bool AutoPlay = false;
 
     private void Awake()
     {
@@ -30,18 +33,46 @@ public class GamePlayLoops : MonoBehaviour
         for (int i = 0;i < HitJudge.CaptureOnce.Count; i++)
         {
             if (i >= HitJudge.CaptureOnce.Count) break;
-            if (Input.GetKeyUp(HitJudge.CaptureOnce[i]))
+            if (!Input.GetKey(HitJudge.CaptureOnce[i]))
             {
                 HitJudge.CaptureOnce.RemoveAt(i);
                 i--;
             }   
-        }  
+        }
 
-        if (!BeatmapLoader.Instance.Audio.isPlaying && !HitJudge.Result.Dead && !HitJudge.Result.Win && HitJudge.Result.Hit > 0)
+
+        if (!HitJudge.Result.Dead && BeatmapLoader.Playing != null && !HitJudge.Result.Win)
         {
-            HitJudge.Result.Win = true;
-            GamePlayLoops.Instance.SummaryInfo.UpdateInfo();
-            GamePlayLoops.Instance.SummaryAni.Play("WinSummary", 0, 0.0f);
+            DebugInfo.Output("SongLength", BeatmapLoader.Playing.SongLength.ToString());
+            DebugInfo.Output("Hit/FC", HitJudge.Result.Hit + "/" + HitJudge.Result.FullCombo);
+            if (BeatmapLoader.Playing.SongLength == -1f)
+            {
+                if (HitJudge.Result.Hit >= HitJudge.Result.FullCombo)
+                {
+                    HitJudge.Result.Win = true;
+                    SummaryInfo.UpdateInfo();
+                    SummaryAni.Play("WinSummary", 0, 0.0f);
+                }
+            }
+            else
+            {
+                float length = BeatmapLoader.Playing.SongLength;
+                if (length == 0)
+                    length = BeatmapLoader.Instance.Audio.clip.length;
+                if (BeatmapLoader.Instance.Audio.time >= length)
+                {
+                    HitJudge.Result.Win = true;
+                    SummaryInfo.UpdateInfo();
+                    SummaryAni.Play("WinSummary", 0, 0.0f);
+                }
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape) && !PauseScreen.activeSelf && !HitJudge.Result.Dead && !HitJudge.Result.Win && AudioUpdate.Started && !CountDown.activeSelf)
+        {
+            HitJudge.CaptureOnce.Clear();
+            AudioUpdate.Audio.Pause();
+            PauseScreen.SetActive(true);
         }
     }
 }

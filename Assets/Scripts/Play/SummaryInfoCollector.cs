@@ -56,19 +56,19 @@ public class SummaryInfoCollector : MonoBehaviour
             Word.sprite = FCW;
             Level.sprite = FC;
         }
-        else if (score >= 950000)
+        else if (score >= 1000000)
         {
             Level.sprite = S;
         }
-        else if (score >= 900000)
+        else if (score >= 920000)
         {
             Level.sprite = A;
         }
-        else if (score >= 850000)
+        else if (score >= 870000)
         {
             Level.sprite = B;
         }
-        else if (score >= 800000)
+        else if (score >= 820000)
         {
             Level.sprite = C;
         }

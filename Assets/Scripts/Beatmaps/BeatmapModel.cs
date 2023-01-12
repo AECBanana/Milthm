@@ -23,6 +23,7 @@ public class BeatmapModel
     public string Source;
     public string GameSource;
     public float PreviewTime = -1f;
+    public float SongLength = 0;
     #endregion
 
     #region BPMÊý¾Ý

@@ -15,7 +15,8 @@ public class OsuMapConverter : MonoBehaviour
         {
             DifficultyValue = -1,
             Illustrator = "Unknown",
-            GameSource = "Osu!Mania"
+            GameSource = "Osu!Mania",
+            SongLength = -1
         };
         model.BPMList.Add(new BeatmapModel.BPMData
         {

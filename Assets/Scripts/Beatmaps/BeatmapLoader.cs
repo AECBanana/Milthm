@@ -24,6 +24,15 @@ public class BeatmapLoader : MonoBehaviour
         GameObject line = Resources.Load<GameObject>("Line"),
                    tap = Resources.Load<GameObject>("Tap"),
                    hold = Resources.Load<GameObject>("Hold");
+        Audio.time = 0;
+        GamePlayLoops.Instance.SummaryAni.Play("PlayEnterAni", 0, 0.0f);
+        HitJudge.Result = new HitJudge.ResultData
+        {
+            FullCombo = map.NoteList.Count
+        };
+        HitJudge.HitList = new List<List<MonoBehaviour>>();
+        HitJudge.CaptureOnce = new List<KeyCode>();
+        lines.Clear();
         float x = -3f;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
@@ -58,12 +67,6 @@ public class BeatmapLoader : MonoBehaviour
             lines.Add(controller);
         }
         int i = 0;
-        HitJudge.Result = new HitJudge.ResultData
-        {
-            FullCombo = map.NoteList.Count
-        };
-        HitJudge.HitList = new List<List<MonoBehaviour>>();
-        HitJudge.CaptureOnce = new List<KeyCode>();
         foreach (BeatmapModel.NoteData note in map.NoteList)
         {
             float from; MonoBehaviour noteController;
@@ -142,7 +145,11 @@ public class BeatmapLoader : MonoBehaviour
 
         Debug.Log("´ý»÷´òÁÐ±í£º" + HitJudge.HitList.Count);
 
-        Audio.Play();
         Audio.time = 0;
+        AudioUpdate.StartTime = System.DateTime.Now;
+        AudioUpdate.Started = false;
+        Audio.Stop();
+
+        GamePlayLoops.Instance.SummaryAni.Play("PlayEnterAni", 0, 0.0f);
     }
 }

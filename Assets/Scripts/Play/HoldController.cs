@@ -48,9 +48,6 @@ public class HoldController : MonoBehaviour
             y -= pass * (Index % 2 == 0 ? 1 : -1);
             transform.localEulerAngles = new Vector3(0, 0, pass * 30 * (Index % 2 == 0 ? 1 : -1));
         }
-        transform.localPosition = new Vector3(x, y, 0);
-        if (KeyTip.localEulerAngles.z != -1 * Line.transform.localEulerAngles.z)
-            KeyTip.localEulerAngles = new Vector3(0, 0, -1 * Line.transform.localEulerAngles.z);
         KeyCode key = Key;
         if (key == KeyCode.None)
             key = Line.Key;
@@ -73,23 +70,36 @@ public class HoldController : MonoBehaviour
                     HeadHit = true;
                 }
             }
+            if (GamePlayLoops.Instance.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
+            {
+                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
+                if (HitAni != null)
+                    HitAni.Play("HoldAni", 0, 0.0f);
+                HeadHit = true;
+            }
         }
         if (HeadHit && !Missed)
         {
-            if (!Input.GetKey(key))
+            if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.Instance.AutoPlay)
             {
-                if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
+                if (!Input.GetKey(key))
                 {
-                    // Miss
-                    Missed = true;
-                    Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                    HitJudge.JudgeMiss(transform.parent, this);
+                    if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
+                    {
+                        // Miss
+                        Missed = true;
+                        Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
+                        HitJudge.JudgeMiss(transform.parent, this);
+                    }
+                    EndHit = true;
+                    if (HitAni != null)
+                        HitAni.SetFloat("Speed", 1.0f);
                 }
-                EndHit = true;
-                if (HitAni != null)
-                    HitAni.SetFloat("Speed", 1.0f);
             }
         }
+        transform.localPosition = new Vector3(x, y, 0);
+        if (KeyTip.localEulerAngles.z != -1 * Line.transform.localEulerAngles.z)
+            KeyTip.localEulerAngles = new Vector3(0, 0, -1 * Line.transform.localEulerAngles.z);
         if (w == Renderer.size.y)
         {
             float d = (AudioUpdate.Time - To) / 0.25f;

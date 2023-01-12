@@ -43,7 +43,7 @@ public class LineController : MonoBehaviour
             KeyTip.localEulerAngles = new Vector3(0, 0, -1 * transform.localEulerAngles.z);
         if (HitJudge.Result.Dead)
         {
-            if (HitJudge.Result.DeadTime.Year == 0)
+            if (HitJudge.Result.DeadTime == DateTime.MinValue)
             {
                 Destroy(gameObject);
                 return;

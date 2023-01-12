@@ -1,16 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RetryBtn : MonoBehaviour
 {
-    bool clicked = false;
     public void Click()
     {
-        if (clicked)
-            return;
-        clicked = true;
-        Loading.Run("PlayScene");
+        if (HitJudge.Result.DeadTime == DateTime.MinValue)
+            GamePlayLoops.Instance.BlackScreen.SetActive(true);
+    }
+    public void LoadRetry()
+    {
+        BeatmapLoader.Instance.Load(BeatmapLoader.Playing);
+        if (GamePlayLoops.Instance.PauseScreen.activeSelf)
+            GamePlayLoops.Instance.PauseScreen.GetComponent<Animator>().Play("HidePausePanel", 0, 0.0f);
     }
     void Update()
     {

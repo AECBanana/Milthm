@@ -65,7 +65,7 @@ public class HitJudge : MonoBehaviour
             {
                 if (FullCombo == 0)
                     return 0;
-                return (long)((MaxCombo * 1.0 / FullCombo) * 100000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.4 + Bad * 1.0 / FullCombo * 0.1) * 900000);
+                return (long)((MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000);
             }
         }
         public float Accuracy
@@ -78,7 +78,7 @@ public class HitJudge : MonoBehaviour
             }
         }
     }
-    static GameObject Perfect, Good, Miss;
+    static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
     public static List<List<MonoBehaviour>> HitList = new List<List<MonoBehaviour>>();
     public static List<KeyCode> CaptureOnce = new List<KeyCode>();
@@ -86,11 +86,16 @@ public class HitJudge : MonoBehaviour
     static HitJudge()
     {
         Perfect = Resources.Load<GameObject>("Perfect");
+        Perfect2 = Resources.Load<GameObject>("Perfect+");
         Good = Resources.Load<GameObject>("Good");
         Miss = Resources.Load<GameObject>("Miss");
     }
     public static bool IsPress(KeyCode key, MonoBehaviour note, bool capture = false)
     {
+        if (GamePlayLoops.Instance.AutoPlay)
+            return false;
+        if (!AudioUpdate.Audio.isPlaying)
+            return false;
         if (HitList.Count == 0)
             return false;
         if (HitList[0].Contains(note))
@@ -115,7 +120,7 @@ public class HitJudge : MonoBehaviour
         bool miss = false;
         if (deltaTime <= GameSettings.Perfect2)
         {
-            effect = Perfect;
+            effect = Perfect2;
             Result.Perfect2++;
             Result.HP += 3;
         }
