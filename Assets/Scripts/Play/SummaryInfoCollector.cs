@@ -22,7 +22,7 @@ public class SummaryInfoCollector : MonoBehaviour
         Title.text = BeatmapLoader.Playing.Title;
         Early.text = HitJudge.Result.Early.ToString();
         Late.text = HitJudge.Result.Late.ToString();
-        Credits.text = BeatmapLoader.Playing.Difficulty + "(" + BeatmapLoader.Playing.DifficultyValue + ")";
+        Credits.text = BeatmapLoader.Playing.Difficulty + (BeatmapLoader.Playing.DifficultyValue == -1f ? "" : " (" + BeatmapLoader.Playing.DifficultyValue + ")");
         string source = "";
 
         if (BeatmapLoader.Playing.Source != "")

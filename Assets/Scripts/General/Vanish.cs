@@ -18,4 +18,12 @@ public class Vanish : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+    public void QuitCanvas()
+    {
+        GetComponent<Animator>().Play("CanvasQuit", 0, 0.0f);
+    }
+    public void HideCanvas()
+    {
+        GetComponent<Animator>().Play("CanvasHide", 0, 0.0f);
+    }
 }

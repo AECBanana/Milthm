@@ -856,7 +856,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6d8700f3ea8b2094bb43e8c2e8b3b2df, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5d838b8dc0264ef469c82ab15d4ac8e2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1518,53 +1518,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &410644735
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 410644737}
-  - component: {fileID: 410644736}
-  m_Layer: 0
-  m_Name: Converter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &410644736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410644735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 092be612666ed654cb50d9dd6e128d9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OsuChart: {fileID: 4900000, guid: fbea48c7582570843a5264ed300cc615, type: 3}
-  Audio: {fileID: 2067816748}
-  FlowSpeed: 10
---- !u!4 &410644737
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410644735}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9831321, y: 0.78962696, z: -0.22986358}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &464124469
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,7 +1978,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6d8700f3ea8b2094bb43e8c2e8b3b2df, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5d838b8dc0264ef469c82ab15d4ac8e2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2586,7 +2539,7 @@ Transform:
   - {fileID: 1659527130}
   - {fileID: 397723545}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1111691226
 Animator:
@@ -5249,7 +5202,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2067816749}
   - component: {fileID: 2067816748}
-  - component: {fileID: 2067816747}
   - component: {fileID: 2067816750}
   - component: {fileID: 2067816751}
   - component: {fileID: 2067816752}
@@ -5260,19 +5212,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2067816747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2067816746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af255e27d28e814884d11f4a2d51f05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Audio: {fileID: 2067816748}
 --- !u!82 &2067816748
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5283,7 +5222,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 06f7d205eedbc7548b7518f612ec987f, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -5435,7 +5374,7 @@ MonoBehaviour:
   PauseScreen: {fileID: 654920256}
   CountDown: {fileID: 1638374975}
   Rain: {fileID: 1970262202}
-  AutoPlay: 1
+  AutoPlay: 0
 --- !u!1 &2083386007
 GameObject:
   m_ObjectHideFlags: 0
@@ -5779,7 +5718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6318111589457394058, guid: 4d35db5d5e51e654cafdeeee4cff9906, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6318111589457394062, guid: 4d35db5d5e51e654cafdeeee4cff9906, type: 3}
       propertyPath: m_Pivot.x
@@ -5791,7 +5730,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6318111589457394062, guid: 4d35db5d5e51e654cafdeeee4cff9906, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6318111589457394062, guid: 4d35db5d5e51e654cafdeeee4cff9906, type: 3}
       propertyPath: m_AnchorMax.x

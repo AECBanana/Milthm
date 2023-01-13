@@ -20,6 +20,7 @@ public class BeatmapModel
     public string Difficulty;
     public double DifficultyValue;
     public string AudioFile;
+    public string IllustrationFile;
     public string Source;
     public string GameSource;
     public float PreviewTime = -1f;
@@ -104,7 +105,12 @@ public class BeatmapModel
     }
 
     public int DetermineBPM(float time)
-        => BPMList.FindIndex(x => x.From <= time && x.To >= time);
+    {
+        if (BPMList.Count == 1)
+            return 0;
+        else
+            return BPMList.FindIndex(x => x.From <= time && x.To >= time);
+    }
 
 
     public int[] ConvertByBPM(float time, int beat)
