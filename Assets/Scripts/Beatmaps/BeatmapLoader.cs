@@ -12,6 +12,7 @@ public class BeatmapLoader : MonoBehaviour
     public Image Bg1, Bg2;
     public static BeatmapModel Playing;
     public static string PlayingUID;
+    public static int PlayingIndex;
     List<LineController> lines = new List<LineController>();
 
     private void Start()

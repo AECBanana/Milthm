@@ -12,11 +12,29 @@ public class DifficultyController : MonoBehaviour
     public string uid;
     public int index;
 
+    private void Start()
+    {
+        if (PlayerPrefs.GetString(uid + "." + index + ".grade") == "")
+        {
+            Grade.gameObject.SetActive(false);
+            Score.gameObject.SetActive(false);
+            Accuracy.gameObject.SetActive(false);
+        }
+        else
+        {
+            Score.text = PlayerPrefs.GetInt(uid + "." + index + ".score").ToString("0000000");
+            Accuracy.text = PlayerPrefs.GetFloat(uid + "." + index + ".acc").ToString("P");
+            Grade.sprite = Resources.Load<Sprite>("Level\\" + PlayerPrefs.GetString(uid + "." + index + ".grade"));
+        }
+    }
+
     public void Touch()
     {
         if (Active == this)
         {
             BeatmapLoader.PlayingUID = uid;
+            BeatmapLoader.PlayingIndex = index;
+            PlayerPrefs.SetInt(uid + ".lastPlay", index);
             BeatmapLoader.Playing = SongResources.Beatmaps[uid][index];
             Loading.Run("PlayScene", "PlayLoadingPrefab");
         }

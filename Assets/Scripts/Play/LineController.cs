@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LineController : MonoBehaviour
 {
+    public static List<LineController> Lines = new List<LineController>();
     public const float MoveArea = 50f;
     public float FlowSpeed;
     public KeyCode KeyOverride = KeyCode.None;
@@ -36,7 +37,14 @@ public class LineController : MonoBehaviour
         }
     }
 
-
+    private void Awake()
+    {
+        Lines.Add(this);
+    }
+    private void OnDestroy()
+    {
+        Lines.Remove(this);
+    }
     private void Update()
     {
         if (KeyTip.localEulerAngles.z != -1 * transform.localEulerAngles.z)

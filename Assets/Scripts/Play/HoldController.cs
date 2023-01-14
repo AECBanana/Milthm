@@ -70,7 +70,7 @@ public class HoldController : MonoBehaviour
                     HeadHit = true;
                 }
             }
-            if (GamePlayLoops.Instance.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
+            if (GamePlayLoops.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
                 HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
                 if (HitAni != null)
@@ -80,7 +80,7 @@ public class HoldController : MonoBehaviour
         }
         if (HeadHit && !Missed)
         {
-            if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.Instance.AutoPlay)
+            if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.AutoPlay)
             {
                 if (!Input.GetKey(key))
                 {

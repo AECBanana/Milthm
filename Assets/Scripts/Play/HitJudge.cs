@@ -92,7 +92,7 @@ public class HitJudge : MonoBehaviour
     }
     public static bool IsPress(KeyCode key, MonoBehaviour note, bool capture = false)
     {
-        if (GamePlayLoops.Instance.AutoPlay)
+        if (GamePlayLoops.AutoPlay)
             return false;
         if (!AudioUpdate.Audio.isPlaying)
             return false;
@@ -175,7 +175,7 @@ public class HitJudge : MonoBehaviour
             miss = true;
             Result.Miss++;
             Result.MissContinious++;
-            Result.HP -= 10;
+            Result.HP -= 5;
             if (orTime > 0)
                 Result.Late++;
             else

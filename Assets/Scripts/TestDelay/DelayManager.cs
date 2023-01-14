@@ -37,7 +37,7 @@ public class DelayManager : MonoBehaviour
             }
         }
     }
-    void ReleaseAudios()
+    public void ReleaseAudios()
     {
         foreach (AudioSource audio in capture)
         {

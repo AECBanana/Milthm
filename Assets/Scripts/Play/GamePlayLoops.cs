@@ -6,18 +6,19 @@ using UnityEngine.UIElements;
 
 public class GamePlayLoops : MonoBehaviour
 {
+    public static bool AutoPlay = false;
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
     public Text Score, Combo, Accuracy, Pitch;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
-    public GameObject BlackScreen, PauseScreen, CountDown, Rain;
-    public bool AutoPlay = false;
+    public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
 
     private void Awake()
     {
         Instance = this;
+        AutoPlayTip.SetActive(AutoPlay);
     }
     void Update()
     {
@@ -47,7 +48,7 @@ public class GamePlayLoops : MonoBehaviour
             DebugInfo.Output("Hit/FC", HitJudge.Result.Hit + "/" + HitJudge.Result.FullCombo);
             if (BeatmapLoader.Playing.SongLength == -1f)
             {
-                if (HitJudge.Result.Hit >= HitJudge.Result.FullCombo)
+                if (LineController.Lines.Count == 0)
                 {
                     HitJudge.Result.Win = true;
                     SummaryInfo.UpdateInfo();

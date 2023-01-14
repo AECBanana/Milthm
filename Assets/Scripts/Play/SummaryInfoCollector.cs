@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 
 public class SummaryInfoCollector : MonoBehaviour
 {
+    public GameObject NewRecord, AutoPlayTip;
     public Text Perfect2, Perfect, Good, Bad, Miss, Score, Accuracy, Title, Credits, Early, Late, Source, MaxCombo;
     public Image Word, Level;
     public Sprite R, SS, S, A, B, C, F, FC, FCW, AP, Complete, Fail, ROR;
@@ -40,48 +42,80 @@ public class SummaryInfoCollector : MonoBehaviour
         }
 
         long score = HitJudge.Result.Score;
+        string grade = "";
         Word.sprite = Complete;
         if (HitJudge.Result.Perfect2 == HitJudge.Result.FullCombo)
         {
             Word.sprite = ROR;
             Level.sprite = R;
+            grade = "R";
         }
         else if (HitJudge.Result.Perfect2 + HitJudge.Result.Perfect == HitJudge.Result.FullCombo)
         {
             Word.sprite = AP;
             Level.sprite = SS;
+            grade = "AP";
         }
         else if (HitJudge.Result.Miss == 0)
         {
             Word.sprite = FCW;
             Level.sprite = FC;
+            grade = "FC";
         }
         else if (score >= 1000000)
         {
             Level.sprite = S;
+            grade = "S";
         }
         else if (score >= 920000)
         {
             Level.sprite = A;
+            grade = "A";
         }
         else if (score >= 870000)
         {
             Level.sprite = B;
+            grade = "B";
         }
         else if (score >= 820000)
         {
             Level.sprite = C;
+            grade = "C";
         }
         else
         {
             Level.sprite = F;
+            grade = "F";
         }
         if (HitJudge.Result.Dead)
         {
             Word.sprite = Fail;
             Level.sprite = F;
+            grade = "F";
         }    
         Level.SetNativeSize();
         Word.SetNativeSize();
+
+        AutoPlayTip.SetActive(GamePlayLoops.AutoPlay);
+        if (GamePlayLoops.AutoPlay)
+        {
+            NewRecord.SetActive(false);
+            return;
+        }
+
+        bool newrecord = false;
+        if (HitJudge.Result.Score > PlayerPrefs.GetInt(BeatmapLoader.PlayingUID + "." + BeatmapLoader.PlayingIndex + ".score"))
+        {
+            PlayerPrefs.SetInt(BeatmapLoader.PlayingUID + "." + BeatmapLoader.PlayingIndex + ".score", (int)HitJudge.Result.Score);
+            PlayerPrefs.SetString(BeatmapLoader.PlayingUID + "." + BeatmapLoader.PlayingIndex + ".grade", grade);
+            newrecord = true;
+        }
+        if (HitJudge.Result.Accuracy > PlayerPrefs.GetFloat(BeatmapLoader.PlayingUID + "." + BeatmapLoader.PlayingIndex + ".acc"))
+        {
+            PlayerPrefs.SetFloat(BeatmapLoader.PlayingUID + "." + BeatmapLoader.PlayingIndex + ".acc", HitJudge.Result.Accuracy);
+            newrecord = true;
+        }
+
+        NewRecord.SetActive(newrecord);
     }
 }

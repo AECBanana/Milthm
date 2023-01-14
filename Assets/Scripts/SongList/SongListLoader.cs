@@ -133,7 +133,7 @@ public class SongListLoader : MonoBehaviour
         SongItemController controller = item.GetComponent<SongItemController>();
         controller.Beatmap = uid;
         int lastPlay = PlayerPrefs.GetInt(uid + ".lastPlay");
-        if (lastPlay < 0 || lastPlay >= SongResources.Illustration[uid].Count) lastPlay = 0;
+        if (lastPlay < 0 || lastPlay >= SongResources.Beatmaps[uid].Count) lastPlay = 0;
         BeatmapModel map = SongResources.Beatmaps[uid][lastPlay];
         controller.Illustration.sprite = SongResources.Illustration[uid][map.IllustrationFile];
         controller.Description.text = map.Title + " - " + map.Beatmapper;

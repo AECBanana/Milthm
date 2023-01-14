@@ -73,16 +73,6 @@ public class SongPreviewController : MonoBehaviour
         {
             GameObject go = Instantiate(DifficultyPrefab, scroll);
             DifficultyController controller = go.GetComponent<DifficultyController>();
-            if (PlayerPrefs.GetString(uid + ".grade") == "")
-            {
-                controller.Grade.gameObject.SetActive(false);
-                controller.Score.gameObject.SetActive(false);
-                controller.Accuracy.gameObject.SetActive(false);
-            }
-            else
-            {
-
-            }
             controller.uid = uid;
             controller.index = list.Count;
             controller.Title.text = map.Difficulty + (map.DifficultyValue == -1f ? "" : " (" + map.DifficultyValue + ")");
@@ -91,7 +81,7 @@ public class SongPreviewController : MonoBehaviour
         }
 
         int lastPlay = PlayerPrefs.GetInt(uid + ".lastPlay");
-        if (lastPlay < 0 || lastPlay >= SongResources.Illustration[uid].Count) lastPlay = 0;
+        if (lastPlay < 0 || lastPlay >= SongResources.Beatmaps[uid].Count) lastPlay = 0;
 
         list[lastPlay].Back.sprite = list[lastPlay].ActiveSprite;
         DifficultyController.Active = list[lastPlay];
