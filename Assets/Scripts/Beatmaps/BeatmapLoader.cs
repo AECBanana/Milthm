@@ -2,18 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BeatmapLoader : MonoBehaviour
 {
     public static BeatmapLoader Instance;
     public static float Delay = 0f;
     public AudioSource Audio;
+    public Image Bg1, Bg2;
     public static BeatmapModel Playing;
+    public static string PlayingUID;
     List<LineController> lines = new List<LineController>();
 
-    private void Awake()
+    private void Start()
     {
         Instance = this;
+        Load(Playing);
+        Bg1.sprite = SongResources.Illustration[PlayingUID][Playing.IllustrationFile];
+        Bg2.sprite = Bg1.sprite;
+        Audio.clip = SongResources.Songs[PlayingUID];
     }
 
     public void Load(BeatmapModel map)

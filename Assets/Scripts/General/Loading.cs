@@ -16,9 +16,9 @@ public class Loading : MonoBehaviour
     /// 启动场景切换
     /// </summary>
     /// <param name="scene">目标场景的名称（注意加入Scenes in Build）</param>
-    public static void Run(string scene)
+    public static void Run(string scene, string prefabName = "LoadingPrefab")
     {
-        GameObject prefab = Resources.Load<GameObject>("LoadingPrefab"); // 载入加载动画预制体
+        GameObject prefab = Resources.Load<GameObject>(prefabName); // 载入加载动画预制体
         GameObject loading = Instantiate(prefab);
         target = scene;
         loading.SetActive(true);

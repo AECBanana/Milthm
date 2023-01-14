@@ -16,7 +16,9 @@ public class DifficultyController : MonoBehaviour
     {
         if (Active == this)
         {
-            Debug.Log("¿ªÍæ£¡");
+            BeatmapLoader.PlayingUID = uid;
+            BeatmapLoader.Playing = SongResources.Beatmaps[uid][index];
+            Loading.Run("PlayScene", "PlayLoadingPrefab");
         }
         else
         {
