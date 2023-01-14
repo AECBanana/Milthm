@@ -11,11 +11,12 @@ public class SongPreviewController : MonoBehaviour
     public static string LastBeatmap;
     public static SongPreviewController Instance;
     public GameObject DifficultyPrefab;
+    public Animator PreviewPanel;
     public Text Title, Description, From;
-    public Image Illustration;
+    public Image Illustration, Background, FakeCover;
     public AudioSource BGM;
     public AudioHighPassFilter Filter;
-    AudioClip clip;
+    public SongItemController SongItem;
 
     private void Awake()
     {
@@ -27,14 +28,40 @@ public class SongPreviewController : MonoBehaviour
         Filter.enabled = true;
     }
 
+    public void Update()
+    {
+        int s = 0;
+        if (Input.GetKeyUp(KeyCode.LeftArrow))
+            s = 1;
+        else if (Input.GetKeyUp(KeyCode.RightArrow))
+            s = 2;
+        if (s > 0)
+        {
+            FakeCover.sprite = Background.sprite;
+            FakeCover.gameObject.SetActive(false);
+            FakeCover.gameObject.SetActive(true);
+            GameObject go = Instantiate(PreviewPanel.gameObject, PreviewPanel.transform.parent);
+            go.SetActive(true);
+            Animator ani = go.GetComponent<Animator>();
+            if (s == 1)
+            {
+                Show(SongItem.PreSong.Beatmap);
+                SongItem = SongItem.PreSong;
+                ani.Play("SongToRight", 0, 0.0f);
+                PreviewPanel.Play("SongFromLeft", 0, 0.0f);
+            }
+            else if (s == 2)
+            {
+                Show(SongItem.NextSong.Beatmap);
+                SongItem = SongItem.NextSong;
+                ani.Play("SongToLeft", 0, 0.0f);
+                PreviewPanel.Play("SongFromRight", 0, 0.0f);
+            }
+        }
+    }
+
     public void Show(string uid)
     {
-        if (clip != null && LastBeatmap != uid)
-        {
-            BGM.clip = null;
-            clip.UnloadAudioData();
-            clip = null;
-        }
         Transform scroll = DifficultyPrefab.transform.parent;
         for (int i = 0; i < scroll.childCount; i++)
         {
@@ -72,38 +99,16 @@ public class SongPreviewController : MonoBehaviour
         BeatmapModel m = SongResources.Beatmaps[uid][lastPlay];
 
         Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
+        Background.sprite = Illustration.sprite;
 
         Title.text = m.Title;
-        Description.text = "ÒôÀÖ£º" + m.Composer + " Æ×Ãæ£º" + m.Beatmapper + " Çú»æ£º" + m.Illustrator;
+        Description.text = "[Çú]" + m.Composer + " [Æ×]" + m.Beatmapper + " [ÃÀ]" + m.Illustrator;
 
-        string file = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile;
-        string extension = Path.GetExtension(m.AudioFile).ToLower();
-        AudioType type = AudioType.UNKNOWN;
-        if (extension == ".mp3")
-            type = AudioType.MPEG;
-        else if (extension == ".ogg")
-            type = AudioType.OGGVORBIS;
-        else if (extension == ".wav")
-            type = AudioType.WAV;
-        else if (extension == ".aiff")
-            type = AudioType.AIFF;
+        BGM.clip = SongResources.Songs[uid];
+        if (m.PreviewTime != -1)
+            BGM.time = m.PreviewTime;
+        BGM.Play();
 
-        if (type != AudioType.UNKNOWN && clip == null)
-        {
-            var handler = new DownloadHandlerAudioClip(file, type);
-            var request = new UnityWebRequest(file, "GET", handler, null);
-            request.SendWebRequest().completed += (obj) =>
-            {
-                if (handler.audioClip != null)
-                {
-                    clip = handler.audioClip;
-                    BGM.clip = clip;
-                    BGM.Play();
-                    if (m.PreviewTime != -1)
-                        BGM.time = m.PreviewTime;
-                }
-            };
-        }
 
         Filter.enabled = false;
 

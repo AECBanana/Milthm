@@ -24,8 +24,12 @@ public class DifficultyController : MonoBehaviour
             Back.sprite = ActiveSprite;
             Active = this;
             BeatmapModel m = SongResources.Beatmaps[uid][index];
-            SongPreviewController.Instance.Description.text = "ÒôÀÖ£º" + m.Composer + " Æ×Ãæ£º" + m.Beatmapper + " Çú»æ£º" + m.Illustrator;
+            SongPreviewController.Instance.Description.text = "[Çú]" + m.Composer + " [Æ×]" + m.Beatmapper + " [ÃÀ]" + m.Illustrator;
+            SongPreviewController.Instance.FakeCover.sprite = SongPreviewController.Instance.Illustration.sprite;
+            SongPreviewController.Instance.FakeCover.gameObject.SetActive(false);
+            SongPreviewController.Instance.FakeCover.gameObject.SetActive(true);
             SongPreviewController.Instance.Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
+            SongPreviewController.Instance.Background.sprite = SongPreviewController.Instance.Illustration.sprite;
         }
     }
 }

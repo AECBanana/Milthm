@@ -9,6 +9,7 @@ public class SongResources : MonoBehaviour
     public static Dictionary<string, Dictionary<string, Sprite>> Illustration = new Dictionary<string, Dictionary<string, Sprite>>();
     public static Dictionary<string, List<BeatmapModel>> Beatmaps = new Dictionary<string, List<BeatmapModel>>();
     public static Dictionary<string, string> Path = new Dictionary<string, string>();
+    public static Dictionary<string, AudioClip> Songs = new Dictionary<string, AudioClip>();
     private static string mDirectory = null;
     public static string DataPath
     {
@@ -22,5 +23,18 @@ public class SongResources : MonoBehaviour
             }
             return mDirectory;
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        foreach(Dictionary<string, Sprite> dict in Illustration.Values)
+        {
+            foreach(Sprite sprite in dict.Values)
+            {
+                Destroy(sprite);
+            }
+        }
+        foreach (AudioClip clip in Songs.Values)
+            Destroy(clip);
     }
 }

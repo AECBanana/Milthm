@@ -13,6 +13,8 @@ public class SongListLoader : MonoBehaviour
         Success, Duplicated, NotSupported, Failed
     }
     public static SongListLoader Instance;
+    public static SongItemController FirstSong, LastSong;
+    public static bool Loaded = false;
 
     public static LoadStatus Load(string path, Action<string> LoadComplete)
     {
@@ -67,6 +69,32 @@ public class SongListLoader : MonoBehaviour
             }
         }
 
+        BeatmapModel m = maps[0];
+
+        string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile;
+        string extension = Path.GetExtension(m.AudioFile).ToLower();
+        AudioType type = AudioType.UNKNOWN;
+        if (extension == ".mp3")
+            type = AudioType.MPEG;
+        else if (extension == ".ogg")
+            type = AudioType.OGGVORBIS;
+        else if (extension == ".wav")
+            type = AudioType.WAV;
+        else if (extension == ".aiff")
+            type = AudioType.AIFF;
+
+        SongResources.Songs.Add(uid, null);
+
+        if (type != AudioType.UNKNOWN)
+        {
+            var handler = new DownloadHandlerAudioClip(f, type);
+            var request = new UnityWebRequest(f, "GET", handler, null);
+            request.SendWebRequest().completed += (obj) =>
+            {
+                SongResources.Songs[uid] = handler.audioClip;
+            };
+        }
+
         return LoadStatus.Success;
     }
 
@@ -75,12 +103,21 @@ public class SongListLoader : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        foreach(string dir in Directory.GetDirectories(SongResources.DataPath))
+        if (!Loaded)
         {
-            if (!dir.EndsWith(".") && !dir.EndsWith(".."))
+            Loaded = true;
+            foreach (string dir in Directory.GetDirectories(SongResources.DataPath))
             {
-                Load(dir, LoadToUI);
+                if (!dir.EndsWith(".") && !dir.EndsWith(".."))
+                {
+                    Load(dir, LoadToUI);
+                }
             }
+        }
+        else
+        {
+            foreach (string uid in SongResources.Beatmaps.Keys)
+                LoadToUI(uid, false);
         }
     }
 
@@ -104,6 +141,15 @@ public class SongListLoader : MonoBehaviour
         item.SetActive(true);
         if (playAni)
             item.GetComponent<Animator>().Play("SongItemShow", 0, 0.0f);
+        if (FirstSong == null)
+            FirstSong = controller;
+        if (LastSong == null)
+            LastSong = controller;
+        LastSong.NextSong = controller;
+        controller.PreSong = LastSong;
+        LastSong = controller;
+        FirstSong.PreSong = LastSong;
+        controller.NextSong = FirstSong;
     }
 
     private void OnDestroy()
