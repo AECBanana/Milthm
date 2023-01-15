@@ -8,6 +8,8 @@ public class LineController : MonoBehaviour
     public static List<LineController> Lines = new List<LineController>();
     public const float MoveArea = 50f;
     public float FlowSpeed;
+    public int Index;
+    public KeyCode OriginKey = KeyCode.None;
     public KeyCode KeyOverride = KeyCode.None;
     public BeatmapModel.LineDirection Direction;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
@@ -44,6 +46,18 @@ public class LineController : MonoBehaviour
     private void OnDestroy()
     {
         Lines.Remove(this);
+    }
+    public void UpdateKeyTip()
+    {
+        if (KeyOverride == KeyCode.None || KeyOverride == KeyCode.Tab)
+        {
+            KeyTip.gameObject.SetActive(false);
+        }
+        else
+        {
+            KeyTip.gameObject.SetActive(true);
+            KeyTip.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("KeySets\\" + (char)('A' + KeyOverride - KeyCode.A));
+        }
     }
     private void Update()
     {

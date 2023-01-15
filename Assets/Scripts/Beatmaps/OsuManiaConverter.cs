@@ -19,6 +19,7 @@ public class OsuManiaConverter
         };
         // 读取元数据
         bool readBg = false;
+        int lineCount = 4;
         foreach (string line in data)
         {
             if (line == "[HitObjects]")
@@ -39,6 +40,8 @@ public class OsuManiaConverter
                 model.BeatmapUID = "Osu!Mania-" + line.Split(':')[1];
             if (line.StartsWith("PreviewTime:"))
                 model.PreviewTime = float.Parse(line.Split(':')[1].Trim()) / 1000f;
+            if (line.StartsWith("CircleSize"))
+                lineCount = int.Parse(line.Split(':')[1].Trim());
             if (line == "[Events]")
             {
                 readBg = true;
@@ -63,30 +66,32 @@ public class OsuManiaConverter
             From = 0f,
             To = 0
         });
-        model.LineList.Add(new BeatmapModel.LineData
+        for(int i = 0;i < lineCount; i++)
         {
-            Direction = BeatmapModel.LineDirection.Right,
-            FlowSpeed = FlowSpeed,
-            KeyOverride = KeyCode.S
-        });
-        model.LineList.Add(new BeatmapModel.LineData
+            model.LineList.Add(new BeatmapModel.LineData
+            {
+                Direction = BeatmapModel.LineDirection.Up,
+                FlowSpeed = FlowSpeed,
+                KeyOverride = KeyCode.Tab
+            });
+        }
+        List<int> xs = new List<int>();
+        foreach (string line in data)
         {
-            Direction = BeatmapModel.LineDirection.Left,
-            FlowSpeed = FlowSpeed,
-            KeyOverride = KeyCode.D
-        });
-        model.LineList.Add(new BeatmapModel.LineData
-        {
-            Direction = BeatmapModel.LineDirection.Up,
-            FlowSpeed = FlowSpeed,
-            KeyOverride = KeyCode.J
-        });
-        model.LineList.Add(new BeatmapModel.LineData
-        {
-            Direction = BeatmapModel.LineDirection.Down,
-            FlowSpeed = FlowSpeed,
-            KeyOverride = KeyCode.K
-        });
+            string[] t = line.Split(',');
+            if (t.Length == 6)
+            {
+                int l = int.Parse(t[0]);
+                if (!xs.Contains(l)) 
+                    xs.Add(l);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        xs.Sort((x,y) => x.CompareTo(y));
+
         foreach (string line in data)
         {
             if (start)
@@ -100,32 +105,14 @@ public class OsuManiaConverter
                 float from = float.Parse(t[2]) / 1000, to;
                 if (t.Length == 6)
                 {
-                    if(int.Parse(t[0]) / 64 / 2 > 3)
-                    {
-                        Debug.Log("Incident line:" + t[4]);
-                    }
+                    int l = xs.FindIndex(x => x == int.Parse(t[0]));
                     to = float.Parse(t[5].Split(':')[0]) / 1000;
                     if (to == 0)
                         to = from;
                     model.NoteList.Add(new BeatmapModel.NoteData
                     {
                         BPM = 0,
-                        Line = int.Parse(t[0]) / 64 / 2,
-                        From = model.ConvertByBPM(from, 100),
-                        To = model.ConvertByBPM(to, 100)
-                    });
-                }
-                else if(t.Length == 7)
-                {
-                    if (int.Parse(t[4]) / 4 > 3)
-                    {
-                        Debug.Log("Incident line:" + t[4]);
-                    }
-                    to = float.Parse(t[5]) / 1000;
-                    model.NoteList.Add(new BeatmapModel.NoteData
-                    {
-                        BPM = 0,
-                        Line = int.Parse(t[4]) / 4,
+                        Line = l,
                         From = model.ConvertByBPM(from, 100),
                         To = model.ConvertByBPM(to, 100)
                     });

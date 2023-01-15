@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class HitJudge : MonoBehaviour
 {
     public class ResultData
     {
+        public List<KeyCode> UsedKeys = new List<KeyCode>();
         private long mHP = 100;
         private bool danger_hiding = false;
         public int MissContinious = 0;
@@ -82,6 +84,12 @@ public class HitJudge : MonoBehaviour
     public static ResultData Result = new ResultData();
     public static List<List<MonoBehaviour>> HitList = new List<List<MonoBehaviour>>();
     public static List<KeyCode> CaptureOnce = new List<KeyCode>();
+    public static List<KeyCode> KeyWeight = new List<KeyCode>()
+    {
+        KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P,
+        KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L,
+        KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M
+    };
 
     static HitJudge()
     {
@@ -92,6 +100,8 @@ public class HitJudge : MonoBehaviour
     }
     public static bool IsPress(KeyCode key, MonoBehaviour note, bool capture = false)
     {
+        if (key == KeyCode.Tab)
+            return false;
         if (GamePlayLoops.AutoPlay)
             return false;
         if (!AudioUpdate.Audio.isPlaying)
@@ -110,6 +120,64 @@ public class HitJudge : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+    public static void ResortLineKeys()
+    {
+        List<LineController> lines = new List<LineController>();
+        List<KeyCode> keys = new List<KeyCode>();
+        for(int i = 0;i < LineController.Lines.Count; i++)
+        {
+            if (LineController.Lines[i].OriginKey == KeyCode.Tab && LineController.Lines[i].KeyOverride != KeyCode.Tab)
+            {
+                lines.Add(LineController.Lines[i]);
+                keys.Add(LineController.Lines[i].KeyOverride);
+            }
+        }
+        keys.Sort((x, y) => KeyWeight.FindIndex(a => a == x).CompareTo(KeyWeight.FindIndex(b => b == y)));
+        for (int i = 0; i < lines.Count; i++)
+        {
+            lines[i].KeyOverride = keys[i];
+            lines[i].UpdateKeyTip();
+        }
+    }
+    public static KeyCode AnykeyPress(MonoBehaviour note)
+    {
+        if (GamePlayLoops.AutoPlay)
+            return KeyCode.Tab;
+        if (!AudioUpdate.Audio.isPlaying)
+            return KeyCode.Tab;
+        if (HitList.Count == 0)
+            return KeyCode.Tab;
+        if (!HitList[0].Contains(note))
+            return KeyCode.Tab;
+        if (Input.anyKey)
+        {
+            List<KeyCode> avaliable = new List<KeyCode>();
+            for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+            {
+                if (Input.GetKey(key) && !Result.UsedKeys.Contains(key))
+                {
+                    avaliable.Add(key);
+                }
+            }
+            if (avaliable.Count > 0)
+            {
+                avaliable.Sort((x, y) => KeyWeight.FindIndex(a => a == x).CompareTo(KeyWeight.FindIndex(b => b == y)));
+                int i = (HitList[0].FindIndex(x => x == note) + 1) / HitList[0].Count * avaliable.Count - 1;
+                if (i < 0)
+                    i = 0;
+                if (i >= avaliable.Count)
+                    i = avaliable.Count - 1;
+                KeyCode key = avaliable[i];
+                Result.UsedKeys.Add(key);
+                return key;
+            }
+            return KeyCode.Tab;
+        }
+        else
+        {
+            return KeyCode.Tab;
         }
     }
     public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime)

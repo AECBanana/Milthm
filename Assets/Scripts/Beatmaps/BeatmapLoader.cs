@@ -24,8 +24,26 @@ public class BeatmapLoader : MonoBehaviour
         Audio.clip = SongResources.Songs[PlayingUID];
     }
 
+    public int GetLineIndex(MonoBehaviour note)
+    {
+        if (note is TapController tap)
+        {
+            return tap.Line.Index;
+        }
+        else if (note is HoldController hold)
+        {
+            return hold.Line.Index;
+        }
+        return 0;
+    }
+
     public void Load(BeatmapModel map)
     {
+        for(int j = 0;j < LineController.Lines.Count; j++)
+        {
+            Destroy(LineController.Lines[j]);
+        }
+        LineController.Lines.Clear();
         Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;
         DebugInfo.Output("Delay", Delay.ToString() + "s");
@@ -41,7 +59,7 @@ public class BeatmapLoader : MonoBehaviour
         HitJudge.HitList = new List<List<MonoBehaviour>>();
         HitJudge.CaptureOnce = new List<KeyCode>();
         lines.Clear();
-        float x = -3f;
+        float x = -2f * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
             GameObject go = Instantiate(line);
@@ -49,6 +67,7 @@ public class BeatmapLoader : MonoBehaviour
             controller.FlowSpeed = l.FlowSpeed;
             controller.Direction = l.Direction;
             controller.KeyOverride = l.KeyOverride;
+            controller.OriginKey = l.KeyOverride;
             if (l.Direction == BeatmapModel.LineDirection.Right)
                 go.transform.localEulerAngles = new Vector3(0, 0, 0);
             else if (l.Direction == BeatmapModel.LineDirection.Up)
@@ -60,7 +79,7 @@ public class BeatmapLoader : MonoBehaviour
 
             if (l.KeyOverride != KeyCode.None)
             {
-                controller.KeyTip.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("KeySets\\" + (char)('A' + l.KeyOverride - KeyCode.A));
+                controller.UpdateKeyTip();
             }
             else
             {
@@ -69,7 +88,7 @@ public class BeatmapLoader : MonoBehaviour
 
             go.transform.localEulerAngles = new Vector3(0, 0, 90);
             go.transform.localPosition = new Vector3(x, -4f, 0);
-            x += (6f) / 3;
+            x += 2f;
 
             go.SetActive(true);
             lines.Add(controller);
@@ -149,6 +168,11 @@ public class BeatmapLoader : MonoBehaviour
                 }
             }
             i++;
+        }
+
+        for(int j = 0;j < HitJudge.HitList.Count; j++)
+        {
+            HitJudge.HitList[j].Sort((x, y) => GetLineIndex(x).CompareTo(GetLineIndex(y)));
         }
 
         Debug.Log("´ý»÷´òÁÐ±í£º" + HitJudge.HitList.Count);

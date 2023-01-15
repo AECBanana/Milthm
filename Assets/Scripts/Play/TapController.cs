@@ -53,7 +53,16 @@ public class TapController : MonoBehaviour
             KeyCode key = Key;
             if (key == KeyCode.None)
                 key = Line.Key;
-            if (HitJudge.IsPress(key, this))
+            if (key == KeyCode.Tab)
+            {
+                key = HitJudge.AnykeyPress(this);
+                if (key != KeyCode.Tab)
+                {
+                    Line.KeyOverride = key;
+                    HitJudge.ResortLineKeys();
+                }
+            }
+            if (key != KeyCode.Tab && HitJudge.IsPress(key, this))
             {
                 HitJudge.CaptureOnce.Add(key);
                 HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);

@@ -18,9 +18,9 @@ public class PlayLoadScreen : MonoBehaviour
         Bg.sprite = Illustration.sprite;
 
         Title.text = m.Title;
-        Composor.text = "Çú    " + m.Composer;
-        Beatmapper.text = "Æ×    " + m.Beatmapper;
-        Illustrator.text = "ÃÀ    " + m.Illustrator;
+        Composor.text = "ÒôÀÖ    " + m.Composer;
+        Beatmapper.text = "Æ×Ãæ    " + m.Beatmapper;
+        Illustrator.text = "Çú»æ    " + m.Illustrator;
 
         string source = "";
 

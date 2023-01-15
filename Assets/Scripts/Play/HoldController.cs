@@ -62,7 +62,16 @@ public class HoldController : MonoBehaviour
             }
             if (!Missed && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Valid)
             {
-                if (HitJudge.IsPress(key, this, true))
+                if (key == KeyCode.Tab)
+                {
+                    key = HitJudge.AnykeyPress(this);
+                    if (key != KeyCode.Tab)
+                    {
+                        Line.KeyOverride = key;
+                        HitJudge.ResortLineKeys();
+                    }
+                }
+                if (key != KeyCode.Tab && HitJudge.IsPress(key, this, true))
                 {
                     HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
                     if (HitAni != null)
