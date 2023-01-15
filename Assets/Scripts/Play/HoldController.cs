@@ -110,6 +110,12 @@ public class HoldController : MonoBehaviour
                 Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f - d * 0.3f);
             if (d >= 1f)
             {
+                if (!HeadHit && !Missed)
+                {
+                    Missed = true;
+                    Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
+                    HitJudge.JudgeMiss(transform.parent, this);
+                }
                 Destroy(gameObject);
                 if (HitAni != null)
                     HitAni.SetFloat("Speed", 1.0f);

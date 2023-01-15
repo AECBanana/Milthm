@@ -7,6 +7,7 @@ public class BackBtn : MonoBehaviour
 {
     public void Click()
     {
+        GamePlayAdapter.Instance.DeleteRain();
         Loading.Run("MainScene");
     }
     void Update()

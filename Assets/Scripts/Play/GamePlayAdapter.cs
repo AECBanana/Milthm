@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class GamePlayAdapter : MonoBehaviour
 {
+    public static GamePlayAdapter Instance;
     List<GameObject> Rains = new List<GameObject>();
     public AudioSource BGM;
+    private void Awake()
+    {
+        Instance = this;
+    }
     public void PlaySummarySnd()
     {
         if (HitJudge.Result.Dead)

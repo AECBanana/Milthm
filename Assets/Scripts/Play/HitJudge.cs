@@ -74,7 +74,7 @@ public class HitJudge : MonoBehaviour
             {
                 if (Hit == 0)
                     return 0;
-                return (Perfect2 + Perfect) * 1.0f / Hit + Good * 1f / Hit * 0.75f + Bad * 1f / Hit * 0.5f;
+                return Mathf.Floor(((Perfect2 + Perfect) * 1.0f / Hit + Good * 1f / Hit * 0.75f + Bad * 1f / Hit * 0.5f) * 100f) / 100f;
             }
         }
     }

@@ -10,6 +10,7 @@ public class AutoPlaySwitch : MonoBehaviour
     private void Awake()
     {
         image = GetComponent<Image>();
+        image.sprite = (GamePlayLoops.AutoPlay ? Active : Deactive);
     }
     public void Click()
     {
