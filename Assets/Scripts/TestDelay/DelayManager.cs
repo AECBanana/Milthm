@@ -48,7 +48,7 @@ public class DelayManager : MonoBehaviour
     {
         if (status == 0)
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.anyKeyDown)
             {
                 status = 1;
                 Audio.Play();
@@ -80,7 +80,7 @@ public class DelayManager : MonoBehaviour
                 }
             }
                 
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.anyKeyDown)
             {
                 if (!tested)
                 testCnt2++;
@@ -103,24 +103,12 @@ public class DelayManager : MonoBehaviour
             display_width += (target_width - display_width) / (Time.deltaTime / (1.0f / 60f) * 60f);
             progress.sizeDelta = new Vector2(display_width, progress.sizeDelta.y);
             progress.GetComponent<Image>().color = new Color(1f, 1f, 1f, 74f / 255f * display_width / max_width);
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.anyKeyDown)
             {
                 GetComponent<Animator>().Play("CanvasQuit", 0, 0.0f);
                 PlayerPrefs.SetFloat("Delay", temp_delay);
                 DoneTip.SetActive(false);
                 status = 3;
-            }
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                delay = 0; single_delay = 0; display_delay = 0; temp_delay = 0;
-                progress.GetComponent<Image>().color = new Color(1f, 1f, 1f, 74f / 255f);
-                testCnt = 0; testCnt2 = 0;
-                lastTip = 0; display_width = 0;
-                DoneTip.SetActive(false);
-                status = 1;
-                CaptureAudios();
-                Audio.Play();
-                DelayText.text = "+0 <b>ms</b>";
             }
         }
     }

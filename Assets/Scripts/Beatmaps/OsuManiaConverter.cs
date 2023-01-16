@@ -71,8 +71,7 @@ public class OsuManiaConverter
             model.LineList.Add(new BeatmapModel.LineData
             {
                 Direction = BeatmapModel.LineDirection.Up,
-                FlowSpeed = FlowSpeed,
-                KeyOverride = KeyCode.Tab
+                FlowSpeed = FlowSpeed
             });
         }
         List<int> xs = new List<int>();

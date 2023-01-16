@@ -44,7 +44,6 @@ public class BeatmapModel
         public int Line;
         public int[] From, To;
         public int BPM;
-        public KeyCode SpecificKey = KeyCode.None;
         public float FromBeat
         {
             get
@@ -73,7 +72,6 @@ public class BeatmapModel
     {
         public LineDirection Direction;
         public float FlowSpeed;
-        public KeyCode KeyOverride = KeyCode.None;
     }
     public List<LineData> LineList = new List<LineData>();
     #endregion

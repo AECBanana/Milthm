@@ -31,16 +31,22 @@ public class GamePlayLoops : MonoBehaviour
         display_width += (width - display_width) / (Time.deltaTime / (1.0f / 60f) * 60f);
         HPBar.transform.localScale = new Vector3(display_width, 1f, 1f);
 
+        string keys = "";
         for (int i = 0;i < HitJudge.CaptureOnce.Count; i++)
         {
             if (i >= HitJudge.CaptureOnce.Count) break;
             if (!Input.GetKey(HitJudge.CaptureOnce[i]))
             {
+                HitJudge.BindNotes[HitJudge.CaptureOnce[i]] = null;
                 HitJudge.CaptureOnce.RemoveAt(i);
                 i--;
-            }   
+            }
+            else
+            {
+                keys += HitJudge.CaptureOnce[i] + ",";
+            }
         }
-
+        DebugInfo.Output("Capture Keys", keys);
 
         if (!HitJudge.Result.Dead && BeatmapLoader.Playing != null && !HitJudge.Result.Win)
         {

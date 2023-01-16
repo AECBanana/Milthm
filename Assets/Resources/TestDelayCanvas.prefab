@@ -310,7 +310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "( \u2022\u0300 \u03C9 \u2022\u0301 )y\u8C03\u5B9A\u5B8C\u6BD5\uFF0C\u6309<b>Z</b>\u952E\u5173\u95ED\uFF0C\u6309<b>R</b>\u91CD\u65B0\u5F00\u59CB~"
+  m_Text: "( \u2022\u0300 \u03C9 \u2022\u0301 )y\u8C03\u5B9A\u5B8C\u6BD5\uFF0C\u6309\u4EFB\u610F\u952E\u5173\u95ED\u3002"
 --- !u!95 &1524652824
 Animator:
   serializedVersion: 4
@@ -1317,7 +1317,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6309\u4E0BZ\u952E\u5F00\u59CB\u5427~"
+  m_Text: "\u8F7B\u89E6\u5F00\u59CB\u5427~"
 --- !u!1 &5775265687913773904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,7 +1562,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u8BF7\u5728\u7B2C\u4E09\u62CD\u65F6\u6309\u4E0BZ\u952E\u3002\r\n"
+  m_Text: "\u8BF7\u5728\u7B2C\u4E09\u62CD\u65F6\u6309\u4E0B\u4EFB\u610F\u952E\u3002\r\n"
 --- !u!1 &5775265688252162493
 GameObject:
   m_ObjectHideFlags: 0

@@ -84,12 +84,7 @@ public class HitJudge : MonoBehaviour
     public static ResultData Result = new ResultData();
     public static List<List<MonoBehaviour>> HitList = new List<List<MonoBehaviour>>();
     public static List<KeyCode> CaptureOnce = new List<KeyCode>();
-    public static List<KeyCode> KeyWeight = new List<KeyCode>()
-    {
-        KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P,
-        KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L,
-        KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M
-    };
+    public static Dictionary<KeyCode, MonoBehaviour> BindNotes = new Dictionary<KeyCode, MonoBehaviour>();
 
     static HitJudge()
     {
@@ -98,86 +93,54 @@ public class HitJudge : MonoBehaviour
         Good = Resources.Load<GameObject>("Good");
         Miss = Resources.Load<GameObject>("Miss");
     }
-    public static bool IsPress(KeyCode key, MonoBehaviour note, bool capture = false)
+    public static KeyCode GetAvaliableHoldingKey(MonoBehaviour note)
     {
-        if (key == KeyCode.Tab)
-            return false;
-        if (GamePlayLoops.AutoPlay)
-            return false;
-        if (!AudioUpdate.Audio.isPlaying)
-            return false;
-        if (HitList.Count == 0)
-            return false;
-        if (HitList[0].Contains(note))
+        //Debug.Log("Finding avaliable keys...");
+        for(int i = 0;i < CaptureOnce.Count; i++)
         {
-            if (CaptureOnce.Contains(key))
-                return false;
-            bool ret = Input.GetKey(key);
-            if (capture && ret)
-                CaptureOnce.Add(key);
-            return ret;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public static void ResortLineKeys()
-    {
-        List<LineController> lines = new List<LineController>();
-        List<KeyCode> keys = new List<KeyCode>();
-        for(int i = 0;i < LineController.Lines.Count; i++)
-        {
-            if (LineController.Lines[i].OriginKey == KeyCode.Tab && LineController.Lines[i].KeyOverride != KeyCode.Tab)
+            if (BindNotes[CaptureOnce[i]] == null)
             {
-                lines.Add(LineController.Lines[i]);
-                keys.Add(LineController.Lines[i].KeyOverride);
+                //Debug.Log(CaptureOnce[i] + " is free");
+                BindNotes[CaptureOnce[i]] = note;
+                return CaptureOnce[i];
+            }
+            else
+            {
+                //Debug.Log(CaptureOnce[i] + " is bind to " + BindNotes[CaptureOnce[i]].name);
             }
         }
-        keys.Sort((x, y) => KeyWeight.FindIndex(a => a == x).CompareTo(KeyWeight.FindIndex(b => b == y)));
-        for (int i = 0; i < lines.Count; i++)
-        {
-            lines[i].KeyOverride = keys[i];
-            lines[i].UpdateKeyTip();
-        }
+        return KeyCode.None;
     }
-    public static KeyCode AnykeyPress(MonoBehaviour note)
+    public static KeyCode IsPress(MonoBehaviour note)
     {
         if (GamePlayLoops.AutoPlay)
-            return KeyCode.Tab;
+            return KeyCode.None;
         if (!AudioUpdate.Audio.isPlaying)
-            return KeyCode.Tab;
+            return KeyCode.None;
         if (HitList.Count == 0)
-            return KeyCode.Tab;
+            return KeyCode.None;
         if (!HitList[0].Contains(note))
-            return KeyCode.Tab;
+            return KeyCode.None;
         if (Input.anyKey)
         {
-            List<KeyCode> avaliable = new List<KeyCode>();
             for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
             {
-                if (Input.GetKey(key) && !Result.UsedKeys.Contains(key))
+                if (Input.GetKeyDown(key) && !CaptureOnce.Contains(key))
                 {
-                    avaliable.Add(key);
-                }
+                    /**if (note is TapController tap)
+                        Debug.Log("tap " + tap.Index + " -> " + key);
+                    else if (note is HoldController hold)
+                        Debug.Log("hold " + hold.Index + " -> " + key);**/
+                    BindNotes[key] = note;
+                    CaptureOnce.Add(key);
+                    return key;
+                }   
             }
-            if (avaliable.Count > 0)
-            {
-                avaliable.Sort((x, y) => KeyWeight.FindIndex(a => a == x).CompareTo(KeyWeight.FindIndex(b => b == y)));
-                int i = (HitList[0].FindIndex(x => x == note) + 1) / HitList[0].Count * avaliable.Count - 1;
-                if (i < 0)
-                    i = 0;
-                if (i >= avaliable.Count)
-                    i = avaliable.Count - 1;
-                KeyCode key = avaliable[i];
-                Result.UsedKeys.Add(key);
-                return key;
-            }
-            return KeyCode.Tab;
+            return KeyCode.None;
         }
         else
         {
-            return KeyCode.Tab;
+            return KeyCode.None;
         }
     }
     public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime)
@@ -238,6 +201,10 @@ public class HitJudge : MonoBehaviour
         }
         else
         {
+            /**if (note is TapController tap)
+                Debug.Log("tap " + tap.Index + " hit, but too early.");
+            else if (note is HoldController hold)
+                Debug.Log("hold " + hold.Index + " hit, but too early.");**/
             effect = Miss;
             Result.Combo = 0;
             miss = true;
@@ -273,12 +240,18 @@ public class HitJudge : MonoBehaviour
     }
     public static void MoveNext(MonoBehaviour note)
     {
+        if (!HitList[0].Contains(note))
+            return;
         HitList[0].Remove(note);
         if (HitList[0].Count == 0)
             HitList.RemoveAt(0);
     }
     public static void JudgeMiss(Transform AniParent, MonoBehaviour note)
     {
+        /**if (note is TapController tap)
+            Debug.Log("tap " + tap.Index + " Missed!");
+        else if (note is HoldController hold)
+            Debug.Log("hold " + hold.Index + " Missed!");**/
         Result.MissContinious++;
         Result.Miss++;
         Result.Hit++;

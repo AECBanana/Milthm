@@ -11,16 +11,14 @@ public class HoldController : MonoBehaviour
     public Sprite DoubleSprite;
     public bool HeadHit = false, EndHit = false;
     public Animator HitAni = null;
-    public KeyCode Key;
     public int Index;
+    KeyCode holdKey = KeyCode.None;
     bool Missed = false;
     SpriteRenderer Renderer;
-    Transform KeyTip;
     private void Awake()
     {
         Renderer = GetComponent<SpriteRenderer>();
         Renderer.color = new Color(1f, 1f, 1f, 0f);
-        KeyTip = transform.GetChild(0);
     }
     private void Update()
     {
@@ -48,9 +46,6 @@ public class HoldController : MonoBehaviour
             y -= pass * (Index % 2 == 0 ? 1 : -1);
             transform.localEulerAngles = new Vector3(0, 0, pass * 30 * (Index % 2 == 0 ? 1 : -1));
         }
-        KeyCode key = Key;
-        if (key == KeyCode.None)
-            key = Line.Key;
         if (!HeadHit)
         {
             if (AudioUpdate.Time - From > GameSettings.Bad && !Missed)
@@ -62,16 +57,7 @@ public class HoldController : MonoBehaviour
             }
             if (!Missed && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Valid)
             {
-                if (key == KeyCode.Tab)
-                {
-                    key = HitJudge.AnykeyPress(this);
-                    if (key != KeyCode.Tab)
-                    {
-                        Line.KeyOverride = key;
-                        HitJudge.ResortLineKeys();
-                    }
-                }
-                if (key != KeyCode.Tab && HitJudge.IsPress(key, this, true))
+                if ((holdKey = HitJudge.IsPress(this)) != KeyCode.None)
                 {
                     HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
                     if (HitAni != null)
@@ -87,11 +73,16 @@ public class HoldController : MonoBehaviour
                 HeadHit = true;
             }
         }
-        if (HeadHit && !Missed)
+        if (HeadHit && !Missed && !EndHit)
         {
             if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.AutoPlay)
             {
-                if (!Input.GetKey(key))
+                if (holdKey == KeyCode.None)
+                {
+                    //Debug.Log("failed to find new key, retrying...");
+                    holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                }
+                if (holdKey == KeyCode.None)
                 {
                     if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
                     {
@@ -104,11 +95,18 @@ public class HoldController : MonoBehaviour
                     if (HitAni != null)
                         HitAni.SetFloat("Speed", 1.0f);
                 }
+                if (holdKey != KeyCode.None && !Input.GetKey(holdKey))
+                {
+                    //Debug.Log(holdKey + " released, finding new key...");
+                    HitJudge.BindNotes[holdKey] = null;
+                    holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                }
             }
         }
+        /**if (holdKey != KeyCode.None)
+            transform.GetChild(0).GetComponent<SpriteRenderer>().sprite =
+                Resources.Load<Sprite>("KeySets\\" + (char)('A' + (holdKey - KeyCode.A)));**/
         transform.localPosition = new Vector3(x, y, 0);
-        if (KeyTip.localEulerAngles.z != -1 * Line.transform.localEulerAngles.z)
-            KeyTip.localEulerAngles = new Vector3(0, 0, -1 * Line.transform.localEulerAngles.z);
         if (w == Renderer.size.y)
         {
             float d = (AudioUpdate.Time - To) / 0.25f;
@@ -124,6 +122,11 @@ public class HoldController : MonoBehaviour
                     Missed = true;
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
                     HitJudge.JudgeMiss(transform.parent, this);
+                }
+                if (holdKey != KeyCode.None && HitJudge.BindNotes[holdKey] == this)
+                {
+                    //Debug.Log("Released " + holdKey);
+                    HitJudge.BindNotes[holdKey] = null;
                 }
                 Destroy(gameObject);
                 if (HitAni != null)

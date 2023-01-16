@@ -58,6 +58,9 @@ public class BeatmapLoader : MonoBehaviour
         };
         HitJudge.HitList = new List<List<MonoBehaviour>>();
         HitJudge.CaptureOnce = new List<KeyCode>();
+        HitJudge.BindNotes = new Dictionary<KeyCode, MonoBehaviour>();
+        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+            HitJudge.BindNotes.Add(key, null);
         lines.Clear();
         float x = -2f * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
@@ -66,8 +69,6 @@ public class BeatmapLoader : MonoBehaviour
             LineController controller = go.GetComponent<LineController>();
             controller.FlowSpeed = l.FlowSpeed;
             controller.Direction = l.Direction;
-            controller.KeyOverride = l.KeyOverride;
-            controller.OriginKey = l.KeyOverride;
             if (l.Direction == BeatmapModel.LineDirection.Right)
                 go.transform.localEulerAngles = new Vector3(0, 0, 0);
             else if (l.Direction == BeatmapModel.LineDirection.Up)
@@ -76,15 +77,6 @@ public class BeatmapLoader : MonoBehaviour
                 go.transform.localEulerAngles = new Vector3(0, 0, 180);
             else if (l.Direction == BeatmapModel.LineDirection.Down)
                 go.transform.localEulerAngles = new Vector3(0, 0, 270);
-
-            if (l.KeyOverride != KeyCode.None)
-            {
-                controller.UpdateKeyTip();
-            }
-            else
-            {
-                controller.KeyTip.gameObject.SetActive(false);
-            }
 
             go.transform.localEulerAngles = new Vector3(0, 0, 90);
             go.transform.localPosition = new Vector3(x, -4f, 0);
@@ -102,18 +94,12 @@ public class BeatmapLoader : MonoBehaviour
                 GameObject go = Instantiate(tap, lines[note.Line].transform);
                 TapController controller = go.GetComponent<TapController>();
                 controller.Line = lines[note.Line];
-                controller.Key = note.SpecificKey;
                 controller.Index = i;
-                if (note.SpecificKey == KeyCode.None)
-                    controller.transform.GetChild(0).gameObject.SetActive(false);
-                else
-                    controller.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("KeySets\\" + (char)('A' + note.SpecificKey - KeyCode.A));
                 from = map.ToRealTime(note).Item1;
                 controller.Time = from + Delay;
                 if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
                     controller.GetComponent<SpriteRenderer>().sprite = controller.DoubleSprite;
                 lines[note.Line].HitObjects.Add(controller);
-                lines[note.Line].ObjectRenders.Add((controller.GetComponent<SpriteRenderer>(), controller.transform.GetChild(0).GetComponent<SpriteRenderer>()));
                 go.SetActive(false);
                 noteController = controller;
             }
@@ -121,12 +107,7 @@ public class BeatmapLoader : MonoBehaviour
             {
                 GameObject go = Instantiate(hold, lines[note.Line].transform);
                 HoldController controller = go.GetComponent<HoldController>();
-                controller.Key = note.SpecificKey;
                 controller.Index = i;
-                if (note.SpecificKey == KeyCode.None)
-                    controller.transform.GetChild(0).gameObject.SetActive(false);
-                else
-                    controller.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("KeySets\\" + (char)('A' + note.SpecificKey - KeyCode.A));
                 controller.Line = lines[note.Line];
                 controller.From = map.ToRealTime(note).Item1 + Delay;
                 controller.To = map.ToRealTime(note).Item2 + Delay;
@@ -134,7 +115,6 @@ public class BeatmapLoader : MonoBehaviour
                 if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
                     controller.GetComponent<SpriteRenderer>().sprite = controller.DoubleSprite;
                 lines[note.Line].HitObjects.Add(controller);
-                lines[note.Line].ObjectRenders.Add((controller.GetComponent<SpriteRenderer>(), controller.transform.GetChild(0).GetComponent<SpriteRenderer>()));
                 go.SetActive(false);
                 noteController = controller;
             }

@@ -9,35 +9,10 @@ public class LineController : MonoBehaviour
     public const float MoveArea = 50f;
     public float FlowSpeed;
     public int Index;
-    public KeyCode OriginKey = KeyCode.None;
-    public KeyCode KeyOverride = KeyCode.None;
     public BeatmapModel.LineDirection Direction;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
-    public List<(SpriteRenderer, SpriteRenderer)> ObjectRenders = new List<(SpriteRenderer, SpriteRenderer)>();
-    public Transform Line, KeyTip;
+    public Transform Line;
     bool hide = false;
-    public KeyCode Key
-    {
-        get
-        {
-            if (KeyOverride != KeyCode.None)
-            {
-                return KeyOverride;
-            }
-            else
-            {
-                if (Direction == BeatmapModel.LineDirection.Left)
-                    return KeyCode.LeftArrow;
-                else if (Direction == BeatmapModel.LineDirection.Right)
-                    return KeyCode.RightArrow;
-                else if (Direction == BeatmapModel.LineDirection.Up)
-                    return KeyCode.UpArrow;
-                else if (Direction == BeatmapModel.LineDirection.Down)
-                    return KeyCode.DownArrow;
-            }
-            return KeyCode.None;
-        }
-    }
 
     private void Awake()
     {
@@ -47,22 +22,8 @@ public class LineController : MonoBehaviour
     {
         Lines.Remove(this);
     }
-    public void UpdateKeyTip()
-    {
-        if (KeyOverride == KeyCode.None || KeyOverride == KeyCode.Tab)
-        {
-            KeyTip.gameObject.SetActive(false);
-        }
-        else
-        {
-            KeyTip.gameObject.SetActive(true);
-            KeyTip.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("KeySets\\" + (char)('A' + KeyOverride - KeyCode.A));
-        }
-    }
     private void Update()
     {
-        if (KeyTip.localEulerAngles.z != -1 * transform.localEulerAngles.z)
-            KeyTip.localEulerAngles = new Vector3(0, 0, -1 * transform.localEulerAngles.z);
         if (HitJudge.Result.Dead)
         {
             if (HitJudge.Result.DeadTime == DateTime.MinValue)
@@ -76,7 +37,7 @@ public class LineController : MonoBehaviour
             Line.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
             transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
         }
-        if (transform.childCount == 2 && !hide)
+        if (transform.childCount == 1 && !hide)
         {
             hide = true;
             GetComponent<Animator>().Play("LineHide", 0, 0.0f);
