@@ -12,7 +12,7 @@ public class HoldController : MonoBehaviour
     public bool HeadHit = false, EndHit = false;
     public Animator HitAni = null;
     public int Index;
-    KeyCode holdKey = KeyCode.None;
+    int holdKey = 0;
     bool Missed = false;
     SpriteRenderer Renderer;
     private void Awake()
@@ -57,7 +57,7 @@ public class HoldController : MonoBehaviour
             }
             if (!Missed && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Valid)
             {
-                if ((holdKey = HitJudge.IsPress(this)) != KeyCode.None)
+                if ((holdKey = HitJudge.IsPress(this)) != 0)
                 {
                     HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
                     if (HitAni != null)
@@ -77,12 +77,12 @@ public class HoldController : MonoBehaviour
         {
             if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.AutoPlay)
             {
-                if (holdKey == KeyCode.None)
+                if (holdKey == 0)
                 {
                     //Debug.Log("failed to find new key, retrying...");
                     holdKey = HitJudge.GetAvaliableHoldingKey(this);
                 }
-                if (holdKey == KeyCode.None)
+                if (holdKey == 0)
                 {
                     if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
                     {
@@ -95,7 +95,7 @@ public class HoldController : MonoBehaviour
                     if (HitAni != null)
                         HitAni.SetFloat("Speed", 1.0f);
                 }
-                if (holdKey != KeyCode.None && !Input.GetKey(holdKey))
+                if (holdKey != 0 && !HitJudge.IsHolding(holdKey))
                 {
                     //Debug.Log(holdKey + " released, finding new key...");
                     HitJudge.BindNotes[holdKey] = null;
@@ -123,7 +123,7 @@ public class HoldController : MonoBehaviour
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
                     HitJudge.JudgeMiss(transform.parent, this);
                 }
-                if (holdKey != KeyCode.None && HitJudge.BindNotes[holdKey] == this)
+                if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
                 {
                     //Debug.Log("Released " + holdKey);
                     HitJudge.BindNotes[holdKey] = null;

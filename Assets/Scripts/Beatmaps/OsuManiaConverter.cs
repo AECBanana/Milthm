@@ -77,19 +77,24 @@ public class OsuManiaConverter
         List<int> xs = new List<int>();
         foreach (string line in data)
         {
-            string[] t = line.Split(',');
-            if (t.Length == 6)
+            if (start)
             {
-                int l = int.Parse(t[0]);
-                if (!xs.Contains(l)) 
-                    xs.Add(l);
+                string[] t = line.Split(',');
+                if (t.Length == 6)
+                {
+                    int l = int.Parse(t[0]);
+                    if (!xs.Contains(l))
+                        xs.Add(l);
+                }
+                else
+                {
+                    continue;
+                }
             }
-            else
-            {
-                continue;
-            }
+            if (line == "[HitObjects]") start = true;
         }
         xs.Sort((x,y) => x.CompareTo(y));
+        start = false;
 
         foreach (string line in data)
         {

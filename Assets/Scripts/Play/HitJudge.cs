@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using System.Linq;
 using UnityEngine;
 
 public class HitJudge : MonoBehaviour
@@ -83,8 +83,8 @@ public class HitJudge : MonoBehaviour
     static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
     public static List<List<MonoBehaviour>> HitList = new List<List<MonoBehaviour>>();
-    public static List<KeyCode> CaptureOnce = new List<KeyCode>();
-    public static Dictionary<KeyCode, MonoBehaviour> BindNotes = new Dictionary<KeyCode, MonoBehaviour>();
+    public static List<int> CaptureOnce = new List<int>();
+    public static Dictionary<int, MonoBehaviour> BindNotes = new Dictionary<int, MonoBehaviour>();
 
     static HitJudge()
     {
@@ -93,54 +93,99 @@ public class HitJudge : MonoBehaviour
         Good = Resources.Load<GameObject>("Good");
         Miss = Resources.Load<GameObject>("Miss");
     }
-    public static KeyCode GetAvaliableHoldingKey(MonoBehaviour note)
+    public static int GetAvaliableHoldingKey(MonoBehaviour note)
     {
-        //Debug.Log("Finding avaliable keys...");
         for(int i = 0;i < CaptureOnce.Count; i++)
         {
             if (BindNotes[CaptureOnce[i]] == null)
             {
-                //Debug.Log(CaptureOnce[i] + " is free");
                 BindNotes[CaptureOnce[i]] = note;
                 return CaptureOnce[i];
             }
-            else
-            {
-                //Debug.Log(CaptureOnce[i] + " is bind to " + BindNotes[CaptureOnce[i]].name);
-            }
         }
-        return KeyCode.None;
+        return 0;
     }
-    public static KeyCode IsPress(MonoBehaviour note)
+    public static int IsPress(MonoBehaviour note)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+            return IsPress_Android(note);
+        else
+            return IsPress_Windows(note);
+    }
+    public static bool IsHolding(int key)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+                if (Input.touches[i].fingerId == key - 1 && Input.touches[i].phase != TouchPhase.Ended && Input.touches[i].phase != TouchPhase.Canceled)
+                    return true;
+            return false;
+        }
+        else
+            return Input.GetKey((KeyCode)key);
+    }
+    static int IsPress_Windows(MonoBehaviour note)
     {
         if (GamePlayLoops.AutoPlay)
-            return KeyCode.None;
+            return 0;
         if (!AudioUpdate.Audio.isPlaying)
-            return KeyCode.None;
+            return 0;
         if (HitList.Count == 0)
-            return KeyCode.None;
+            return 0;
         if (!HitList[0].Contains(note))
-            return KeyCode.None;
+            return 0;
         if (Input.anyKey)
         {
-            for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+            for (int key = (int)KeyCode.A; key <= (int)KeyCode.Z; key++)
             {
-                if (Input.GetKeyDown(key) && !CaptureOnce.Contains(key))
+                if (Input.GetKeyDown((KeyCode)key) && !CaptureOnce.Contains(key))
                 {
                     /**if (note is TapController tap)
                         Debug.Log("tap " + tap.Index + " -> " + key);
                     else if (note is HoldController hold)
                         Debug.Log("hold " + hold.Index + " -> " + key);**/
+                    if (!BindNotes.ContainsKey(key))
+                        BindNotes.Add(key, null);
                     BindNotes[key] = note;
                     CaptureOnce.Add(key);
                     return key;
-                }   
+                }
             }
-            return KeyCode.None;
+            return 0;
         }
         else
         {
-            return KeyCode.None;
+            return 0;
+        }
+    }
+    static int IsPress_Android(MonoBehaviour note)
+    {
+        if (GamePlayLoops.AutoPlay)
+            return 0;
+        if (!AudioUpdate.Audio.isPlaying)
+            return 0;
+        if (HitList.Count == 0)
+            return 0;
+        if (!HitList[0].Contains(note))
+            return 0;
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch touch in Input.touches)
+            {
+                if (touch.phase == TouchPhase.Began && !CaptureOnce.Contains(touch.fingerId + 1))
+                {
+                    if (!BindNotes.ContainsKey(touch.fingerId + 1))
+                        BindNotes.Add(touch.fingerId + 1, null);
+                    BindNotes[touch.fingerId + 1] = note;
+                    CaptureOnce.Add(touch.fingerId + 1);
+                    return touch.fingerId + 1;
+                }
+            }
+            return 0;
+        }
+        else
+        {
+            return 0;
         }
     }
     public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime)

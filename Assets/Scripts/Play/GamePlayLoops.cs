@@ -35,7 +35,7 @@ public class GamePlayLoops : MonoBehaviour
         for (int i = 0;i < HitJudge.CaptureOnce.Count; i++)
         {
             if (i >= HitJudge.CaptureOnce.Count) break;
-            if (!Input.GetKey(HitJudge.CaptureOnce[i]))
+            if (!HitJudge.IsHolding(HitJudge.CaptureOnce[i]))
             {
                 HitJudge.BindNotes[HitJudge.CaptureOnce[i]] = null;
                 HitJudge.CaptureOnce.RemoveAt(i);
@@ -46,7 +46,6 @@ public class GamePlayLoops : MonoBehaviour
                 keys += HitJudge.CaptureOnce[i] + ",";
             }
         }
-        DebugInfo.Output("Capture Keys", keys);
 
         if (!HitJudge.Result.Dead && BeatmapLoader.Playing != null && !HitJudge.Result.Win)
         {

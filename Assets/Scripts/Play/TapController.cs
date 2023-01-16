@@ -48,7 +48,7 @@ public class TapController : MonoBehaviour
         }
         if (!Missed && !Hit && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
         {
-            if (HitJudge.IsPress(this) != KeyCode.None)
+            if (HitJudge.IsPress(this) != 0)
             {
                 HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
                 Hit = true;

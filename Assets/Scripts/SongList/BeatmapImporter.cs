@@ -11,6 +11,8 @@ using UnityEngine.Device;
 
 public class BeatmapImporter : MonoBehaviour
 {
+
+#if UNITY_STANDALONE_WIN
     void OnEnable()
     {
         // must be installed on the main thread to get the right thread id.
@@ -27,7 +29,7 @@ public class BeatmapImporter : MonoBehaviour
         foreach (string file in files)
             ImportBeatmap(file);
     }
-
+#endif
     void ImportBeatmap(string file)
     {
         SongListLoader.LoadStatus status = SongListLoader.LoadStatus.Failed;
@@ -99,8 +101,7 @@ public class BeatmapImporter : MonoBehaviour
 
     public void Click()
     {
-        if (UnityEngine.Application.platform != RuntimePlatform.WindowsEditor)
-            return;
+#if UNITY_EDITOR
         OpenFileDialog dialog = new OpenFileDialog();
         dialog.Title = "导入谱面到Milthm";
         dialog.Filter = "Milthm谱面|*.mlt|Osu!谱面|*.osz";
@@ -108,5 +109,6 @@ public class BeatmapImporter : MonoBehaviour
         {
             ImportBeatmap(dialog.FileName);
         }
+#endif
     }
 }

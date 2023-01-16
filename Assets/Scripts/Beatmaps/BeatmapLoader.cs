@@ -57,10 +57,10 @@ public class BeatmapLoader : MonoBehaviour
             FullCombo = map.NoteList.Count
         };
         HitJudge.HitList = new List<List<MonoBehaviour>>();
-        HitJudge.CaptureOnce = new List<KeyCode>();
-        HitJudge.BindNotes = new Dictionary<KeyCode, MonoBehaviour>();
+        HitJudge.CaptureOnce = new List<int>();
+        HitJudge.BindNotes = new Dictionary<int, MonoBehaviour>();
         for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
-            HitJudge.BindNotes.Add(key, null);
+            HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
         float x = -2f * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
