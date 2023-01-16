@@ -4,9 +4,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 谱面加载器
+/// </summary>
 public class BeatmapLoader : MonoBehaviour
 {
     public static BeatmapLoader Instance;
+    /// <summary>
+    /// 谱面延迟
+    /// </summary>
     public static float Delay = 0f;
     public AudioSource Audio;
     public Image Bg1, Bg2;
@@ -18,12 +24,18 @@ public class BeatmapLoader : MonoBehaviour
     private void Start()
     {
         Instance = this;
+        // 载入正在游玩的谱面，设置背景
         Load(Playing);
         Bg1.sprite = SongResources.Illustration[PlayingUID][Playing.IllustrationFile];
         Bg2.sprite = Bg1.sprite;
         Audio.clip = SongResources.Songs[PlayingUID];
     }
 
+    /// <summary>
+    /// 取得note所在轨道序号
+    /// </summary>
+    /// <param name="note">note</param>
+    /// <returns>轨道序号</returns>
     public int GetLineIndex(MonoBehaviour note)
     {
         if (note is TapController tap)
@@ -37,13 +49,19 @@ public class BeatmapLoader : MonoBehaviour
         return 0;
     }
 
+    /// <summary>
+    /// 载入谱面
+    /// </summary>
+    /// <param name="map">谱面数据模型</param>
     public void Load(BeatmapModel map)
     {
+        // 销毁已有轨道
         for(int j = 0;j < LineController.Lines.Count; j++)
         {
             Destroy(LineController.Lines[j]);
         }
         LineController.Lines.Clear();
+        // 初始化
         Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;
         DebugInfo.Output("Delay", Delay.ToString() + "s");
@@ -62,6 +80,7 @@ public class BeatmapLoader : MonoBehaviour
         for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
             HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
+        // 生成轨道
         float x = -2f * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
@@ -85,10 +104,12 @@ public class BeatmapLoader : MonoBehaviour
             go.SetActive(true);
             lines.Add(controller);
         }
+        // 载入所有note
         int i = 0;
         foreach (BeatmapModel.NoteData note in map.NoteList)
         {
             float from; MonoBehaviour noteController;
+            // 如果开始时间和结束时间一致，为tap
             if (note.FromBeat == note.ToBeat)
             {
                 GameObject go = Instantiate(tap, lines[note.Line].transform);
@@ -118,12 +139,14 @@ public class BeatmapLoader : MonoBehaviour
                 go.SetActive(false);
                 noteController = controller;
             }
+            // 加入待击打列表
             if (HitJudge.HitList.Count == 0)
             {
                 HitJudge.HitList.Add(new List<MonoBehaviour>() { noteController });
             }
             else
             {
+                // 多押处理
                 if (HitJudge.HitList[^1][0] is TapController mtap)
                 {
                     if (mtap.Time == from + Delay)
@@ -150,12 +173,15 @@ public class BeatmapLoader : MonoBehaviour
             i++;
         }
 
+        // 根据轨道序号排序击打列表
         for(int j = 0;j < HitJudge.HitList.Count; j++)
         {
             HitJudge.HitList[j].Sort((x, y) => GetLineIndex(x).CompareTo(GetLineIndex(y)));
         }
 
         Debug.Log("待击打列表：" + HitJudge.HitList.Count);
+
+        // 开始游戏
 
         Audio.time = 0;
         AudioUpdate.StartTime = System.DateTime.Now;

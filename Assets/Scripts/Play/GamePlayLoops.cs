@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// 游玩主控制
+/// </summary>
 public class GamePlayLoops : MonoBehaviour
 {
     public static bool AutoPlay = false;
@@ -22,6 +25,7 @@ public class GamePlayLoops : MonoBehaviour
     }
     void Update()
     {
+        // 更新游玩基本信息
         ProgressBar.localScale = new Vector3(AudioUpdate.Time / AudioUpdate.Audio.clip.length, 1f, 1f);
         Score.text = HitJudge.Result.Score.ToString("0000000");
         Accuracy.text = HitJudge.Result.Accuracy.ToString("P");
@@ -31,6 +35,7 @@ public class GamePlayLoops : MonoBehaviour
         display_width += (width - display_width) / (Time.deltaTime / (1.0f / 60f) * 60f);
         HPBar.transform.localScale = new Vector3(display_width, 1f, 1f);
 
+        // 重置已捕获的输入
         string keys = "";
         for (int i = 0;i < HitJudge.CaptureOnce.Count; i++)
         {
@@ -47,10 +52,12 @@ public class GamePlayLoops : MonoBehaviour
             }
         }
 
+        // 关卡结束判定
         if (!HitJudge.Result.Dead && BeatmapLoader.Playing != null && !HitJudge.Result.Win)
         {
             DebugInfo.Output("SongLength", BeatmapLoader.Playing.SongLength.ToString());
             DebugInfo.Output("Hit/FC", HitJudge.Result.Hit + "/" + HitJudge.Result.FullCombo);
+            // 未指定歌曲长度则在最后一个note击打后结束
             if (BeatmapLoader.Playing.SongLength == -1f)
             {
                 if (LineController.Lines.Count == 0)
@@ -74,6 +81,7 @@ public class GamePlayLoops : MonoBehaviour
             }
         }
 
+        // 暂停界面控制
         if (Input.GetKeyUp(KeyCode.Escape) && !PauseScreen.activeSelf && !HitJudge.Result.Dead && !HitJudge.Result.Win && AudioUpdate.Started && !CountDown.activeSelf)
         {
             HitJudge.CaptureOnce.Clear();

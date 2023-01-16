@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ¹ìµÀ¿ØÖÆÆ÷
+/// </summary>
 public class LineController : MonoBehaviour
 {
     public static List<LineController> Lines = new List<LineController>();

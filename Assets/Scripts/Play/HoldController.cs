@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
+/// <summary>
+/// ³¤Ìõ¿ØÖÆÆ÷
+/// </summary>
 public class HoldController : MonoBehaviour
 {
     public LineController Line;

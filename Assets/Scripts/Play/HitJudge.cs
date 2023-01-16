@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// 击打判定器
+/// </summary>
 public class HitJudge : MonoBehaviour
 {
+    /// <summary>
+    /// 结算数据
+    /// </summary>
     public class ResultData
     {
-        public List<KeyCode> UsedKeys = new List<KeyCode>();
         private long mHP = 100;
         private bool danger_hiding = false;
         public int MissContinious = 0;
@@ -27,6 +32,7 @@ public class HitJudge : MonoBehaviour
                 mHP = value;
                 if (mHP > 100)
                     mHP = 100;
+                // 播放警告动画
                 if (value < 50)
                 {
                     if (!GamePlayLoops.Instance.DangerAni.gameObject.activeSelf)
@@ -45,6 +51,7 @@ public class HitJudge : MonoBehaviour
                         danger_hiding = false;
                     }  
                 }
+                // 死亡处理
                 if (value <= 0 && !Dead)
                 {
                     Dead = true;
@@ -80,10 +87,20 @@ public class HitJudge : MonoBehaviour
             }
         }
     }
+    // 指定判定的特效物体
     static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
+    /// <summary>
+    /// 击打列表
+    /// </summary>
     public static List<List<MonoBehaviour>> HitList = new List<List<MonoBehaviour>>();
+    /// <summary>
+    /// 已被捕获的输入
+    /// </summary>
     public static List<int> CaptureOnce = new List<int>();
+    /// <summary>
+    /// 已捕获的输入对应的note
+    /// </summary>
     public static Dictionary<int, MonoBehaviour> BindNotes = new Dictionary<int, MonoBehaviour>();
 
     static HitJudge()
@@ -93,6 +110,11 @@ public class HitJudge : MonoBehaviour
         Good = Resources.Load<GameObject>("Good");
         Miss = Resources.Load<GameObject>("Miss");
     }
+    /// <summary>
+    /// 查找可用的输入
+    /// </summary>
+    /// <param name="note">note</param>
+    /// <returns>0为无可用输入</returns>
     public static int GetAvaliableHoldingKey(MonoBehaviour note)
     {
         for(int i = 0;i < CaptureOnce.Count; i++)
@@ -105,6 +127,11 @@ public class HitJudge : MonoBehaviour
         }
         return 0;
     }
+    /// <summary>
+    /// 是否输入
+    /// </summary>
+    /// <param name="note">note</param>
+    /// <returns>非0表示存在有效输入</returns>
     public static int IsPress(MonoBehaviour note)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -112,6 +139,11 @@ public class HitJudge : MonoBehaviour
         else
             return IsPress_Windows(note);
     }
+    /// <summary>
+    /// 是否输入持续中
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
     public static bool IsHolding(int key)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -124,6 +156,11 @@ public class HitJudge : MonoBehaviour
         else
             return Input.GetKey((KeyCode)key);
     }
+    /// <summary>
+    /// Windows端输入判定
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     static int IsPress_Windows(MonoBehaviour note)
     {
         if (GamePlayLoops.AutoPlay)
@@ -158,6 +195,11 @@ public class HitJudge : MonoBehaviour
             return 0;
         }
     }
+    /// <summary>
+    /// 移动端输入判定
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     static int IsPress_Android(MonoBehaviour note)
     {
         if (GamePlayLoops.AutoPlay)
@@ -188,6 +230,13 @@ public class HitJudge : MonoBehaviour
             return 0;
         }
     }
+    /// <summary>
+    /// 判定
+    /// </summary>
+    /// <param name="AniParent">判定动画生成位置</param>
+    /// <param name="note">note</param>
+    /// <param name="deltaTime">误差时间</param>
+    /// <returns>如有判定动画生成，则为非null</returns>
     public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime)
     {
         GameObject effect = null;
@@ -283,6 +332,10 @@ public class HitJudge : MonoBehaviour
             return null;
         }
     }
+    /// <summary>
+    /// 将判定移动到下一个note
+    /// </summary>
+    /// <param name="note"></param>
     public static void MoveNext(MonoBehaviour note)
     {
         if (!HitList[0].Contains(note))
@@ -291,6 +344,11 @@ public class HitJudge : MonoBehaviour
         if (HitList[0].Count == 0)
             HitList.RemoveAt(0);
     }
+    /// <summary>
+    /// 强制判定Miss（过晚、hold过早松开等）
+    /// </summary>
+    /// <param name="AniParent"></param>
+    /// <param name="note"></param>
     public static void JudgeMiss(Transform AniParent, MonoBehaviour note)
     {
         /**if (note is TapController tap)

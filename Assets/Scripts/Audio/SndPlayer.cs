@@ -25,6 +25,10 @@ public class SndPlayer : MonoBehaviour
             Debug.Log("无法播放：" + snd);
         }
     }
+    /// <summary>
+    /// 播放音效
+    /// </summary>
+    /// <param name="snd">音效资源</param>
     public static void Play(AudioClip snd)
     {
         if (ActiveSndPlayer != null)

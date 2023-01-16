@@ -97,11 +97,20 @@ public class BeatmapModel
     public List<PerformanceData> PerformanceList = new List<PerformanceData>();
     #endregion
 
+    /// <summary>
+    /// 导出.milthm谱面数据
+    /// </summary>
+    /// <param name="Path">导出路径</param>
     public void Export(string Path)
     {
         File.WriteAllText(Path, JsonUtility.ToJson(this));
     }
 
+    /// <summary>
+    /// 决定BPM
+    /// </summary>
+    /// <param name="time">歌曲时间</param>
+    /// <returns>根据BPM列表搜索指定BPM的序号</returns>
     public int DetermineBPM(float time)
     {
         if (BPMList.Count == 1)
@@ -110,7 +119,12 @@ public class BeatmapModel
             return BPMList.FindIndex(x => x.From <= time && x.To >= time);
     }
 
-
+    /// <summary>
+    /// 将时间转化为BPM表示法
+    /// </summary>
+    /// <param name="time">歌曲时间</param>
+    /// <param name="beat">拍数</param>
+    /// <returns></returns>
     public int[] ConvertByBPM(float time, int beat)
     {
         BPMData BPM = BPMList[DetermineBPM(time)];
@@ -123,16 +137,29 @@ public class BeatmapModel
         };
     }
 
+    /// <summary>
+    /// 获取note的歌曲时间
+    /// </summary>
+    /// <param name="note">note</param>
+    /// <returns>(开始时间,结束时间)</returns>
     public (float, float) ToRealTime(NoteData note)
     {
         return (BPMList[note.BPM].From + note.FromBeat * (60.0f / BPMList[note.BPM].BPM), BPMList[note.BPM].From + note.ToBeat * (60.0f / BPMList[note.BPM].BPM));
     }
 
+    /// <summary>
+    /// 读取谱面数据
+    /// </summary>
+    /// <param name="Path">谱面文件路径</param>
+    /// <returns></returns>
     public static BeatmapModel Read(string Path)
     {
         return JsonUtility.FromJson<BeatmapModel>(File.ReadAllText(Path));
     }
 
+    /// <summary>
+    /// 三阶贝塞尔曲线
+    /// </summary>
     public float BezierCubic(float t, float a, float b, float c, float d)
     {
         return (float)((a * Math.Pow(1 - t, 3)) + (3 * b * t * Math.Pow(1 - t, 2)) + (3 * c * (1 - t) * Math.Pow(t, 2)) + (d * Math.Pow(t, 3)));
