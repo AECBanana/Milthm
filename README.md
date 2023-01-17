@@ -4,13 +4,13 @@
 
 <img src="Icon.png" alt="Milthm" style="zoom:50%;" />
 
-**Mil**k Rhy**thm**，一款PC端~~自娱自乐~~节奏音游(无轨)。
+**Mil**k Rhy**thm**，一款PC/移动端~~自娱自乐~~节奏音游(无轨)。
 
 基础玩法：
 
 * Tap，Hold
-* 按键：方向键/小键盘(考虑到这两个在不同电脑基本上残缺一个)
-* 指定按键：A~Z
+* Windows：A-Z任意键击打
+* Android：全屏判定
 
 谱面：
 

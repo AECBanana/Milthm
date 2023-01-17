@@ -86,7 +86,7 @@ public class BeatmapLoader : MonoBehaviour
         {
             GameObject go = Instantiate(line);
             LineController controller = go.GetComponent<LineController>();
-            controller.FlowSpeed = l.FlowSpeed;
+            controller.FlowSpeed = l.FlowSpeed * 0.9f;
             controller.Direction = l.Direction;
             if (l.Direction == BeatmapModel.LineDirection.Right)
                 go.transform.localEulerAngles = new Vector3(0, 0, 0);

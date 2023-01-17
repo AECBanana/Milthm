@@ -45,7 +45,7 @@ public class AudioUpdate : MonoBehaviour
     {
         Audio = GetComponent<AudioSource>();
     }
-    private void Update()
+    private void FixedUpdate()
     {
         updated = false;
         // 如果正在暂停

@@ -16,6 +16,10 @@ public class GameSettings : MonoBehaviour
     private void Awake()
     {
         Cursor.SetCursor(CursorTexture, Vector2.zero, CursorMode.Auto);
-        Application.targetFrameRate = 300;
+        QualitySettings.vSyncCount = 1;
+        if (Application.platform == RuntimePlatform.Android)
+            Application.targetFrameRate = 120;
+        else
+            Application.targetFrameRate = 300;
     }
 }

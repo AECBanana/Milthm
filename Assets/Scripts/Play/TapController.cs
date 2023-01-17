@@ -19,7 +19,7 @@ public class TapController : MonoBehaviour
         Renderer = GetComponent<SpriteRenderer>();
         Renderer.color = new Color(1f, 1f, 1f, 0f);
     }
-    private void Update()
+    private void FixedUpdate()
     {
         float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * 5, y = 0;
         if (x > LineController.MoveArea)
@@ -39,6 +39,15 @@ public class TapController : MonoBehaviour
             transform.localEulerAngles = new Vector3(0, 0, pass * 30 * (Index % 2 == 0 ? 1 : -1));
         }
         transform.localPosition = new Vector3(x, y, 0);
+        if (x < 0)
+        {
+            float d = -1 * x / 2f;
+            if (d > 1f) d = 1f;
+            Renderer.color = new Color(1f, 1f, 1f, 1f - d);
+        }
+    }
+    private void Update()
+    {
         if (AudioUpdate.Time - Time > GameSettings.Bad && !Missed)
         {
             //Debug.Log("tap " + Index + ", too late to hit.");
@@ -60,12 +69,6 @@ public class TapController : MonoBehaviour
             HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
             Hit = true;
             Destroy(gameObject);
-        }
-        if (x < 0)
-        {
-            float d = -1 * x / 2f;
-            if (d > 1f) d = 1f;
-            Renderer.color = new Color(1f, 1f, 1f, 1f - d);
         }
     }
 }

@@ -25,7 +25,7 @@ public class LineController : MonoBehaviour
     {
         Lines.Remove(this);
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (HitJudge.Result.Dead)
         {

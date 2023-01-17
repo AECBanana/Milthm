@@ -16,6 +16,7 @@ public class HoldController : MonoBehaviour
     public Animator HitAni = null;
     public int Index;
     int holdKey = 0;
+    int failFrames = 0;
     bool Missed = false;
     SpriteRenderer Renderer;
     private void Awake()
@@ -23,7 +24,7 @@ public class HoldController : MonoBehaviour
         Renderer = GetComponent<SpriteRenderer>();
         Renderer.color = new Color(1f, 1f, 1f, 0f);
     }
-    private void Update()
+    private void FixedUpdate()
     {
         float x = (From - AudioUpdate.Time) * Line.FlowSpeed * 5 - 1.66f,
               x2 = (To - AudioUpdate.Time) * Line.FlowSpeed * 5 + 1.66f,
@@ -49,6 +50,39 @@ public class HoldController : MonoBehaviour
             y -= pass * (Index % 2 == 0 ? 1 : -1);
             transform.localEulerAngles = new Vector3(0, 0, pass * 30 * (Index % 2 == 0 ? 1 : -1));
         }
+        /**if (holdKey != KeyCode.None)
+            transform.GetChild(0).GetComponent<SpriteRenderer>().sprite =
+                Resources.Load<Sprite>("KeySets\\" + (char)('A' + (holdKey - KeyCode.A)));**/
+        transform.localPosition = new Vector3(x, y, 0);
+        if (w == Renderer.size.y)
+        {
+            float d = (AudioUpdate.Time - To) / 0.25f;
+            if (d > 1f) d = 1f;
+            if (!Missed)
+                Renderer.color = new Color(1f, 1f, 1f, 1f - d);
+            else
+                Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f - d * 0.3f);
+            if (d >= 1f)
+            {
+                if (!HeadHit && !Missed)
+                {
+                    Missed = true;
+                    Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
+                    HitJudge.JudgeMiss(transform.parent, this);
+                }
+                if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
+                {
+                    //Debug.Log("Released " + holdKey);
+                    HitJudge.BindNotes[holdKey] = null;
+                }
+                Destroy(gameObject);
+                if (HitAni != null)
+                    HitAni.SetFloat("Speed", 1.0f);
+            }
+        }
+    }
+    private void Update()
+    {
         if (!HeadHit)
         {
             if (AudioUpdate.Time - From > GameSettings.Bad && !Missed)
@@ -84,8 +118,12 @@ public class HoldController : MonoBehaviour
                 {
                     //Debug.Log("failed to find new key, retrying...");
                     holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                    if (holdKey == 0)
+                        failFrames++;
+                    else
+                        failFrames = 0;
                 }
-                if (holdKey == 0)
+                if (failFrames > 3)
                 {
                     if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
                     {
@@ -104,36 +142,6 @@ public class HoldController : MonoBehaviour
                     HitJudge.BindNotes[holdKey] = null;
                     holdKey = HitJudge.GetAvaliableHoldingKey(this);
                 }
-            }
-        }
-        /**if (holdKey != KeyCode.None)
-            transform.GetChild(0).GetComponent<SpriteRenderer>().sprite =
-                Resources.Load<Sprite>("KeySets\\" + (char)('A' + (holdKey - KeyCode.A)));**/
-        transform.localPosition = new Vector3(x, y, 0);
-        if (w == Renderer.size.y)
-        {
-            float d = (AudioUpdate.Time - To) / 0.25f;
-            if (d > 1f) d = 1f;
-            if (!Missed)
-                Renderer.color = new Color(1f, 1f, 1f, 1f - d);
-            else
-                Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f - d * 0.3f);
-            if (d >= 1f)
-            {
-                if (!HeadHit && !Missed)
-                {
-                    Missed = true;
-                    Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                    HitJudge.JudgeMiss(transform.parent, this);
-                }
-                if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
-                {
-                    //Debug.Log("Released " + holdKey);
-                    HitJudge.BindNotes[holdKey] = null;
-                }
-                Destroy(gameObject);
-                if (HitAni != null)
-                    HitAni.SetFloat("Speed", 1.0f);
             }
         }
     }

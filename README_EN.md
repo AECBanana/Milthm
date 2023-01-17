@@ -4,13 +4,13 @@
 
 <img src="Icon.png" alt="Milthm" style="zoom:50%;" />
 
-**Mil**k Rhy**thm**，a simple rhythm game ~~made for fun~~ for PC.
+**Mil**k Rhy**thm**，a simple rhythm game ~~made for fun~~ for PC/Mobile.
 
 Base Game Mechanics：
 
 * Tap，Hold
-* Input：Arrow Keys/Number Pad(Considering one of them may be unavaliable on most PC)
-* Specific Input：A~Z
+* Windows：A-Z Anykey to hit
+* Android：Touch anywhere to hit
 
 Beatmap：
 
