@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -13,7 +14,7 @@ public class GamePlayLoops : MonoBehaviour
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
-    public Text Score, Combo, Accuracy, Pitch;
+    public TextMeshProUGUI Combo, Score, Accuracy, Pitch;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
