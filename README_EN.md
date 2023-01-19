@@ -118,6 +118,10 @@ Some Art：AI Technology
 
   Musical note  By Freepik
 
+  Pause  By Kiranshastry
+
+  Setting  By Freepik
+
   License：[Flaticon License Certificate](https://media.flaticon.com/license/license.pdf)
 
 * Music

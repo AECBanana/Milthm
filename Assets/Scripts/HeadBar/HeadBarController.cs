@@ -13,7 +13,7 @@ public class HeadBarController : MonoBehaviour
         if (Index == 4)
         {
             // ÑÓ³Ùµ÷½ÚÆ÷
-            Instantiate(Resources.Load<GameObject>("TestDelayCanvas")).SetActive(true);
+            Instantiate(Resources.Load<GameObject>("SettingCanvas")).SetActive(true);
         }
     }
 }

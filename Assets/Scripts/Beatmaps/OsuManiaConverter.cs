@@ -153,7 +153,7 @@ public class OsuManiaConverter
         }
 
         // 导出为.milthm谱面文件
-        model.Export(Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + ".milthm");
+        model.Export(Path.GetDirectoryName(file) + "/" + Path.GetFileNameWithoutExtension(file) + ".milthm");
 
         return SongListLoader.LoadStatus.Success;
     }

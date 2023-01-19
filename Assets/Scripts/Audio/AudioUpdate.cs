@@ -54,7 +54,12 @@ public class AudioUpdate : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        m_Time += UnityEngine.Time.deltaTime;
+        if (m_Time >= 0)
+        {
+            m_Time += UnityEngine.Time.deltaTime;
+            if (!Audio.isPlaying)
+                m_Time = Audio.time;
+        }
         updated = false;
         // 如果正在暂停
         if (!Started && BeatmapLoader.Playing != null)

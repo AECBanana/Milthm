@@ -14,6 +14,7 @@ public class SummaryInfoCollector : MonoBehaviour
 
     public void UpdateInfo()
     {
+        GamePlayLoops.Instance.DangerAni.gameObject.SetActive(false);
         Perfect2.text = HitJudge.Result.Perfect2.ToString();
         Perfect.text = HitJudge.Result.Perfect.ToString();
         Good.text = HitJudge.Result.Good.ToString();

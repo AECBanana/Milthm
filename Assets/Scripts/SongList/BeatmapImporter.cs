@@ -8,11 +8,20 @@ using System.IO.Compression;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Device;
+using NativeFilePickerNamespace;
 
 public class BeatmapImporter : MonoBehaviour
 {
 
-#if UNITY_STANDALONE_WIN
+#if UNITY_ANDROID
+    void Click()
+    {
+        NativeFilePicker.PickFile((data) =>
+        {
+            ImportBeatmap(data);
+        }, "*/*");
+    }
+#else
     void OnEnable()
     {
         // must be installed on the main thread to get the right thread id.
@@ -29,14 +38,24 @@ public class BeatmapImporter : MonoBehaviour
         foreach (string file in files)
             ImportBeatmap(file);
     }
+    void Click()
+    {
+        OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Title = "导入谱面到Milthm";
+        dialog.Filter = "Milthm谱面|*.mlt|Osu!谱面|*.osz";
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            ImportBeatmap(dialog.FileName);
+        }
+    }
 #endif
     void ImportBeatmap(string file)
     {
         SongListLoader.LoadStatus status = SongListLoader.LoadStatus.Failed;
-        string path = SongResources.DataPath + "\\" + Guid.NewGuid().ToString();
+        string path = SongResources.DataPath + "/" + Guid.NewGuid().ToString();
 
         while (Directory.Exists(path))
-            path = SongResources.DataPath + "\\" + Guid.NewGuid().ToString();
+            path = SongResources.DataPath + "/" + Guid.NewGuid().ToString();
 
         try
         {
@@ -99,16 +118,4 @@ public class BeatmapImporter : MonoBehaviour
         }
     }
 
-    public void Click()
-    {
-#if UNITY_EDITOR
-        OpenFileDialog dialog = new OpenFileDialog();
-        dialog.Title = "导入谱面到Milthm";
-        dialog.Filter = "Milthm谱面|*.mlt|Osu!谱面|*.osz";
-        if (dialog.ShowDialog() == DialogResult.OK)
-        {
-            ImportBeatmap(dialog.FileName);
-        }
-#endif
-    }
 }

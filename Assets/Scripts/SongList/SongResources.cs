@@ -19,11 +19,11 @@ public class SongResources : MonoBehaviour
             {
                 if (Application.platform == RuntimePlatform.Android)
                 {
-                    mDirectory = Application.persistentDataPath;
+                    mDirectory = Application.persistentDataPath + "/Songs";
                 }
                 else
                 {
-                    mDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Milthm";
+                    mDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Milthm";
                     if (!Directory.Exists(mDirectory))
                         Directory.CreateDirectory(mDirectory);
                 }

@@ -106,6 +106,7 @@ public class DelayManager : MonoBehaviour
             {
                 GetComponent<Animator>().Play("CanvasQuit", 0, 0.0f);
                 PlayerPrefs.SetFloat("Delay", temp_delay);
+                SettingsController.Instance.UpdateStatus();
                 DoneTip.SetActive(false);
                 status = 3;
             }

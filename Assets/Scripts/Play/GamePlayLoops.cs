@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 public class GamePlayLoops : MonoBehaviour
 {
     public static bool AutoPlay = false;
+    public static bool PauseBtn = false;
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
@@ -83,8 +84,9 @@ public class GamePlayLoops : MonoBehaviour
         }
 
         // ÔÝÍ£½çÃæ¿ØÖÆ
-        if (Input.GetKeyUp(KeyCode.Escape) && !PauseScreen.activeSelf && !HitJudge.Result.Dead && !HitJudge.Result.Win && AudioUpdate.Started && !CountDown.activeSelf)
+        if ((Input.GetKeyUp(KeyCode.Escape) || PauseBtn) && !PauseScreen.activeSelf && !HitJudge.Result.Dead && !HitJudge.Result.Win && AudioUpdate.Started && !CountDown.activeSelf)
         {
+            PauseBtn = false;
             HitJudge.CaptureOnce.Clear();
             AudioUpdate.Audio.Pause();
             PauseScreen.SetActive(true);

@@ -16,6 +16,7 @@ public class SongPreviewController : MonoBehaviour
     public AudioSource BGM;
     public AudioHighPassFilter Filter;
     public SongItemController SongItem;
+    public static bool LeftBtn = false, RightBtn = false;
 
     private void Awake()
     {
@@ -30,12 +31,13 @@ public class SongPreviewController : MonoBehaviour
     public void Update()
     {
         int s = 0;
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || LeftBtn)
             s = 1;
-        else if (Input.GetKeyUp(KeyCode.RightArrow))
+        else if (Input.GetKeyUp(KeyCode.RightArrow) || RightBtn)
             s = 2;
         if (s > 0)
         {
+            LeftBtn = false; RightBtn = false;
             FakeCover.sprite = Background.sprite;
             FakeCover.gameObject.SetActive(false);
             FakeCover.gameObject.SetActive(true);
