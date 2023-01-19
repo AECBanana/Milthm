@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
-using static Unity.VisualScripting.Member;
+using TMPro;
 
 public class SongPreviewController : MonoBehaviour
 {
@@ -12,7 +11,7 @@ public class SongPreviewController : MonoBehaviour
     public static SongPreviewController Instance;
     public GameObject DifficultyPrefab;
     public Animator PreviewPanel;
-    public Text Title, Description, From;
+    public TMP_Text Title, Description, From;
     public Image Illustration, Background, FakeCover;
     public AudioSource BGM;
     public AudioHighPassFilter Filter;

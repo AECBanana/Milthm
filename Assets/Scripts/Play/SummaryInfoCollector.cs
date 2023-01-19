@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SummaryInfoCollector : MonoBehaviour
 {
     public GameObject NewRecord, AutoPlayTip;
-    public Text Perfect2, Perfect, Good, Bad, Miss, Score, Accuracy, Title, Credits, Early, Late, Source, MaxCombo;
+    public TMP_Text Perfect2, Perfect, Good, Bad, Miss, Score, Accuracy, Title, Credits, Early, Late, Source, MaxCombo;
     public Image Word, Level;
     public Sprite R, SS, S, A, B, C, F, FC, FCW, AP, Complete, Fail, ROR;
 

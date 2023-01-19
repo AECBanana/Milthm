@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 public class PlayLoadScreen : MonoBehaviour
 {
     public Image Bg, Illustration;
-    public Text Title, Difficulty, Composor, Beatmapper, Illustrator, From;
+    public TMP_Text Title, Difficulty, Composor, Beatmapper, Illustrator, From;
 
     private void Awake()
     {

@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DelayManager : MonoBehaviour
 {
     public AudioSource Audio;
     public Animator[] SndTip;
-    public Text DelayText;
+    public TMP_Text DelayText;
     public GameObject DoneTip;
     public RectTransform progress;
     int lastTip = 0;

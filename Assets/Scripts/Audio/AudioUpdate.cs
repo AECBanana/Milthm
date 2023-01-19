@@ -30,7 +30,14 @@ public class AudioUpdate : MonoBehaviour
             if (!updated)
             {
                 updated = true;
-                m_Time = Audio.time;
+                if (Audio.time > m_Time)
+                {
+                    m_Time = Audio.time;
+                }
+                else if (Mathf.Abs(Audio.time - m_Time) >= 1f / 20f)
+                {
+                    m_Time = (m_Time + Audio.time) / 2;
+                }
             }
             // 若尚未开始游戏
             if (!Started && Audio.time == 0)
@@ -47,6 +54,7 @@ public class AudioUpdate : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        m_Time += UnityEngine.Time.deltaTime;
         updated = false;
         // 如果正在暂停
         if (!Started && BeatmapLoader.Playing != null)

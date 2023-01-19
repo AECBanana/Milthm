@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ public class SongItemController : MonoBehaviour
 {
     public string Beatmap;
     public Image Illustration;
-    public Text Description;
+    public TMP_Text Description;
     public SongPreviewController Preview;
     public SongItemController NextSong;
     public SongItemController PreSong;

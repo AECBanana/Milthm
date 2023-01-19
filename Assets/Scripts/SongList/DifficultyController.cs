@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DifficultyController : MonoBehaviour
 {
     public static DifficultyController Active;
     public Image Grade, Back;
-    public Text Score, Accuracy, Title;
+    public TMP_Text Score, Accuracy, Title;
     public Sprite ActiveSprite, DeactiveSprite;
     public string uid;
     public int index;

@@ -64,6 +64,8 @@
 
   [Tai's Assets] Translucent Image - Fast UI Background Blur
 
+  [yasirkula] Native File Picker for Android & iOS
+
   许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
 
 * 开源项目

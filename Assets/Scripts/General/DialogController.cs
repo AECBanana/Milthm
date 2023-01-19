@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class DialogController : MonoBehaviour
 {
-    public Text Title, Content;
+    public TMP_Text Title, Content;
     bool closed = false;
     /// <summary>
     /// 销毁消息框（播放动画）

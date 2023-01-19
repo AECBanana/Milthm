@@ -15,7 +15,7 @@ public class GameSettings : MonoBehaviour
     public Texture2D CursorTexture;
     private void Awake()
     {
-        Cursor.SetCursor(CursorTexture, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(CursorTexture, new Vector2(16, 16), CursorMode.Auto);
         QualitySettings.vSyncCount = 1;
         if (Application.platform == RuntimePlatform.Android)
             Application.targetFrameRate = 120;
