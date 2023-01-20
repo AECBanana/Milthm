@@ -24,11 +24,16 @@ public class HoldController : MonoBehaviour
         Renderer = GetComponent<SpriteRenderer>();
         Renderer.color = new Color(1f, 1f, 1f, 0f);
     }
-    private void FixedUpdate()
+    private void UpdateGraphics()
     {
-        float x = (From - AudioUpdate.Time) * Line.FlowSpeed * 5 - 1.66f,
-              x2 = (To - AudioUpdate.Time) * Line.FlowSpeed * 5 + 1.66f,
+        float x = (From - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5 - 1.66f,
+              x2 = (To - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5 + 1.66f,
               y = 0;
+        if (AudioUpdate.Instance.PreviewMode)
+        {
+            x = (From - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5 - 1.66f;
+            x2 = (To - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5 + 1.66f;
+        }
         if (x < -1.66f)
             x = -1.66f;
         if (x > LineController.MoveArea)
@@ -64,7 +69,7 @@ public class HoldController : MonoBehaviour
                 Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f - d * 0.3f);
             if (d >= 1f)
             {
-                if (!HeadHit && !Missed)
+                if (!HeadHit && !Missed && !AudioUpdate.Instance.PreviewMode)
                 {
                     Missed = true;
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
@@ -75,13 +80,16 @@ public class HoldController : MonoBehaviour
                     //Debug.Log("Released " + holdKey);
                     HitJudge.BindNotes[holdKey] = null;
                 }
-                Destroy(gameObject);
+                Line.RemainingNote--;
+                HeadHit = false;
+                gameObject.SetActive(false);
+                //Destroy(gameObject);
                 if (HitAni != null)
                     HitAni.SetFloat("Speed", 1.0f);
             }
         }
     }
-    private void Update()
+    public void Judge()
     {
         if (!HeadHit)
         {
@@ -123,7 +131,7 @@ public class HoldController : MonoBehaviour
                     else
                         failFrames = 0;
                 }
-                if (failFrames > 3)
+                if (failFrames > 5)
                 {
                     if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
                     {
@@ -144,5 +152,23 @@ public class HoldController : MonoBehaviour
                 }
             }
         }
+    }
+    private void Update()
+    {
+        if (!AudioUpdate.Instance.PreviewMode)
+        {
+            Judge();
+        }
+        else
+        {
+            if (!HeadHit && Mathf.Abs(From - AudioUpdate.Time + SettingsController.DelayValue / 1000) <= GameSettings.Perfect2)
+            {
+                HitAni = HitJudge.PlayPerfect(transform.parent);
+                if (HitAni != null)
+                    HitAni.Play("HoldAni", 0, 0.0f);
+                HeadHit = true;
+            }
+        }
+        UpdateGraphics();
     }
 }

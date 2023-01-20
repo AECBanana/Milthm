@@ -20,6 +20,8 @@ public class AudioUpdate : MonoBehaviour
     /// 是否开始游戏
     /// </summary>
     public static bool Started = false;
+    public static AudioUpdate Instance;
+    public bool PreviewMode = false;
     static float m_Time;                // 歌曲播放进度缓存
     static bool updated = false;        // 歌曲播放进度更新状态
     
@@ -34,13 +36,13 @@ public class AudioUpdate : MonoBehaviour
                 {
                     m_Time = Audio.time;
                 }
-                else if (Mathf.Abs(Audio.time - m_Time) >= 1f / 20f)
+                else if (m_Time - Audio.time >= 1f / 10f)
                 {
-                    m_Time = (m_Time + Audio.time) / 2;
+                    m_Time += (Audio.time - m_Time) / 10f;
                 }
             }
             // 若尚未开始游戏
-            if (!Started && Audio.time == 0)
+            if (!Started && Audio.time == 0 &&!Instance.PreviewMode)
             {
                 // 返回负数时间让谱面正常下落
                 m_Time = (float)(DateTime.Now - StartTime).TotalSeconds - 3.0f;
@@ -51,10 +53,11 @@ public class AudioUpdate : MonoBehaviour
     private void Awake()
     {
         Audio = GetComponent<AudioSource>();
+        Instance = this;
     }
-    private void FixedUpdate()
+    private void Update()
     {
-        if (m_Time >= 0)
+        if (updated && m_Time >= 0)
         {
             m_Time += UnityEngine.Time.deltaTime;
             if (!Audio.isPlaying)

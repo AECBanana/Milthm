@@ -13,10 +13,15 @@ public class Vanish : MonoBehaviour
     }
     public void AniCallback()
     {
-        Destroy(gameObject);
+        if (TryGetComponent<Canvas>(out _) && gameObject.transform.parent != null)
+            Destroy(gameObject.transform.parent.gameObject);
+        else
+            Destroy(gameObject);
     }
     public void Delete()
-        => AniCallback();
+    {
+        Destroy(gameObject);
+    }
     public void Hide()
     {
         gameObject.SetActive(false);

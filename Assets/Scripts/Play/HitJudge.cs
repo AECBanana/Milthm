@@ -230,6 +230,14 @@ public class HitJudge : MonoBehaviour
             return 0;
         }
     }
+    public static Animator PlayPerfect(Transform AniParent)
+    {
+        SndPlayer.Play(GameSettings.HitSnd);
+        GameObject go = Instantiate(Perfect2, AniParent);
+        go.transform.localPosition = new Vector3(4.1f, 0, 0);
+        go.SetActive(true);
+        return go.GetComponent<Animator>();
+    }
     /// <summary>
     /// ÅÐ¶¨
     /// </summary>
@@ -317,6 +325,11 @@ public class HitJudge : MonoBehaviour
             if (Result.Combo > Result.MaxCombo) 
                 Result.MaxCombo = Result.Combo;
             Result.MissContinious = 0;
+            if (Result.Combo % 100 == 0 || Result.Combo == 50)
+            {
+                GamePlayLoops.Instance.ComboTip.text = Result.Combo + " COMBO";
+                GamePlayLoops.Instance.ComboTip.gameObject.SetActive(true);
+            }
         }
         Result.Hit++;
         MoveNext(note);

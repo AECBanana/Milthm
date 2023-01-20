@@ -9,6 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class BeatmapLoader : MonoBehaviour
 {
+    public static float FlowSpeed;
     public static BeatmapLoader Instance;
     /// <summary>
     /// 谱面延迟
@@ -62,6 +63,9 @@ public class BeatmapLoader : MonoBehaviour
         }
         LineController.Lines.Clear();
         // 初始化
+        float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", 0.5f),
+              scale = PlayerPrefs.GetFloat("Scale", 0.0f);
+        FlowSpeed = Mathf.Pow(0.5f + flowspeed, 1.2f);
         Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;
         DebugInfo.Output("Delay", Delay.ToString() + "s");
@@ -81,7 +85,8 @@ public class BeatmapLoader : MonoBehaviour
             HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
         // 生成轨道
-        float x = -2f * (map.LineList.Count - 1) / 2;
+        float space = Camera.main.ViewportToWorldPoint(new Vector3(200f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
+        float x = -space * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
             GameObject go = Instantiate(line);
@@ -99,8 +104,9 @@ public class BeatmapLoader : MonoBehaviour
 
             go.transform.localEulerAngles = new Vector3(0, 0, 90);
             go.transform.localPosition = new Vector3(x, -4f, 0);
-            x += 2f;
+            x += space;
 
+            go.transform.localScale = new Vector3(0.3f * (1.0f + scale), 0.3f * (1.0f + scale), 0.3f * (1.0f + scale));
             go.SetActive(true);
             lines.Add(controller);
         }
@@ -139,6 +145,7 @@ public class BeatmapLoader : MonoBehaviour
                 go.SetActive(false);
                 noteController = controller;
             }
+            lines[note.Line].RemainingNote++;
             // 加入待击打列表
             if (HitJudge.HitList.Count == 0)
             {

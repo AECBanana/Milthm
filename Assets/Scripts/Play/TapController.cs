@@ -19,9 +19,11 @@ public class TapController : MonoBehaviour
         Renderer = GetComponent<SpriteRenderer>();
         Renderer.color = new Color(1f, 1f, 1f, 0f);
     }
-    private void FixedUpdate()
+    private void UpdateGraphics()
     {
-        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * 5, y = 0;
+        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5, y = 0;
+        if (AudioUpdate.Instance.PreviewMode)
+            x = (Time - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5;
         if (x > LineController.MoveArea)
         {
             if (Renderer.color.a != 0)
@@ -46,14 +48,16 @@ public class TapController : MonoBehaviour
             Renderer.color = new Color(1f, 1f, 1f, 1f - d);
         }
     }
-    private void Update()
+    public void Judge()
     {
         if (AudioUpdate.Time - Time > GameSettings.Bad && !Missed)
         {
             //Debug.Log("tap " + Index + ", too late to hit.");
             HitJudge.JudgeMiss(transform.parent, this);
             Missed = true;
-            Destroy(gameObject);
+            Line.RemainingNote--;
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
         if (!Missed && !Hit && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
         {
@@ -61,14 +65,35 @@ public class TapController : MonoBehaviour
             {
                 HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
                 Hit = true;
-                Destroy(gameObject);
+                Line.RemainingNote--;
+                gameObject.SetActive(false);
+                //Destroy(gameObject);
             }
         }
         if (GamePlayLoops.AutoPlay && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
             HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
             Hit = true;
-            Destroy(gameObject);
+            Line.RemainingNote--;
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
+    }
+    private void Update()
+    {
+        if (!AudioUpdate.Instance.PreviewMode)
+        {
+            Judge();
+        }
+        else
+        {
+            if (Mathf.Abs(Time - AudioUpdate.Time + SettingsController.DelayValue / 1000) <= GameSettings.Perfect2)
+            {
+                HitJudge.PlayPerfect(transform.parent);
+                Line.RemainingNote--;
+                gameObject.SetActive(false);
+            }
+        }
+        UpdateGraphics();
     }
 }

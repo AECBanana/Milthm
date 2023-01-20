@@ -49,9 +49,11 @@ public class SongListLoader : MonoBehaviour
             if (!SongResources.Illustration[uid].ContainsKey(map.IllustrationFile))
             {
                 SongResources.Illustration[uid].Add(map.IllustrationFile, null);
-                string file = "file:///" + path.Replace("\\", "//") + "//" + map.IllustrationFile;
+                string file = "file:///" + path.Replace("\\", "//") + "//" + map.IllustrationFile.Replace(" ", "%20");
                 var handler = new DownloadHandlerTexture();
                 var request = new UnityWebRequest(file, "GET", handler, null);
+                request.disposeDownloadHandlerOnDispose = true;
+                request.timeout = 3;
                 request.SendWebRequest().completed += (obj) =>
                 {
                     if (handler.texture != null)
@@ -61,6 +63,7 @@ public class SongListLoader : MonoBehaviour
                     }
                     else
                     {
+                        SongResources.Illustration[uid][map.IllustrationFile] = Resources.Load<Sprite>("defaultSongBG");
                         Debug.Log("µ¼ÈëÇú»æÊ§°Ü£º" + file);
                     }
                     if (LoadComplete != null && !SongResources.Illustration[uid].Values.ToList().Contains(null))
@@ -71,7 +74,7 @@ public class SongListLoader : MonoBehaviour
 
         BeatmapModel m = maps[0];
 
-        string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile;
+        string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile.Replace(" ", "%20");
         string extension = Path.GetExtension(m.AudioFile).ToLower();
         AudioType type = AudioType.UNKNOWN;
         if (extension == ".mp3")
@@ -89,6 +92,8 @@ public class SongListLoader : MonoBehaviour
         {
             var handler = new DownloadHandlerAudioClip(f, type);
             var request = new UnityWebRequest(f, "GET", handler, null);
+            request.disposeDownloadHandlerOnDispose = true;
+            request.timeout = 3;
             request.SendWebRequest().completed += (obj) =>
             {
                 SongResources.Songs[uid] = handler.audioClip;

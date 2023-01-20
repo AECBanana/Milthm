@@ -15,7 +15,7 @@ public class GamePlayLoops : MonoBehaviour
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
-    public TextMeshProUGUI Combo, Score, Accuracy, Pitch;
+    public TextMeshProUGUI Combo, Score, Accuracy, Pitch, ComboTip;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
@@ -31,7 +31,7 @@ public class GamePlayLoops : MonoBehaviour
         ProgressBar.localScale = new Vector3(AudioUpdate.Time / AudioUpdate.Audio.clip.length, 1f, 1f);
         Score.text = HitJudge.Result.Score.ToString("0000000");
         Accuracy.text = HitJudge.Result.Accuracy.ToString("P");
-        Combo.text = HitJudge.Result.Combo + " <b>Combo</b>";
+        Combo.text = HitJudge.Result.Combo + " <b>COMBO</b>";
 
         float width = HitJudge.Result.HP / 100.0f;
         display_width += (width - display_width) / (Time.deltaTime / (1.0f / 60f) * 60f);
