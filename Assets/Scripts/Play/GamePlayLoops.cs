@@ -58,7 +58,12 @@ public class GamePlayLoops : MonoBehaviour
             }
         }
         if (keys != lastKey && HitJudge.Record)
-            HitJudge.RecordLog.AppendLine("[Log] " + keys + " are holding this frame <At " + AudioUpdate.Time + ">");
+        {
+            if (keys == "")
+                HitJudge.RecordLog.AppendLine("[Log] NO INPUTS this frame <At " + AudioUpdate.Time + ">");
+            else
+                HitJudge.RecordLog.AppendLine("[Log] " + keys + " are holding this frame <At " + AudioUpdate.Time + ">");
+        } 
         lastKey = keys;
 
         // ¹Ø¿¨½áÊøÅÐ¶¨

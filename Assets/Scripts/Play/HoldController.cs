@@ -164,7 +164,16 @@ public class HoldController : MonoBehaviour
                     if (HitJudge.Record)
                         HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Hold) released " + holdKey);
                     HitJudge.BindNotes[holdKey] = null;
-                    holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                    if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
+                    {
+                        holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                    }
+                    else
+                    {
+                        EndHit = true;
+                        if (HitAni != null)
+                            HitAni.SetFloat("Speed", 1.0f);
+                    }
                 }
             }
         }

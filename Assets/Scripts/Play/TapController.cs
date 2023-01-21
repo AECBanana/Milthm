@@ -68,6 +68,7 @@ public class TapController : MonoBehaviour
             if (holdKey != 0)
             {
                 HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, ref Missed);
+                HitJudge.BindNotes[holdKey] = null;
                 if (Missed)
                 {
                     /**if (HitJudge.Record)

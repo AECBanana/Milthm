@@ -59,7 +59,7 @@ public class BeatmapLoader : MonoBehaviour
         // 销毁已有轨道
         for(int j = 0;j < LineController.Lines.Count; j++)
         {
-            Destroy(LineController.Lines[j]);
+            Destroy(LineController.Lines[j].gameObject);
         }
         LineController.Lines.Clear();
         // 初始化

@@ -122,13 +122,13 @@ public class HitJudge : MonoBehaviour
     public static int GetAvaliableHoldingKey(MonoBehaviour note)
     {
         if (Record)
-            RecordLog.AppendLine("//Start Seeking////////////////////////");
+            RecordLog.AppendLine("++Start Seeking");
         for(int i = 0;i < CaptureOnce.Count; i++)
         {
             if (BindNotes[CaptureOnce[i]] == null)
             {
                 if (Record)
-                    RecordLog.AppendLine(CaptureOnce[i] + " is AVALIABLE.\n///////////////////////////////////////");
+                    RecordLog.AppendLine(CaptureOnce[i] + " is AVALIABLE.\n++");
                 BindNotes[CaptureOnce[i]] = note;
                 return CaptureOnce[i];
             }
@@ -141,7 +141,11 @@ public class HitJudge : MonoBehaviour
             }
         }
         if (Record)
-            RecordLog.AppendLine("///////////////////////////////////////");
+        {
+            if (CaptureOnce.Count == 0)
+                RecordLog.AppendLine("No inputs right now.");
+            RecordLog.AppendLine("++");
+        }
         return 0;
     }
     /// <summary>
@@ -192,7 +196,7 @@ public class HitJudge : MonoBehaviour
         {
             for (int key = (int)KeyCode.A; key <= (int)KeyCode.Z; key++)
             {
-                if (Input.GetKeyDown((KeyCode)key) && !CaptureOnce.Contains(key))
+                if (Input.GetKey((KeyCode)key) && !CaptureOnce.Contains(key))
                 {
                     if (Record)
                     {
@@ -206,6 +210,11 @@ public class HitJudge : MonoBehaviour
                     BindNotes[key] = note;
                     CaptureOnce.Add(key);
                     return key;
+                }
+                else if (Record)
+                {
+                    if (Input.GetKeyDown((KeyCode)key))
+                        RecordLog.AppendLine("[Log] " + key + " avaliable, but being catched.");
                 }
             }
             return 0;
@@ -234,7 +243,7 @@ public class HitJudge : MonoBehaviour
         {
             foreach (Touch touch in Input.touches)
             {
-                if (touch.phase == TouchPhase.Began && !CaptureOnce.Contains(touch.fingerId + 1))
+                if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled && !CaptureOnce.Contains(touch.fingerId + 1))
                 {
                     if (!BindNotes.ContainsKey(touch.fingerId + 1))
                         BindNotes.Add(touch.fingerId + 1, null);
