@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,11 @@ public class SummaryInfoCollector : MonoBehaviour
 
     public void UpdateInfo()
     {
+        if (HitJudge.Record)
+        {
+            File.WriteAllText(Application.persistentDataPath + "/" + "judge_record_" + Guid.NewGuid().ToString() + ".txt", HitJudge.RecordLog.ToString());
+            HitJudge.RecordLog.Clear();
+        }
         GamePlayLoops.Instance.DangerAni.gameObject.SetActive(false);
         Perfect2.text = HitJudge.Result.Perfect2.ToString();
         Perfect.text = HitJudge.Result.Perfect.ToString();

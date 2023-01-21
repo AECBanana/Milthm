@@ -134,7 +134,7 @@ public class OsuManiaConverter
                 {
                     int l = xs.FindIndex(x => x == int.Parse(t[0]));
                     to = float.Parse(t[5].Split(':')[0]) / 1000;
-                    if (to == 0)
+                    if (to == 0 || to <= from)
                         to = from;
                     model.NoteList.Add(new BeatmapModel.NoteData
                     {

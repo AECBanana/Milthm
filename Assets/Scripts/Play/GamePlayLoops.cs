@@ -19,11 +19,13 @@ public class GamePlayLoops : MonoBehaviour
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
+    public string lastKey = "";
 
     private void Awake()
     {
         Instance = this;
         AutoPlayTip.SetActive(AutoPlay);
+        HitJudge.Record = bool.Parse(PlayerPrefs.GetString("ExportJudge", "False"));
     }
     void Update()
     {
@@ -44,6 +46,8 @@ public class GamePlayLoops : MonoBehaviour
             if (i >= HitJudge.CaptureOnce.Count) break;
             if (!HitJudge.IsHolding(HitJudge.CaptureOnce[i]))
             {
+                if (HitJudge.Record)
+                    HitJudge.RecordLog.AppendLine("[Self-Released] " + HitJudge.CaptureOnce[i] + " released.");
                 HitJudge.BindNotes[HitJudge.CaptureOnce[i]] = null;
                 HitJudge.CaptureOnce.RemoveAt(i);
                 i--;
@@ -53,6 +57,9 @@ public class GamePlayLoops : MonoBehaviour
                 keys += HitJudge.CaptureOnce[i] + ",";
             }
         }
+        if (keys != lastKey && HitJudge.Record)
+            HitJudge.RecordLog.AppendLine("[Log] " + keys + " are holding this frame <At " + AudioUpdate.Time + ">");
+        lastKey = keys;
 
         // ¹Ø¿¨½áÊøÅÐ¶¨
         if (!HitJudge.Result.Dead && BeatmapLoader.Playing != null && !HitJudge.Result.Win)

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 /// <summary>
 /// 击打判定器
@@ -90,6 +92,8 @@ public class HitJudge : MonoBehaviour
     // 指定判定的特效物体
     static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
+    public static bool Record = false;
+    public static StringBuilder RecordLog = new StringBuilder();
     /// <summary>
     /// 击打列表
     /// </summary>
@@ -117,14 +121,27 @@ public class HitJudge : MonoBehaviour
     /// <returns>0为无可用输入</returns>
     public static int GetAvaliableHoldingKey(MonoBehaviour note)
     {
+        if (Record)
+            RecordLog.AppendLine("//Start Seeking////////////////////////");
         for(int i = 0;i < CaptureOnce.Count; i++)
         {
             if (BindNotes[CaptureOnce[i]] == null)
             {
+                if (Record)
+                    RecordLog.AppendLine(CaptureOnce[i] + " is AVALIABLE.\n///////////////////////////////////////");
                 BindNotes[CaptureOnce[i]] = note;
                 return CaptureOnce[i];
             }
+            else if (Record)
+            {
+                if (BindNotes[CaptureOnce[i]] is TapController tap)
+                    RecordLog.AppendLine(CaptureOnce[i] + " is connected with " + tap.Index + "(Tap)");
+                else if (BindNotes[CaptureOnce[i]] is HoldController hold)
+                    RecordLog.AppendLine(CaptureOnce[i] + " is connected with " + hold.Index + "(Hold)");
+            }
         }
+        if (Record)
+            RecordLog.AppendLine("///////////////////////////////////////");
         return 0;
     }
     /// <summary>
@@ -177,10 +194,13 @@ public class HitJudge : MonoBehaviour
             {
                 if (Input.GetKeyDown((KeyCode)key) && !CaptureOnce.Contains(key))
                 {
-                    /**if (note is TapController tap)
-                        Debug.Log("tap " + tap.Index + " -> " + key);
-                    else if (note is HoldController hold)
-                        Debug.Log("hold " + hold.Index + " -> " + key);**/
+                    if (Record)
+                    {
+                        if (note is TapController tap)
+                            RecordLog.AppendLine("[Bind] " + tap.Index + "(Tap) -> " + key);
+                        else if (note is HoldController hold)
+                            RecordLog.AppendLine("[Bind] " + hold.Index + "(Hold) -> " + key);
+                    }
                     if (!BindNotes.ContainsKey(key))
                         BindNotes.Add(key, null);
                     BindNotes[key] = note;
@@ -218,6 +238,13 @@ public class HitJudge : MonoBehaviour
                 {
                     if (!BindNotes.ContainsKey(touch.fingerId + 1))
                         BindNotes.Add(touch.fingerId + 1, null);
+                    if (Record)
+                    {
+                        if (note is TapController tap)
+                            RecordLog.AppendLine("[Bind] " + tap.Index + "(Tap) -> Finger " + (touch.fingerId + 1));
+                        else if (note is HoldController hold)
+                            RecordLog.AppendLine("[Bind] " + hold.Index + "(Hold) -> Finger " + (touch.fingerId + 1));
+                    }
                     BindNotes[touch.fingerId + 1] = note;
                     CaptureOnce.Add(touch.fingerId + 1);
                     return touch.fingerId + 1;
@@ -245,7 +272,7 @@ public class HitJudge : MonoBehaviour
     /// <param name="note">note</param>
     /// <param name="deltaTime">误差时间</param>
     /// <returns>如有判定动画生成，则为非null</returns>
-    public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime)
+    public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime, ref bool missed)
     {
         GameObject effect = null;
         float orTime = deltaTime;
@@ -303,14 +330,18 @@ public class HitJudge : MonoBehaviour
         }
         else
         {
-            /**if (note is TapController tap)
-                Debug.Log("tap " + tap.Index + " hit, but too early.");
-            else if (note is HoldController hold)
-                Debug.Log("hold " + hold.Index + " hit, but too early.");**/
+            if (Record)
+            {
+                if (note is TapController tap)
+                    RecordLog.AppendLine("[AutoMiss-TooEarly] " + tap.Index + "(Tap) Missed");
+                else if (note is HoldController hold)
+                    RecordLog.AppendLine("[AutoMiss-TooEarly] " + hold.Index + "(Hold) Missed");
+            }
             effect = Miss;
             Result.Combo = 0;
             miss = true;
             Result.Miss++;
+            missed = true;
             Result.MissContinious++;
             Result.HP -= 5;
             if (orTime > 0)
@@ -330,6 +361,13 @@ public class HitJudge : MonoBehaviour
                 GamePlayLoops.Instance.ComboTip.text = Result.Combo + " COMBO";
                 GamePlayLoops.Instance.ComboTip.gameObject.SetActive(true);
             }
+        }
+        if (Record)
+        {
+            if (note is TapController tap)
+                RecordLog.AppendLine("[Judge] " + tap.Index + "(Tap): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
+            else if (note is HoldController hold)
+                RecordLog.AppendLine("[Judge] " + hold.Index + "(Hold): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
         }
         Result.Hit++;
         MoveNext(note);
@@ -364,10 +402,13 @@ public class HitJudge : MonoBehaviour
     /// <param name="note"></param>
     public static void JudgeMiss(Transform AniParent, MonoBehaviour note)
     {
-        /**if (note is TapController tap)
-            Debug.Log("tap " + tap.Index + " Missed!");
-        else if (note is HoldController hold)
-            Debug.Log("hold " + hold.Index + " Missed!");**/
+        if (Record)
+        {
+            if (note is TapController tap)
+                RecordLog.AppendLine("[AutoMiss] " + tap.Index + "(Tap): Missed");
+            else if (note is HoldController hold)
+                RecordLog.AppendLine("[AutoMiss] " + hold.Index + "(Hold): Missed");
+        }
         Result.MissContinious++;
         Result.Miss++;
         Result.Hit++;

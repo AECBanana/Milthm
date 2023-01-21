@@ -8,7 +8,9 @@ using System.IO.Compression;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Device;
+#if UNITY_ANDROID
 using NativeFilePickerNamespace;
+#endif
 
 public class BeatmapImporter : MonoBehaviour
 {

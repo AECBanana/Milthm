@@ -73,11 +73,14 @@ public class HoldController : MonoBehaviour
                 {
                     Missed = true;
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
+                    if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[AutoMiss-TooLate] " + Index + "(Hold) Missed <From " + From + " to " + To + ">");
                     HitJudge.JudgeMiss(transform.parent, this);
                 }
                 if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
                 {
-                    //Debug.Log("Released " + holdKey);
+                    if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Hold) released " + holdKey);
                     HitJudge.BindNotes[holdKey] = null;
                 }
                 Line.RemainingNote--;
@@ -104,15 +107,22 @@ public class HoldController : MonoBehaviour
             {
                 if ((holdKey = HitJudge.IsPress(this)) != 0)
                 {
-                    HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
+                    HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
+                    if (Missed)
+                    {
+                        if (HitJudge.Record)
+                            HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Hold) released " + holdKey);
+                        HitJudge.BindNotes[holdKey] = null;
+                    }
                     if (HitAni != null)
                         HitAni.Play("HoldAni", 0, 0.0f);
-                    HeadHit = true;
+                    if (!Missed)
+                        HeadHit = true;
                 }
             }
             if (GamePlayLoops.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
-                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From);
+                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
                 if (HitAni != null)
                     HitAni.Play("HoldAni", 0, 0.0f);
                 HeadHit = true;
@@ -124,7 +134,8 @@ public class HoldController : MonoBehaviour
             {
                 if (holdKey == 0)
                 {
-                    //Debug.Log("failed to find new key, retrying...");
+                    if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[Rebind] " + Index + "(Hold) seeking proper inputs...");
                     holdKey = HitJudge.GetAvaliableHoldingKey(this);
                     if (holdKey == 0)
                         failFrames++;
@@ -139,6 +150,8 @@ public class HoldController : MonoBehaviour
                         Missed = true;
                         Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
                         HitJudge.JudgeMiss(transform.parent, this);
+                        if (HitJudge.Record)
+                            HitJudge.RecordLog.AppendLine("[AutoMiss-NotEnough] " + Index + "(Hold) released too early.");
                     }
                     EndHit = true;
                     if (HitAni != null)
@@ -146,7 +159,10 @@ public class HoldController : MonoBehaviour
                 }
                 if (holdKey != 0 && !HitJudge.IsHolding(holdKey))
                 {
-                    //Debug.Log(holdKey + " released, finding new key...");
+                    if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[Disconnect] " + Index + "(Hold) lost connection to " + holdKey);
+                    if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Hold) released " + holdKey);
                     HitJudge.BindNotes[holdKey] = null;
                     holdKey = HitJudge.GetAvaliableHoldingKey(this);
                 }

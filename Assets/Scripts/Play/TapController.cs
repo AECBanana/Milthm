@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using UnityEngine;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -12,6 +13,7 @@ public class TapController : MonoBehaviour
     public bool Hit = false;
     public KeyCode Key;
     public int Index;
+    int holdKey = -1;
     bool Missed = false;
     SpriteRenderer Renderer;
     private void Awake()
@@ -52,7 +54,8 @@ public class TapController : MonoBehaviour
     {
         if (AudioUpdate.Time - Time > GameSettings.Bad && !Missed)
         {
-            //Debug.Log("tap " + Index + ", too late to hit.");
+            if (HitJudge.Record)
+                HitJudge.RecordLog.AppendLine("[AutoMiss-TooLate] " + Index + "(Tap) Missed <At " + Time + ">");
             HitJudge.JudgeMiss(transform.parent, this);
             Missed = true;
             Line.RemainingNote--;
@@ -61,10 +64,20 @@ public class TapController : MonoBehaviour
         }
         if (!Missed && !Hit && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
         {
-            if (HitJudge.IsPress(this) != 0)
+            holdKey = HitJudge.IsPress(this);
+            if (holdKey != 0)
             {
-                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
-                Hit = true;
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, ref Missed);
+                if (Missed)
+                {
+                    /**if (HitJudge.Record)
+                        HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Tap) released " + holdKey);
+                    HitJudge.BindNotes[holdKey] = null;**/
+                }
+                else
+                {
+                    Hit = true;
+                }
                 Line.RemainingNote--;
                 gameObject.SetActive(false);
                 //Destroy(gameObject);
@@ -72,7 +85,7 @@ public class TapController : MonoBehaviour
         }
         if (GamePlayLoops.AutoPlay && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
-            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time);
+            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, ref Missed);
             Hit = true;
             Line.RemainingNote--;
             gameObject.SetActive(false);
