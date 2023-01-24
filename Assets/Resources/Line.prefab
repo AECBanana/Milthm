@@ -184,14 +184,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e254d4387b6f704db2bd2eb7eec4af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JudgePoint: {fileID: 2180556639370011014}
   FlowSpeed: 0
   Index: 0
   Direction: 0
+  RemainingNote: 0
   HitObjects: []
+  ShowedObjects: []
   Line: {fileID: 2180556638607964779}
 --- !u!95 &9208407697061135087
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -208,7 +211,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &3295440705396273745
 MonoBehaviour:
   m_ObjectHideFlags: 0

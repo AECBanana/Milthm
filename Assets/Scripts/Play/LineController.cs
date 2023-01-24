@@ -9,6 +9,7 @@ using UnityEngine;
 public class LineController : MonoBehaviour
 {
     public static List<LineController> Lines = new List<LineController>();
+    public Transform JudgePoint;
     public const float MoveArea = 50f;
     public float FlowSpeed;
     public int Index;
@@ -29,7 +30,7 @@ public class LineController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (HitJudge.Result.Dead)
+        if (HitJudge.Result.Dead && !AudioUpdate.Instance.PreviewMode)
         {
             if (HitJudge.Result.DeadTime == DateTime.MinValue)
             {

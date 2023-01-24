@@ -92,7 +92,12 @@ public class HitJudge : MonoBehaviour
     // 指定判定的特效物体
     static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
+    public static float JudgeArea = 0;
     public static bool Record = false;
+    /// <summary>
+    /// 判定模式，0=全屏判定，1=非全屏判定(但PC不支持)
+    /// </summary>
+    public static int JudgeMode = 0;
     public static StringBuilder RecordLog = new StringBuilder();
     /// <summary>
     /// 击打列表
@@ -239,12 +244,26 @@ public class HitJudge : MonoBehaviour
             return 0;
         if (!HitList[0].Contains(note))
             return 0;
+        Transform judgePoint = null;
+        if (JudgeMode == 1)
+        {
+            if (note is TapController tap)
+                judgePoint = tap.Line.JudgePoint.transform;
+            else if (note is HoldController hold)
+                judgePoint = hold.Line.JudgePoint.transform;
+        }
         if (Input.touchCount > 0)
         {
             foreach (Touch touch in Input.touches)
             {
                 if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled && !CaptureOnce.Contains(touch.fingerId + 1))
                 {
+                    if (JudgeMode == 1)
+                    {
+                        Vector2 delta = Camera.main.ScreenToWorldPoint(touch.position) - judgePoint.position;
+                        if (!(Math.Abs(delta.x) <= JudgeArea && Math.Abs(delta.y) <= JudgeArea))
+                            continue;
+                    }
                     if (!BindNotes.ContainsKey(touch.fingerId + 1))
                         BindNotes.Add(touch.fingerId + 1, null);
                     if (Record)

@@ -63,6 +63,8 @@ public class BeatmapLoader : MonoBehaviour
         }
         LineController.Lines.Clear();
         // ≥ı ºªØ
+        HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", 0);
+        HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
         float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", 0.5f),
               scale = PlayerPrefs.GetFloat("Scale", 0.0f);
         FlowSpeed = Mathf.Pow(0.5f + flowspeed, 1.2f);
