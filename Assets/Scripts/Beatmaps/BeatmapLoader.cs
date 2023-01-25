@@ -105,7 +105,7 @@ public class BeatmapLoader : MonoBehaviour
                 go.transform.localEulerAngles = new Vector3(0, 0, 270);
 
             go.transform.localEulerAngles = new Vector3(0, 0, 90);
-            go.transform.localPosition = new Vector3(x, -4f, 0);
+            go.transform.localPosition = new Vector3(x, -3.5f, 0);
             x += space;
 
             go.transform.localScale = new Vector3(0.3f * (1.0f + scale), 0.3f * (1.0f + scale), 0.3f * (1.0f + scale));
