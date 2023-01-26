@@ -86,7 +86,7 @@ public class SettingsController : MonoBehaviour
         else
         {
             Screen.fullScreen = false;
-            Screen.SetResolution(int.Parse(Resolution.itemText.text.Split('x')[0]), int.Parse(Resolution.itemText.text.Split('x')[1]), false);
+            Screen.SetResolution(int.Parse(Resolution.captionText.text.Split('x')[0]), int.Parse(Resolution.captionText.text.Split('x')[1]), false);
         }
         UpdateLine();
     }
