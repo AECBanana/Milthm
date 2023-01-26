@@ -126,6 +126,8 @@ public class HitJudge : MonoBehaviour
     /// <returns>0为无可用输入</returns>
     public static int GetAvaliableHoldingKey(MonoBehaviour note)
     {
+        if (JudgeMode == 1 && Application.platform == RuntimePlatform.Android)
+            return 0;
         if (Record)
             RecordLog.AppendLine("++Start Seeking");
         for(int i = 0;i < CaptureOnce.Count; i++)
