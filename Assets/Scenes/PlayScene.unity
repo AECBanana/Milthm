@@ -5772,7 +5772,7 @@ MonoBehaviour:
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
   source: {fileID: 2083386011}
-  vibrancy: 1.62
+  vibrancy: 1.58
   brightness: 0
   flatten: 0.142
   m_spriteBlending: 0.218
@@ -6633,7 +6633,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 419.77002, y: 94.94}
+  m_SizeDelta: {x: 998.37, y: 247.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1968234330
 CanvasRenderer:
@@ -6695,9 +6695,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Late
-
-'
+  m_text: Late
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7d7a0f33d91db3344a34add3cf1e9d19, type: 2}
   m_sharedMaterial: {fileID: -1860754848416709621, guid: 7d7a0f33d91db3344a34add3cf1e9d19, type: 2}
@@ -6706,8 +6704,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1174428778
-  m_fontColor: {r: 0.41509432, g: 0.35944572, b: 0, a: 0.27450982}
+    rgba: 1174408447
+  m_fontColor: {r: 1, g: 0.048963048, b: 0, a: 0.27450982}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6724,8 +6722,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 128
+  m_fontSizeBase: 128
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
