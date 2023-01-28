@@ -26,6 +26,7 @@ public class DifficultyController : MonoBehaviour
             Score.text = PlayerPrefs.GetInt(uid + "." + index + ".score").ToString("0000000");
             Accuracy.text = PlayerPrefs.GetFloat(uid + "." + index + ".acc").ToString("P");
             Grade.sprite = Resources.Load<Sprite>("Level\\" + PlayerPrefs.GetString(uid + "." + index + ".grade"));
+            Grade.SetNativeSize();
         }
     }
 

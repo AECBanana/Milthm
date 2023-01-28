@@ -70,12 +70,18 @@ public class SongPreviewController : MonoBehaviour
                 Destroy(scroll.GetChild(i).gameObject);
         }
         List<DifficultyController> list = new List<DifficultyController>();
+        List<BeatmapModel> maps = new List<BeatmapModel>();
         foreach(BeatmapModel map in SongResources.Beatmaps[uid])
+        {
+            maps.Add(map);
+        }
+        maps.Sort((x, y) => x.NoteList.Count.CompareTo(y.NoteList.Count));
+        foreach (BeatmapModel map in maps)
         {
             GameObject go = Instantiate(DifficultyPrefab, scroll);
             DifficultyController controller = go.GetComponent<DifficultyController>();
             controller.uid = uid;
-            controller.index = list.Count;
+            controller.index = SongResources.Beatmaps[uid].FindIndex(x => x == map);
             controller.Title.text = map.Difficulty + (map.DifficultyValue == -1f ? "" : " (" + map.DifficultyValue + ")");
             go.SetActive(true);
             list.Add(controller);
