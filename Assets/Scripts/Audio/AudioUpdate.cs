@@ -22,7 +22,7 @@ public class AudioUpdate : MonoBehaviour
     public static bool Started = false;
     public static AudioUpdate Instance;
     public bool PreviewMode = false;
-    static float m_Time;                // 歌曲播放进度缓存
+    public static float m_Time;         // 歌曲播放进度缓存
     static bool updated = false;        // 歌曲播放进度更新状态
     
     public static float Time

@@ -15,7 +15,7 @@ public class GamePlayLoops : MonoBehaviour
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
-    public TextMeshProUGUI Combo, Score, Accuracy, Pitch, ComboTip;
+    public TextMeshProUGUI Combo, Score, Accuracy, Pitch, ComboTip, Skip;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
@@ -102,6 +102,34 @@ public class GamePlayLoops : MonoBehaviour
             HitJudge.CaptureOnce.Clear();
             AudioUpdate.Audio.Pause();
             PauseScreen.SetActive(true);
+        }
+
+        // Ìø¹ý¿ØÖÆ
+        if (HitJudge.HitList.Count > 0 && HitJudge.HitList[0].Count > 0)
+        {
+            float time = 0;
+            if (HitJudge.HitList[0][0] is TapController tap)
+                time = tap.Time;
+            else if (HitJudge.HitList[0][0] is HoldController hold)
+                time = hold.From;
+            if (time - AudioUpdate.Time > 3 && AudioUpdate.Started)
+            {
+                Skip.gameObject.SetActive(true);
+                Skip.text = "Relax  " + Mathf.Round(time - AudioUpdate.Time - 3) + "s";
+                if (Input.anyKey)
+                {
+                    AudioUpdate.Audio.time = time - 3;
+                    AudioUpdate.m_Time = time - 3;
+                }
+            }
+            else
+            {
+                Skip.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Skip.gameObject.SetActive(false);
         }
     }
 }
