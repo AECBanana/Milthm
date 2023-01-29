@@ -328,16 +328,14 @@ public class HitJudge : MonoBehaviour
             if (orTime > 0)
             {
                 Result.Late++;
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(false);
-                GamePlayLoops.Instance.Pitch.text = "Late";
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(true);
+                GamePlayLoops.Instance.Late.SetActive(false);
+                GamePlayLoops.Instance.Late.SetActive(true);
             }
             else
             {
                 Result.Early++;
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(false);
-                GamePlayLoops.Instance.Pitch.text = "Early";
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(true);
+                GamePlayLoops.Instance.Early.SetActive(false);
+                GamePlayLoops.Instance.Early.SetActive(true);
             } 
         }
         else if (deltaTime <= GameSettings.Bad)
@@ -346,16 +344,14 @@ public class HitJudge : MonoBehaviour
             if (orTime > 0)
             {
                 Result.Late++;
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(false);
-                GamePlayLoops.Instance.Pitch.text = "Late";
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(true);
+                GamePlayLoops.Instance.Late.SetActive(false);
+                GamePlayLoops.Instance.Late.SetActive(true);
             }
             else
             {
                 Result.Early++;
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(false);
-                GamePlayLoops.Instance.Pitch.text = "Early";
-                GamePlayLoops.Instance.Pitch.gameObject.SetActive(true);
+                GamePlayLoops.Instance.Early.SetActive(false);
+                GamePlayLoops.Instance.Early.SetActive(true);
             }
         }
         else

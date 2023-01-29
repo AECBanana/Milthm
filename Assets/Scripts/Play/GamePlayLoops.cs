@@ -15,7 +15,8 @@ public class GamePlayLoops : MonoBehaviour
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
     public float display_width;
-    public TextMeshProUGUI Combo, Score, Accuracy, Pitch, ComboTip, Skip;
+    public TextMeshProUGUI Combo, Score, Accuracy, ComboTip, Skip;
+    public GameObject Early, Late;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
@@ -105,7 +106,7 @@ public class GamePlayLoops : MonoBehaviour
         }
 
         // Ìø¹ý¿ØÖÆ
-        if (HitJudge.HitList.Count > 0 && HitJudge.HitList[0].Count > 0)
+        if (HitJudge.HitList.Count > 0 && HitJudge.HitList[0].Count > 0 && !HitJudge.Result.Win && !HitJudge.Result.Dead)
         {
             float time = 0;
             if (HitJudge.HitList[0][0] is TapController tap)
