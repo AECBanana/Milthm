@@ -89,6 +89,7 @@ public class SongPreviewController : MonoBehaviour
 
         int lastPlay = PlayerPrefs.GetInt(uid + ".lastPlay");
         if (lastPlay < 0 || lastPlay >= SongResources.Beatmaps[uid].Count) lastPlay = 0;
+        lastPlay = list.FindIndex(x => x.index == lastPlay);
 
         list[lastPlay].Back.sprite = list[lastPlay].ActiveSprite;
         DifficultyController.Active = list[lastPlay];
