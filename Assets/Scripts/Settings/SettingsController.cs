@@ -56,7 +56,7 @@ public class SettingsController : MonoBehaviour
     }
     public void UpdateLine()
     {
-        Instance.Line.transform.localScale = new Vector3(0.3f * (1.0f + Instance.Scale.value), 0.3f * (1.0f + Instance.Scale.value), 0.3f * (1.0f + Instance.Scale.value));
+        Instance.Line.transform.localScale = new Vector3(32.4f * (1.0f + Instance.Scale.value), 32.4f * (1.0f + Instance.Scale.value), 32.4f * (1.0f + Instance.Scale.value));
         Instance.Line.GetComponent<LineController>().FlowSpeed = 9f * Mathf.Pow(0.5f + Instance.FlowSpeed.value, 1.2f);
     }
     public void SaveSettings()
