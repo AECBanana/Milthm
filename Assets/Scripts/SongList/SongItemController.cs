@@ -8,7 +8,7 @@ public class SongItemController : MonoBehaviour
 {
     public string Beatmap;
     public Image Illustration;
-    public TMP_Text Description;
+    public TMP_Text Description, Beatmapper, Count;
     public SongPreviewController Preview;
     public SongItemController NextSong;
     public SongItemController PreSong;

@@ -139,9 +139,18 @@ public class SongListLoader : MonoBehaviour
         controller.Beatmap = uid;
         int lastPlay = PlayerPrefs.GetInt(uid + ".lastPlay");
         if (lastPlay < 0 || lastPlay >= SongResources.Beatmaps[uid].Count) lastPlay = 0;
-        BeatmapModel map = SongResources.Beatmaps[uid][lastPlay];
+        List<BeatmapModel> maps = new List<BeatmapModel>();
+        foreach (BeatmapModel m in SongResources.Beatmaps[uid])
+        {
+            maps.Add(m);
+        }
+        maps.Sort((x, y) => x.NoteList.Count.CompareTo(y.NoteList.Count));
+
+        BeatmapModel map = maps[lastPlay];
         controller.Illustration.sprite = SongResources.Illustration[uid][map.IllustrationFile];
-        controller.Description.text = map.Title + " - " + map.Beatmapper;
+        controller.Description.text = map.Title;
+        controller.Beatmapper.text = map.Beatmapper;
+        controller.Count.text = SongResources.Beatmaps[uid].Count.ToString();
         DragTip.transform.SetAsLastSibling();
         item.SetActive(true);
         if (playAni)
