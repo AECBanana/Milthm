@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -23,8 +24,12 @@ public class AudioUpdate : MonoBehaviour
     public static AudioUpdate Instance;
     public bool PreviewMode = false;
     public static float m_Time;         // 歌曲播放进度缓存
+    static float b_Time;
     static bool updated = false;        // 歌曲播放进度更新状态
-    
+    static bool playing = false;
+    static DateTime updateTime = DateTime.MinValue;
+    Timer updateTimer;
+
     public static float Time
     {
         get
@@ -32,14 +37,21 @@ public class AudioUpdate : MonoBehaviour
             if (!updated)
             {
                 updated = true;
-                if (Audio.time > m_Time)
+                if (Audio.time - m_Time >= 0.2f)
                 {
+                    Debug.Log("Update timer is too slow!!");
+                    updateTime = DateTime.Now;
+                    b_Time = Audio.time;
                     m_Time = Audio.time;
                 }
-                else if (m_Time - Audio.time >= 1f / 10f)
+                else if (m_Time - Audio.time >= 0.2f)
                 {
-                    m_Time += (Audio.time - m_Time) / 10f;
+                    Debug.Log("Update timer is too fast!!");
+                    updateTime = DateTime.Now;
+                    b_Time = Audio.time;
+                    m_Time = Audio.time;
                 }
+                //DebugInfo.Output("同步状况", m_Time + " -> " + Audio.time);
             }
             // 若尚未开始游戏
             if (!Started && Audio.time == 0 &&!Instance.PreviewMode)
@@ -54,16 +66,41 @@ public class AudioUpdate : MonoBehaviour
     {
         Audio = GetComponent<AudioSource>();
         Instance = this;
+        updateTimer = new Timer((e) =>
+        {
+            if (playing)
+            {
+                m_Time = b_Time + (float)(DateTime.Now - updateTime).TotalSeconds;
+                updated = false;
+            }
+        }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(5.0));
+    }
+    private void OnDestroy()
+    {
+        updateTimer.Dispose();
     }
     private void Update()
     {
-        if (updated && m_Time >= 0)
+        if (Audio.isPlaying)
         {
-            m_Time += UnityEngine.Time.deltaTime;
-            if (!Audio.isPlaying)
+            if (!playing)
+            {
+                playing = true;
+                updateTime = DateTime.Now;
+                b_Time = Audio.time;
                 m_Time = Audio.time;
+            }
         }
-        updated = false;
+        else
+        {
+            if (playing)
+            {
+                playing = false;
+                m_Time = 0;
+            }
+        }
+        //m_Time = Audio.time;
+
         // 如果正在暂停
         if (!Started && BeatmapLoader.Playing != null)
         {

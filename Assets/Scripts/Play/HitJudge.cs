@@ -176,10 +176,17 @@ public class HitJudge : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            for (int i = 0; i < Input.touchCount; i++)
-                if (Input.touches[i].fingerId == key - 1 && Input.touches[i].phase != TouchPhase.Ended && Input.touches[i].phase != TouchPhase.Canceled)
-                    return true;
-            return false;
+            if (JudgeMode == 1)
+            {
+                return LineController.Lines[key - 1].Holding;
+            }
+            else
+            {
+                for (int i = 0; i < Input.touchCount; i++)
+                    if (Input.touches[i].fingerId == key - 1 && Input.touches[i].phase != TouchPhase.Ended && Input.touches[i].phase != TouchPhase.Canceled)
+                        return true;
+                return false;
+            }
         }
         else
             return Input.GetKey((KeyCode)key);
@@ -246,13 +253,23 @@ public class HitJudge : MonoBehaviour
             return 0;
         if (!HitList[0].Contains(note))
             return 0;
-        Transform judgePoint = null;
         if (JudgeMode == 1)
         {
-            if (note is TapController tap)
-                judgePoint = tap.Line.JudgePoint.transform;
-            else if (note is HoldController hold)
-                judgePoint = hold.Line.JudgePoint.transform;
+            // ·ÇÈ«ÆÁÅÐ¶¨
+            LineController line = null;
+            if (note is TapController mtap)
+                line = mtap.Line;
+            else if (note is HoldController mhold)
+                line = mhold.Line;
+            if (line.Holding && !CaptureOnce.Contains(line.Index + 1))
+            {
+                if (!BindNotes.ContainsKey(line.Index + 1))
+                    BindNotes.Add(line.Index + 1, null);
+                BindNotes[line.Index + 1] = note;
+                CaptureOnce.Add(line.Index + 1);
+                return line.Index + 1;
+            }
+            return 0;
         }
         if (Input.touchCount > 0)
         {
@@ -260,12 +277,6 @@ public class HitJudge : MonoBehaviour
             {
                 if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled && !CaptureOnce.Contains(touch.fingerId + 1))
                 {
-                    if (JudgeMode == 1)
-                    {
-                        Vector2 delta = Camera.main.ScreenToWorldPoint(touch.position) - judgePoint.position;
-                        if (!(Math.Abs(delta.x) <= JudgeArea && Math.Abs(delta.y) <= JudgeArea))
-                            continue;
-                    }
                     if (!BindNotes.ContainsKey(touch.fingerId + 1))
                         BindNotes.Add(touch.fingerId + 1, null);
                     if (Record)

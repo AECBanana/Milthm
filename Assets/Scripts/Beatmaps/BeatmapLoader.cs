@@ -95,6 +95,7 @@ public class BeatmapLoader : MonoBehaviour
             LineController controller = go.GetComponent<LineController>();
             controller.FlowSpeed = l.FlowSpeed * 0.9f;
             controller.Direction = l.Direction;
+            controller.Index = lines.Count;
             if (l.Direction == BeatmapModel.LineDirection.Right)
                 go.transform.localEulerAngles = new Vector3(0, 0, 0);
             else if (l.Direction == BeatmapModel.LineDirection.Up)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// ¹ìµÀ¿ØÖÆÆ÷
@@ -13,6 +14,7 @@ public class LineController : MonoBehaviour
     public const float MoveArea = 50f;
     public float FlowSpeed;
     public int Index;
+    public bool Holding = false;
     public BeatmapModel.LineDirection Direction;
     public int RemainingNote = 0;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
@@ -20,9 +22,24 @@ public class LineController : MonoBehaviour
     public Transform Line;
     bool hide = false;
 
+    public void TouchDown()
+    {
+        Holding = true;
+    }
+
+    public void TouchUp()
+    {
+        Holding = false;
+    }
+
     private void Awake()
     {
         Lines.Add(this);
+        if (!(HitJudge.JudgeMode == 1 && Application.platform == RuntimePlatform.Android))
+        {
+            GetComponent<EventTrigger>().enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
     private void OnDestroy()
     {
