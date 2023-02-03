@@ -96,7 +96,7 @@ public class AudioUpdate : MonoBehaviour
             if (playing)
             {
                 playing = false;
-                m_Time = 0;
+                m_Time = Audio.time;
             }
         }
         //m_Time = Audio.time;

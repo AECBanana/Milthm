@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,7 +60,8 @@ public class BeatmapLoader : MonoBehaviour
         // 销毁已有轨道
         for(int j = 0;j < LineController.Lines.Count; j++)
         {
-            Destroy(LineController.Lines[j].gameObject);
+            if (LineController.Lines[j] != null)
+                Destroy(LineController.Lines[j].gameObject);
         }
         LineController.Lines.Clear();
         // 初始化
@@ -87,7 +89,8 @@ public class BeatmapLoader : MonoBehaviour
             HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
         // 生成轨道
-        float space = Camera.main.ViewportToWorldPoint(new Vector3(200f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
+        float orSpace = 200f + Mathf.Max(1f - (map.LineList.Count - 4.0f) / 4.0f, 0f) * 100f;
+        float space = Camera.main.ViewportToWorldPoint(new Vector3(orSpace / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
         float x = -space * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
@@ -112,6 +115,7 @@ public class BeatmapLoader : MonoBehaviour
             go.transform.localScale = new Vector3(0.3f * (1.0f + scale), 0.3f * (1.0f + scale), 0.3f * (1.0f + scale));
             go.SetActive(true);
             lines.Add(controller);
+            LineController.Lines.Add(controller);
         }
         // 载入所有note
         int i = 0;

@@ -34,16 +34,11 @@ public class LineController : MonoBehaviour
 
     private void Awake()
     {
-        Lines.Add(this);
         if (!(HitJudge.JudgeMode == 1 && Application.platform == RuntimePlatform.Android))
         {
             GetComponent<EventTrigger>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
         }
-    }
-    private void OnDestroy()
-    {
-        Lines.Remove(this);
     }
     private void FixedUpdate()
     {

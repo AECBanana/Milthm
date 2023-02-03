@@ -189,6 +189,7 @@ MonoBehaviour:
   JudgePoint: {fileID: 2180556639370011014}
   FlowSpeed: 0
   Index: 0
+  Holding: 0
   Direction: 0
   RemainingNote: 0
   HitObjects: []
@@ -239,7 +240,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 26.942633, y: 0.04846573}
+  m_Offset: {x: 26.50328, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -250,7 +251,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 57.693882, y: 4.099422}
+  m_Size: {x: 58.572586, y: 6}
   m_EdgeRadius: 0
 --- !u!114 &753788595803537985
 MonoBehaviour:

@@ -75,7 +75,7 @@ public class GamePlayLoops : MonoBehaviour
             // 未指定歌曲长度则在最后一个note击打后结束
             if (BeatmapLoader.Playing.SongLength == -1f)
             {
-                if (LineController.Lines.Count == 0)
+                if (HitJudge.HitList.Count == 0)
                 {
                     HitJudge.Result.Win = true;
                     SummaryInfo.UpdateInfo();
