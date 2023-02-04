@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,11 +17,13 @@ public class GamePlayLoops : MonoBehaviour
     public Transform ProgressBar, HPBar;
     public float display_width;
     public TextMeshProUGUI Combo, Score, Accuracy, ComboTip, Skip;
-    public GameObject Early, Late;
+    public GameObject Early, Late, SkipTip;
+    public RectTransform SkipBack, SkipFore;
     public Animator DangerAni, SummaryAni;
     public SummaryInfoCollector SummaryInfo;
     public GameObject BlackScreen, PauseScreen, CountDown, Rain, AutoPlayTip;
     public string lastKey = "";
+    DateTime skipTime = DateTime.MinValue;
 
     private void Awake()
     {
@@ -119,13 +122,42 @@ public class GamePlayLoops : MonoBehaviour
                 Skip.text = "Relax  " + Mathf.Round(time - AudioUpdate.Time - 3) + "s";
                 if (Input.anyKey)
                 {
-                    AudioUpdate.Audio.time = time - 3;
-                    AudioUpdate.m_Time = time - 3;
+                    if (skipTime == DateTime.MinValue)
+                    {
+                        SkipTip.SetActive(false);
+                        SkipTip.SetActive(true);
+                        SkipFore.sizeDelta = new Vector2(SkipFore.sizeDelta.x, 0);
+                        skipTime = DateTime.Now;
+                    }
+                    else
+                    {
+                        float pro = (float)((DateTime.Now - skipTime).TotalSeconds / 1.0);
+                        if (pro > 1)
+                            pro = 1;
+                        SkipFore.sizeDelta = new Vector2(SkipFore.sizeDelta.x, pro * SkipBack.sizeDelta.y);
+                        if (pro >= 1)
+                        {
+                            AudioUpdate.Audio.time = time - 3;
+                            AudioUpdate.m_Time = time - 3;
+                            skipTime = DateTime.MinValue;
+                            SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                        }
+                    }
+                } 
+                else if (skipTime != DateTime.MinValue)
+                {
+                    skipTime = DateTime.MinValue;
+                    SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
                 }
             }
             else
             {
                 Skip.gameObject.SetActive(false);
+                if (skipTime != DateTime.MinValue)
+                {
+                    skipTime = DateTime.MinValue;
+                    SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                }
             }
         }
         else
