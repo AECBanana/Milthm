@@ -78,7 +78,7 @@ public class GamePlayLoops : MonoBehaviour
             // 未指定歌曲长度则在最后一个note击打后结束
             if (BeatmapLoader.Playing.SongLength == -1f)
             {
-                if (HitJudge.HitList.Count == 0)
+                if (LineController.UnhitLines.Count == 0)
                 {
                     HitJudge.Result.Win = true;
                     SummaryInfo.UpdateInfo();
@@ -124,6 +124,7 @@ public class GamePlayLoops : MonoBehaviour
                 {
                     if (skipTime == DateTime.MinValue)
                     {
+                        Debug.Log("Skip started.");
                         SkipTip.SetActive(false);
                         SkipTip.SetActive(true);
                         SkipFore.sizeDelta = new Vector2(SkipFore.sizeDelta.x, 0);
@@ -137,16 +138,20 @@ public class GamePlayLoops : MonoBehaviour
                         SkipFore.sizeDelta = new Vector2(SkipFore.sizeDelta.x, pro * SkipBack.sizeDelta.y);
                         if (pro >= 1)
                         {
-                            AudioUpdate.Audio.time = time - 3;
-                            AudioUpdate.m_Time = time - 3;
+                            AudioUpdate.Audio.time = time - 3f;
+                            AudioUpdate.m_Time = time - 3f;
+                            AudioUpdate.b_Time = time - 3f;
+                            AudioUpdate.updateTime = DateTime.Now;
                             skipTime = DateTime.MinValue;
-                            SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                            Debug.Log("Skip done.");
+                            SkipTip.GetComponent<Animator>().Play("SkipTipDone", 0, 0.0f);
                         }
                     }
                 } 
                 else if (skipTime != DateTime.MinValue)
                 {
                     skipTime = DateTime.MinValue;
+                    Debug.Log("Skip released.");
                     SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
                 }
             }
@@ -155,6 +160,7 @@ public class GamePlayLoops : MonoBehaviour
                 Skip.gameObject.SetActive(false);
                 if (skipTime != DateTime.MinValue)
                 {
+                    Debug.Log("Skiped.");
                     skipTime = DateTime.MinValue;
                     SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
                 }

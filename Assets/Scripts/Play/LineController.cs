@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 public class LineController : MonoBehaviour
 {
     public static List<LineController> Lines = new List<LineController>();
+    public static List<LineController> UnhitLines = new List<LineController>();
     public Transform JudgePoint;
     public const float MoveArea = 50f;
     public float FlowSpeed;
@@ -39,6 +40,11 @@ public class LineController : MonoBehaviour
             GetComponent<EventTrigger>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
         }
+        UnhitLines.Add(this);
+    }
+    private void OnDestroy()
+    {
+        UnhitLines.Remove(this);
     }
     private void FixedUpdate()
     {

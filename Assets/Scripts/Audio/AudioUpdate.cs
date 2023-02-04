@@ -24,10 +24,10 @@ public class AudioUpdate : MonoBehaviour
     public static AudioUpdate Instance;
     public bool PreviewMode = false;
     public static float m_Time;         // 歌曲播放进度缓存
-    static float b_Time;
+    public static float b_Time;
     static bool updated = false;        // 歌曲播放进度更新状态
     static bool playing = false;
-    static DateTime updateTime = DateTime.MinValue;
+    public static DateTime updateTime = DateTime.MinValue;
     Timer updateTimer;
 
     public static float Time

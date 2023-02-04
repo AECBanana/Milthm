@@ -94,6 +94,7 @@ public class HitJudge : MonoBehaviour
     public static ResultData Result = new ResultData();
     public static float JudgeArea = 0;
     public static bool Record = false;
+    public static bool NoDead = false;
     /// <summary>
     /// 判定模式，0=全屏判定，1=非全屏判定(但PC不支持)
     /// </summary>
@@ -380,7 +381,8 @@ public class HitJudge : MonoBehaviour
             Result.Miss++;
             missed = true;
             Result.MissContinious++;
-            Result.HP -= 5;
+            if (!NoDead)
+                Result.HP -= 7;
             if (orTime > 0)
                 Result.Late++;
             else
@@ -452,7 +454,8 @@ public class HitJudge : MonoBehaviour
         Result.Combo = 0;
         Result.Late++;
         MoveNext(note);
-        Result.HP -= 10;
+        if (!NoDead)
+            Result.HP -= 7;
         GameObject go = Instantiate(Miss, AniParent);
         go.transform.localPosition = new Vector3(4.1f, 0, 0);
         go.SetActive(true);

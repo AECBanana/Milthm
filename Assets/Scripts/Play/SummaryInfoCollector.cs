@@ -95,7 +95,7 @@ public class SummaryInfoCollector : MonoBehaviour
             Level.sprite = F;
             grade = "F";
         }
-        if (HitJudge.Result.Dead)
+        if (HitJudge.Result.Dead || grade == "F")
         {
             Word.sprite = Fail;
             Level.sprite = F;
