@@ -16,6 +16,7 @@ public class LineController : MonoBehaviour
     public float FlowSpeed;
     public int Index;
     public bool Holding = false;
+    public bool FirstHold = false;
     public BeatmapModel.LineDirection Direction;
     public int RemainingNote = 0;
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
@@ -25,11 +26,13 @@ public class LineController : MonoBehaviour
 
     public void TouchDown()
     {
+        Debug.Log("Holding " + Index);
         Holding = true;
     }
 
     public void TouchUp()
     {
+        Debug.Log("Released " + Index);
         Holding = false;
     }
 
@@ -37,14 +40,18 @@ public class LineController : MonoBehaviour
     {
         if (!(HitJudge.JudgeMode == 1 && Application.platform == RuntimePlatform.Android))
         {
-            GetComponent<EventTrigger>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
         }
         UnhitLines.Add(this);
     }
+    private void Start()
+    {
+        TouchRaycast.Instance.Register(gameObject, this);
+    }
     private void OnDestroy()
     {
         UnhitLines.Remove(this);
+        TouchRaycast.Instance.Revoke(gameObject);
     }
     private void FixedUpdate()
     {

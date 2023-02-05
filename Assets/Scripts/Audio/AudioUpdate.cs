@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
 
@@ -27,8 +28,8 @@ public class AudioUpdate : MonoBehaviour
     public static float b_Time;
     static bool updated = false;        // 歌曲播放进度更新状态
     static bool playing = false;
-    public static DateTime updateTime = DateTime.MinValue;
-    Timer updateTimer;
+    public static Stopwatch updateWatch;
+    Thread updateThread;
 
     public static float Time
     {
@@ -39,15 +40,15 @@ public class AudioUpdate : MonoBehaviour
                 updated = true;
                 if (Audio.time - m_Time >= 0.2f)
                 {
-                    Debug.Log("Update timer is too slow!!");
-                    updateTime = DateTime.Now;
+                    UnityEngine.Debug.Log("Update timer is too slow!!");
+                    updateWatch.Restart();
                     b_Time = Audio.time;
                     m_Time = Audio.time;
                 }
                 else if (m_Time - Audio.time >= 0.2f)
                 {
-                    Debug.Log("Update timer is too fast!!");
-                    updateTime = DateTime.Now;
+                    UnityEngine.Debug.Log("Update timer is too fast!!");
+                    updateWatch.Restart();
                     b_Time = Audio.time;
                     m_Time = Audio.time;
                 }
@@ -64,20 +65,28 @@ public class AudioUpdate : MonoBehaviour
     }
     private void Awake()
     {
+        updateWatch = new Stopwatch();
         Audio = GetComponent<AudioSource>();
         Instance = this;
-        updateTimer = new Timer((e) =>
+        updateThread = new Thread(UpdateThread);
+        updateThread.Start();
+    }
+    public static void UpdateThread()
+    {
+        while (true)
         {
             if (playing)
             {
-                m_Time = b_Time + (float)(DateTime.Now - updateTime).TotalSeconds;
+                m_Time = b_Time + (float)(updateWatch.ElapsedTicks * 1.0f / Stopwatch.Frequency);
                 updated = false;
             }
-        }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(5.0));
+            Thread.Sleep(1);
+        }
     }
     private void OnDestroy()
     {
-        updateTimer.Dispose();
+        updateThread.Abort();
+        updateWatch.Stop();
     }
     private void Update()
     {
@@ -86,7 +95,7 @@ public class AudioUpdate : MonoBehaviour
             if (!playing)
             {
                 playing = true;
-                updateTime = DateTime.Now;
+                updateWatch.Restart();
                 b_Time = Audio.time;
                 m_Time = Audio.time;
             }
@@ -96,6 +105,7 @@ public class AudioUpdate : MonoBehaviour
             if (playing)
             {
                 playing = false;
+                updateWatch.Stop();
                 m_Time = Audio.time;
             }
         }

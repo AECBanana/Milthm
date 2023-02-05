@@ -262,7 +262,7 @@ public class HitJudge : MonoBehaviour
                 line = mtap.Line;
             else if (note is HoldController mhold)
                 line = mhold.Line;
-            if (line.Holding && !CaptureOnce.Contains(line.Index + 1))
+            if (line.FirstHold && !CaptureOnce.Contains(line.Index + 1))
             {
                 if (!BindNotes.ContainsKey(line.Index + 1))
                     BindNotes.Add(line.Index + 1, null);

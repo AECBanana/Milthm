@@ -34,6 +34,10 @@ public class BeatmapImporter : MonoBehaviour
     {
         UnityDragAndDropHook.UninstallHook();
     }
+    void OnDestroy()
+    {
+        UnityDragAndDropHook.UninstallHook();
+    }
 
     void OnFiles(List<string> files, POINT pos)
     {

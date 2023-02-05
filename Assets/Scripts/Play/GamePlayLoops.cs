@@ -141,7 +141,7 @@ public class GamePlayLoops : MonoBehaviour
                             AudioUpdate.Audio.time = time - 3f;
                             AudioUpdate.m_Time = time - 3f;
                             AudioUpdate.b_Time = time - 3f;
-                            AudioUpdate.updateTime = DateTime.Now;
+                            AudioUpdate.updateWatch.Restart();
                             skipTime = DateTime.MinValue;
                             Debug.Log("Skip done.");
                             SkipTip.GetComponent<Animator>().Play("SkipTipDone", 0, 0.0f);
@@ -150,9 +150,12 @@ public class GamePlayLoops : MonoBehaviour
                 } 
                 else if (skipTime != DateTime.MinValue)
                 {
-                    skipTime = DateTime.MinValue;
                     Debug.Log("Skip released.");
-                    SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                    if ((DateTime.Now - skipTime).TotalSeconds >= 0.25f)
+                        SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                    else
+                        SkipTip.SetActive(false);
+                    skipTime = DateTime.MinValue;
                 }
             }
             else
@@ -161,8 +164,11 @@ public class GamePlayLoops : MonoBehaviour
                 if (skipTime != DateTime.MinValue)
                 {
                     Debug.Log("Skiped.");
+                    if ((DateTime.Now - skipTime).TotalSeconds >= 0.25f)
+                        SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
+                    else
+                        SkipTip.SetActive(false);
                     skipTime = DateTime.MinValue;
-                    SkipTip.GetComponent<Animator>().Play("SkipTipHide", 0, 0.0f);
                 }
             }
         }
