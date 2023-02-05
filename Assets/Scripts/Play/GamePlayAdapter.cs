@@ -22,7 +22,7 @@ public class GamePlayAdapter : MonoBehaviour
     /// </summary>
     public void PlaySummarySnd()
     {
-        if (HitJudge.Result.Dead)
+        if (HitJudge.Result.Dead || HitJudge.Result.Score < 820000)
             SndPlayer.Play("Fail");
         else
             SndPlayer.Play("UI_Buttons_Pack2\\Button_11_Pack2");

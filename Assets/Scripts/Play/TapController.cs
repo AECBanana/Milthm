@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using UnityEngine;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 public class TapController : MonoBehaviour
 {

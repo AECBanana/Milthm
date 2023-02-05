@@ -1,6 +1,8 @@
 using B83.Win32;
 using System;
+#if UNITY_EDITOR_WIN
 using System.Windows.Forms;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
