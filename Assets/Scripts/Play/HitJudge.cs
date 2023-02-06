@@ -313,7 +313,7 @@ public class HitJudge : MonoBehaviour
     /// <param name="note">note</param>
     /// <param name="deltaTime">误差时间</param>
     /// <returns>如有判定动画生成，则为非null</returns>
-    public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime, ref bool missed)
+    public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime, string snd, ref bool missed)
     {
         GameObject effect = null;
         float orTime = deltaTime;
@@ -389,7 +389,12 @@ public class HitJudge : MonoBehaviour
         }
         if (!miss)
         {
-            SndPlayer.Play(GameSettings.HitSnd);
+            if (string.IsNullOrEmpty(snd))
+                SndPlayer.Play(GameSettings.HitSnd);
+            else if (SongResources.HitSnd[snd] == null)
+                SndPlayer.Play(GameSettings.HitSnd);
+            else
+                SndPlayer.Play(SongResources.HitSnd[snd]);
             Result.Combo++;
             if (Result.Combo > Result.MaxCombo) 
                 Result.MaxCombo = Result.Combo;
@@ -412,7 +417,7 @@ public class HitJudge : MonoBehaviour
         if (effect != null)
         {
             GameObject go = Instantiate(effect, AniParent);
-            go.transform.localPosition = new Vector3(4.1f, 0, 0);
+            go.transform.localPosition = new Vector3(-1.97f, 0, 0); //4.1f
             go.SetActive(true);
             return go.GetComponent<Animator>();
         }
@@ -456,7 +461,7 @@ public class HitJudge : MonoBehaviour
         if (!NoDead)
             Result.HP -= 7;
         GameObject go = Instantiate(Miss, AniParent);
-        go.transform.localPosition = new Vector3(4.1f, 0, 0);
+        go.transform.localPosition = new Vector3(-1.97f, 0, 0);
         go.SetActive(true);
     }
 

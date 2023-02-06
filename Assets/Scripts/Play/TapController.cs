@@ -9,6 +9,7 @@ public class TapController : MonoBehaviour
     public float Time;
     public Sprite DoubleSprite;
     public bool Hit = false;
+    public string Snd;
     public KeyCode Key;
     public int Index;
     int holdKey = -1;
@@ -65,7 +66,7 @@ public class TapController : MonoBehaviour
             holdKey = HitJudge.IsPress(this);
             if (holdKey != 0)
             {
-                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, ref Missed);
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref Missed);
                 HitJudge.BindNotes[holdKey] = null;
                 if (Missed)
                 {
@@ -84,7 +85,7 @@ public class TapController : MonoBehaviour
         }
         if (GamePlayLoops.AutoPlay && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
-            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, ref Missed);
+            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref Missed);
             Hit = true;
             Line.RemainingNote--;
             gameObject.SetActive(false);

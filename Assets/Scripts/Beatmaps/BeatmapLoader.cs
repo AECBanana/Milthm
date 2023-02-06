@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 /// <summary>
@@ -21,13 +23,14 @@ public class BeatmapLoader : MonoBehaviour
     public static BeatmapModel Playing;
     public static string PlayingUID;
     public static int PlayingIndex;
+    public static int TaskState;
     List<LineController> lines = new List<LineController>();
 
     private void Start()
     {
         Instance = this;
         // 载入正在游玩的谱面，设置背景
-        Load(Playing);
+        Load(PlayingUID, Playing);
         Bg1.sprite = SongResources.Illustration[PlayingUID][Playing.IllustrationFile];
         Bg2.sprite = Bg1.sprite;
         Audio.clip = SongResources.Songs[PlayingUID];
@@ -55,8 +58,9 @@ public class BeatmapLoader : MonoBehaviour
     /// 载入谱面
     /// </summary>
     /// <param name="map">谱面数据模型</param>
-    public void Load(BeatmapModel map)
+    public void Load(string uid, BeatmapModel map)
     {
+        TaskState = 1;
         // 销毁已有轨道
         for(int j = 0;j < LineController.Lines.Count; j++)
         {
@@ -66,6 +70,13 @@ public class BeatmapLoader : MonoBehaviour
         LineController.Lines.Clear();
         LineController.UnhitLines.Clear();
         // 初始化
+        GameSettings.NoCustomSnd = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
+        if (uid != "")
+            SongResources.HitSnd = new Dictionary<string, AudioClip>();
+        if (GameSettings.NoCustomSnd || string.IsNullOrEmpty(map.SndSet))
+            GameSettings.HitSnd = "milthm";
+        else
+            GameSettings.HitSnd = map.SndSet;
         HitJudge.NoDead = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", 0);
         HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
@@ -124,6 +135,9 @@ public class BeatmapLoader : MonoBehaviour
         foreach (BeatmapModel.NoteData note in map.NoteList)
         {
             float from; MonoBehaviour noteController;
+            string snd = "";
+            if (!GameSettings.NoCustomSnd)
+                snd = note.Snd;
             // 如果开始时间和结束时间一致，为tap
             if (note.FromBeat == note.ToBeat)
             {
@@ -131,6 +145,7 @@ public class BeatmapLoader : MonoBehaviour
                 TapController controller = go.GetComponent<TapController>();
                 controller.Line = lines[note.Line];
                 controller.Index = i;
+                controller.Snd = snd;
                 from = map.ToRealTime(note).Item1;
                 controller.Time = from + Delay;
                 if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
@@ -144,6 +159,7 @@ public class BeatmapLoader : MonoBehaviour
                 GameObject go = Instantiate(hold, lines[note.Line].transform);
                 HoldController controller = go.GetComponent<HoldController>();
                 controller.Index = i;
+                controller.Snd = snd;
                 controller.Line = lines[note.Line];
                 controller.From = map.ToRealTime(note).Item1 + Delay;
                 controller.To = map.ToRealTime(note).Item2 + Delay;
@@ -155,6 +171,44 @@ public class BeatmapLoader : MonoBehaviour
                 noteController = controller;
             }
             lines[note.Line].RemainingNote++;
+            // 音效处理
+            if (uid != "" && !string.IsNullOrEmpty(snd))
+            {
+                if (!SongResources.HitSnd.ContainsKey(note.Snd))
+                {
+                    string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + note.Snd.Replace(" ", "%20").Replace("#", "%23");
+                    Debug.Log("Loading snd: " + f);
+                    string extension = Path.GetExtension(note.Snd).ToLower();
+                    AudioType type = AudioType.UNKNOWN;
+                    if (extension == ".mp3")
+                        type = AudioType.MPEG;
+                    else if (extension == ".ogg")
+                        type = AudioType.OGGVORBIS;
+                    else if (extension == ".wav")
+                        type = AudioType.WAV;
+                    else if (extension == ".aiff")
+                        type = AudioType.AIFF;
+
+                    TaskState++;
+
+                    if (type != AudioType.UNKNOWN)
+                    {
+                        var handler = new DownloadHandlerAudioClip(f, type);
+                        var request = new UnityWebRequest(f, "GET", handler, null);
+                        request.disposeDownloadHandlerOnDispose = true;
+                        request.timeout = 3;
+                        SongResources.HitSnd.Add(note.Snd, null);
+                        request.SendWebRequest().completed += (obj) =>
+                        {
+                            if (handler.isDone && handler.audioClip != null)
+                                SongResources.HitSnd[note.Snd] = handler.audioClip;
+                            else
+                                Debug.Log("Unable to load: " + note.Snd);
+                            TaskState--;
+                        };
+                    }
+                }
+            }
             // 加入待击打列表
             if (HitJudge.HitList.Count == 0)
             {
@@ -197,7 +251,7 @@ public class BeatmapLoader : MonoBehaviour
 
         Debug.Log("待击打列表：" + HitJudge.HitList.Count);
 
-        // 开始游戏
+        TaskState--;
 
         Audio.time = 0;
         AudioUpdate.StartTime = System.DateTime.Now;
@@ -205,5 +259,15 @@ public class BeatmapLoader : MonoBehaviour
         Audio.Stop();
 
         GamePlayLoops.Instance.SummaryAni.Play("PlayEnterAni", 0, 0.0f);
+    }
+
+    private void Update()
+    {
+        if (TaskState == 0)
+            return;
+        Audio.time = 0;
+        AudioUpdate.StartTime = System.DateTime.Now;
+        AudioUpdate.Started = false;
+        Audio.Stop();
     }
 }

@@ -59,7 +59,7 @@ public class TestBeatmapGenerator : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.L) && !loaded)
         {
             model = BeatmapModel.Read("D:\\test.json");
-            GetComponent<BeatmapLoader>().Load(model);
+           // GetComponent<BeatmapLoader>().Load( model);
             loaded = true;
         }
     }

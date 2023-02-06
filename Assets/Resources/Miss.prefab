@@ -12,16 +12,32 @@ PrefabInstance:
       value: Miss
       objectReference: {fileID: 0}
     - target: {fileID: 6064577281553044388, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
+      propertyPath: m_Size.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064577281553044388, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 682a4451b86d5ef4fa13f03c08723a79, type: 3}
+    - target: {fileID: 6064577281553044388, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6064577281553044391, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6064577281553044391, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064577281553044391, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064577281553044391, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.52
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6064577281553044391, guid: da8de77dbaa04a64792085f83a4b2ab6, type: 3}
       propertyPath: m_LocalPosition.y

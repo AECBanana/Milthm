@@ -14,6 +14,7 @@ public class HoldController : MonoBehaviour
     public Sprite DoubleSprite;
     public bool HeadHit = false, EndHit = false;
     public Animator HitAni = null;
+    public string Snd;
     public int Index;
     int holdKey = 0;
     int failFrames = 0;
@@ -107,7 +108,7 @@ public class HoldController : MonoBehaviour
             {
                 if ((holdKey = HitJudge.IsPress(this)) != 0)
                 {
-                    HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
+                    HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed);
                     if (Missed)
                     {
                         if (HitJudge.Record)
@@ -122,7 +123,7 @@ public class HoldController : MonoBehaviour
             }
             if (GamePlayLoops.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
-                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
+                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed);
                 if (HitAni != null)
                     HitAni.Play("HoldAni", 0, 0.0f);
                 HeadHit = true;

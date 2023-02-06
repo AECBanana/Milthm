@@ -10,6 +10,7 @@ public class SongResources : MonoBehaviour
     public static Dictionary<string, List<BeatmapModel>> Beatmaps = new Dictionary<string, List<BeatmapModel>>();
     public static Dictionary<string, string> Path = new Dictionary<string, string>();
     public static Dictionary<string, AudioClip> Songs = new Dictionary<string, AudioClip>();
+    public static Dictionary<string, AudioClip> HitSnd = new Dictionary<string, AudioClip>();
     private static string mDirectory = null;
     public static string DataPath
     {

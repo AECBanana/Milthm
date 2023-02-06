@@ -27,6 +27,7 @@ public class OsuManiaConverter
             Illustrator = "Unknown",
             GameSource = "Osu!Mania",
             SongLength = -1,
+            FormatVersion = GameSettings.FormatVersion
         };
         // 读取元数据
         bool readBg = false;
@@ -36,6 +37,16 @@ public class OsuManiaConverter
             // 读取到击打物件时停止
             if (line == "[HitObjects]")
                 break;
+            if (line.StartsWith("SampleSet: "))
+            {
+                string set = line.Split(':')[1].Trim().ToLower();
+                if (set == "drum")
+                    model.SndSet = "osu-drum";
+                else if (set == "soft")
+                    model.SndSet = "osu-soft";
+                else if (set == "normal")
+                    model.SndSet = "osu-normal";
+            }
             // 标题
             if (line.StartsWith("TitleUnicode:"))
                 model.Title = line.Split(':')[1];
@@ -141,7 +152,8 @@ public class OsuManiaConverter
                         BPM = 0,
                         Line = l,
                         From = model.ConvertByBPM(from, 100),
-                        To = model.ConvertByBPM(to, 100)
+                        To = model.ConvertByBPM(to, 100),
+                        Snd = t[^1].Split(':')[^1]
                     });
                 }
                 else

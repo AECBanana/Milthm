@@ -25,6 +25,8 @@ public class BeatmapModel
     public string GameSource;
     public float PreviewTime = -1f;
     public float SongLength = 0;
+    public string FormatVersion;
+    public string SndSet;
     #endregion
 
     #region BPMÊý¾Ý
@@ -44,6 +46,7 @@ public class BeatmapModel
         public int Line;
         public int[] From, To;
         public int BPM;
+        public string Snd;
         public float FromBeat
         {
             get

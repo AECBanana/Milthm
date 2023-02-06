@@ -31,6 +31,14 @@ public class GamePlayLoops : MonoBehaviour
         AutoPlayTip.SetActive(AutoPlay);
         HitJudge.Record = bool.Parse(PlayerPrefs.GetString("ExportJudge", "False"));
     }
+    private void OnDestroy()
+    {
+        foreach(AudioClip clip in SongResources.HitSnd.Values)
+        {
+            Destroy(clip);
+        }
+        SongResources.HitSnd.Clear();
+    }
     void Update()
     {
         // 更新游玩基本信息

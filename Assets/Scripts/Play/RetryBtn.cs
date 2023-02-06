@@ -12,7 +12,7 @@ public class RetryBtn : MonoBehaviour
     }
     public void LoadRetry()
     {
-        BeatmapLoader.Instance.Load(BeatmapLoader.Playing);
+        BeatmapLoader.Instance.Load("", BeatmapLoader.Playing);
         if (GamePlayLoops.Instance.PauseScreen.activeSelf)
             GamePlayLoops.Instance.PauseScreen.GetComponent<Animator>().Play("HidePausePanel", 0, 0.0f);
     }

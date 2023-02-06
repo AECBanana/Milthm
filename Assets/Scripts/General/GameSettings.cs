@@ -7,10 +7,12 @@ using UnityEngine;
 /// </summary>
 public class GameSettings : MonoBehaviour
 {
+    public const string FormatVersion = "alpha 0.7.8";
     // 击打音效
-    public const string HitSnd = "hit";
+    public static string HitSnd = "milthm";
     // 判定区间
     public const float Perfect2 = 0.03f, Perect = 0.06f, Good = 0.12f, Bad = 0.135f, Valid = 0.15f, HoldValid = 0.3f;
+    public static bool NoCustomSnd = false;
     [Tooltip("鼠标图标")]
     public Texture2D CursorTexture;
     private void Awake()

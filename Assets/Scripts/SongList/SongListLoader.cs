@@ -49,7 +49,7 @@ public class SongListLoader : MonoBehaviour
             if (!SongResources.Illustration[uid].ContainsKey(map.IllustrationFile))
             {
                 SongResources.Illustration[uid].Add(map.IllustrationFile, null);
-                string file = "file:///" + path.Replace("\\", "//") + "//" + map.IllustrationFile.Replace(" ", "%20");
+                string file = "file:///" + path.Replace("\\", "//") + "//" + map.IllustrationFile.Replace(" ", "%20").Replace("#", "%23");
                 var handler = new DownloadHandlerTexture();
                 var request = new UnityWebRequest(file, "GET", handler, null);
                 request.disposeDownloadHandlerOnDispose = true;
@@ -74,7 +74,7 @@ public class SongListLoader : MonoBehaviour
 
         BeatmapModel m = maps[0];
 
-        string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile.Replace(" ", "%20");
+        string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + m.AudioFile.Replace(" ", "%20").Replace("#", "%23"); 
         string extension = Path.GetExtension(m.AudioFile).ToLower();
         AudioType type = AudioType.UNKNOWN;
         if (extension == ".mp3")
@@ -139,14 +139,7 @@ public class SongListLoader : MonoBehaviour
         controller.Beatmap = uid;
         int lastPlay = PlayerPrefs.GetInt(uid + ".lastPlay");
         if (lastPlay < 0 || lastPlay >= SongResources.Beatmaps[uid].Count) lastPlay = 0;
-        List<BeatmapModel> maps = new List<BeatmapModel>();
-        foreach (BeatmapModel m in SongResources.Beatmaps[uid])
-        {
-            maps.Add(m);
-        }
-        maps.Sort((x, y) => x.NoteList.Count.CompareTo(y.NoteList.Count));
-
-        BeatmapModel map = maps[lastPlay];
+        BeatmapModel map = SongResources.Beatmaps[uid][lastPlay];
         controller.Illustration.sprite = SongResources.Illustration[uid][map.IllustrationFile];
         controller.Description.text = map.Title;
         controller.Beatmapper.text = map.Beatmapper;
@@ -163,6 +156,7 @@ public class SongListLoader : MonoBehaviour
         controller.PreSong = LastSong;
         LastSong = controller;
         FirstSong.PreSong = LastSong;
+        controller.OutDate.SetActive(map.FormatVersion != GameSettings.FormatVersion);
         controller.NextSong = FirstSong;
     }
 

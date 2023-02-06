@@ -46,12 +46,14 @@ public class LineController : MonoBehaviour
     }
     private void Start()
     {
-        TouchRaycast.Instance.Register(gameObject, this);
+        if (TouchRaycast.Instance != null)
+            TouchRaycast.Instance.Register(gameObject, this);
     }
     private void OnDestroy()
     {
         UnhitLines.Remove(this);
-        TouchRaycast.Instance.Revoke(gameObject);
+        if (TouchRaycast.Instance != null)
+            TouchRaycast.Instance.Revoke(gameObject);
     }
     private void FixedUpdate()
     {
