@@ -78,11 +78,12 @@ public class BeatmapLoader : MonoBehaviour
             GameSettings.HitSnd = "milthm";
         else
             GameSettings.HitSnd = map.SndSet;
+        GameSettings.NoPerfect = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
         HitJudge.NoDead = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
-        HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", 0);
+        HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
         HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
-        float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", 0.5f),
-              scale = PlayerPrefs.GetFloat("Scale", 0.0f);
+        float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f),
+              scale = PlayerPrefs.GetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);
         FlowSpeed = Mathf.Pow(0.5f + flowspeed, 1.2f);
         Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;

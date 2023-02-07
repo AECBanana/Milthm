@@ -11,7 +11,7 @@ public class SettingsController : MonoBehaviour
     static bool updateing = false;
     public GameObject Line;
     public Slider FlowSpeed, Scale, BGMVolume, HitVolume;
-    public Toggle ExportJudge, NoFSJudge, NoDead, NoCustomSnd;
+    public Toggle ExportJudge, NoFSJudge, NoDead, NoCustomSnd, NoPerfect;
     public TMP_Dropdown Resolution;
     public TMP_InputField Delay;
     private void Awake()
@@ -30,15 +30,16 @@ public class SettingsController : MonoBehaviour
     public void UpdateStatus()
     {
         updateing = true;
-        FlowSpeed.value = PlayerPrefs.GetFloat("FlowSpeed", 0.5f);
+        FlowSpeed.value = PlayerPrefs.GetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f);
         BGMVolume.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
         HitVolume.value = PlayerPrefs.GetFloat("HitVolume", 1f);
-        Scale.value = PlayerPrefs.GetFloat("Scale", 0.0f);
+        Scale.value = PlayerPrefs.GetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);
         DelayValue = PlayerPrefs.GetFloat("Delay", 0.0f);
         ExportJudge.isOn = bool.Parse(PlayerPrefs.GetString("ExportJudge", "False"));
         NoDead.isOn = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         NoCustomSnd.isOn = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
-        NoFSJudge.isOn = PlayerPrefs.GetInt("JudgeMode", 0) == 1;
+        NoPerfect.isOn = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
+        NoFSJudge.isOn = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0) == 1;
         Delay.text = DelayValue.ToString();
         Resolution.value = PlayerPrefs.GetInt("Resolution", 0);
         updateing = false;
@@ -48,12 +49,13 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetFloat("BGMVolume", 0.5f);
         PlayerPrefs.SetFloat("HitVolume", 1f);
         PlayerPrefs.SetFloat("Delay", 0.0f);
-        PlayerPrefs.SetFloat("FlowSpeed", 0.5f);
-        PlayerPrefs.SetFloat("Scale", 0.0f);
+        PlayerPrefs.SetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f);
+        PlayerPrefs.SetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);
         PlayerPrefs.SetString("NoDead", "False");
         PlayerPrefs.SetString("ExportJudge", "False");
         PlayerPrefs.SetString("NoCustomSnd", "False");
-        PlayerPrefs.SetInt("JudgeMode", 0);
+        PlayerPrefs.SetString("NoPerfect", "False");
+        PlayerPrefs.SetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
         PlayerPrefs.SetInt("Resolution", 0);
         Instance.UpdateStatus();
         UpdateLine();
@@ -89,6 +91,7 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetString("ExportJudge", ExportJudge.isOn.ToString());
         PlayerPrefs.SetString("NoDead", NoDead.isOn.ToString());
         PlayerPrefs.SetString("NoCustomSnd", NoCustomSnd.isOn.ToString());
+        PlayerPrefs.SetString("NoPerfect", NoPerfect.isOn.ToString());
         PlayerPrefs.SetInt("JudgeMode", NoFSJudge.isOn ? 1 : 0);
         PlayerPrefs.SetInt("Resolution", Resolution.value);
         foreach (VolumeSettings vs in VolumeSettings.Volumes)

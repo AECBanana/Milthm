@@ -29,7 +29,6 @@ public class AudioUpdate : MonoBehaviour
     static bool updated = false;        // 歌曲播放进度更新状态
     static bool playing = false;
     public static Stopwatch updateWatch;
-    Thread updateThread;
 
     public static float Time
     {
@@ -68,28 +67,19 @@ public class AudioUpdate : MonoBehaviour
         updateWatch = new Stopwatch();
         Audio = GetComponent<AudioSource>();
         Instance = this;
-        updateThread = new Thread(UpdateThread);
-        updateThread.Start();
-    }
-    public static void UpdateThread()
-    {
-        while (true)
-        {
-            if (playing)
-            {
-                m_Time = b_Time + (float)(updateWatch.ElapsedTicks * 1.0f / Stopwatch.Frequency);
-                updated = false;
-            }
-            Thread.Sleep(1);
-        }
     }
     private void OnDestroy()
     {
-        updateThread.Abort();
         updateWatch.Stop();
     }
     private void Update()
     {
+        //UnityEngine.Debug.Log("Update delta time: " + UnityEngine.Time.deltaTime);
+        if (playing)
+        {
+            m_Time = b_Time + (float)(updateWatch.ElapsedTicks * 1.0f / Stopwatch.Frequency);
+            updated = false;
+        }
         if (Audio.isPlaying)
         {
             if (!playing)

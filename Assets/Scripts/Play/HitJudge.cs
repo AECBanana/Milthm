@@ -416,6 +416,8 @@ public class HitJudge : MonoBehaviour
         MoveNext(note);
         if (effect != null)
         {
+            if (effect == Perfect && GameSettings.NoPerfect)
+                effect = Perfect2;
             GameObject go = Instantiate(effect, AniParent);
             go.transform.localPosition = new Vector3(-1.97f, 0, 0); //4.1f
             go.SetActive(true);
