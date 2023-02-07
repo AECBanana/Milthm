@@ -99,6 +99,7 @@ public class SettingsController : MonoBehaviour
         if (Resolution.value == 0)
         {
             Screen.fullScreen = true;
+            Screen.SetResolution(Screen.width, Screen.height, true);
         }
         else
         {
