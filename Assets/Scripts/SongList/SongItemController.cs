@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SongItemController : MonoBehaviour
@@ -17,7 +18,8 @@ public class SongItemController : MonoBehaviour
     public GameObject OutDate;
     public GameObject RemoveBtn;
     Animator animator;
-    DateTime pressTime;
+    bool pressing = false;
+    DateTime pressTime = DateTime.MinValue;
 
     public void DeleteSong()
     {
@@ -49,20 +51,38 @@ public class SongItemController : MonoBehaviour
 
     public void TouchUp()
     {
+        pressing = false;
         if ((DateTime.Now - pressTime).TotalSeconds >= 0.5)
         {
             DeleteMode();
+            pressTime = DateTime.MinValue;
+            return;
+        }
+        if (pressTime == DateTime.MinValue)
+        {
             return;
         }
         Preview.SongItem = this;
         Preview.Show(Beatmap);
+        pressTime = DateTime.MinValue;
     }
 
     public void TouchDown()
     {
-        pressTime = DateTime.Now;
-        if (Input.GetMouseButton(1))
-            pressTime -= TimeSpan.FromMinutes(1);
+        if (pressTime == DateTime.MinValue)
+        {
+            pressTime = DateTime.Now;
+            if (Input.GetMouseButton(1))
+                pressTime -= TimeSpan.FromMinutes(1);
+        }
+        pressing = true;
+        if ((DateTime.Now - pressTime).TotalSeconds >= 0.5 && !RemoveBtn.activeSelf)
+        {
+            Debug.Log("Occurred.");
+            DeleteMode();
+            pressTime = DateTime.MinValue;
+            return;
+        }
     }
 
     public void MouseIn()
@@ -81,7 +101,7 @@ public class SongItemController : MonoBehaviour
 
     private void Update()
     {
-        if (RemoveBtn.activeSelf && Input.GetMouseButtonUp(0))
+        if (RemoveBtn.activeSelf && Input.anyKey && EventSystem.current.currentSelectedGameObject != RemoveBtn && !pressing)
         {
             RemoveBtn.SetActive(false);
             animator.SetBool("MouseIn", false);

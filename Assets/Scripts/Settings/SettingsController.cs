@@ -10,7 +10,7 @@ public class SettingsController : MonoBehaviour
     public static SettingsController Instance;
     static bool updateing = false;
     public GameObject Line;
-    public Slider FlowSpeed, Scale;
+    public Slider FlowSpeed, Scale, BGMVolume, HitVolume;
     public Toggle ExportJudge, NoFSJudge, NoDead, NoCustomSnd;
     public TMP_Dropdown Resolution;
     public TMP_InputField Delay;
@@ -31,6 +31,8 @@ public class SettingsController : MonoBehaviour
     {
         updateing = true;
         FlowSpeed.value = PlayerPrefs.GetFloat("FlowSpeed", 0.5f);
+        BGMVolume.value = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
+        HitVolume.value = PlayerPrefs.GetFloat("HitVolume", 1f);
         Scale.value = PlayerPrefs.GetFloat("Scale", 0.0f);
         DelayValue = PlayerPrefs.GetFloat("Delay", 0.0f);
         ExportJudge.isOn = bool.Parse(PlayerPrefs.GetString("ExportJudge", "False"));
@@ -43,6 +45,8 @@ public class SettingsController : MonoBehaviour
     }
     public void ResetSettings()
     {
+        PlayerPrefs.SetFloat("BGMVolume", 0.5f);
+        PlayerPrefs.SetFloat("HitVolume", 1f);
         PlayerPrefs.SetFloat("Delay", 0.0f);
         PlayerPrefs.SetFloat("FlowSpeed", 0.5f);
         PlayerPrefs.SetFloat("Scale", 0.0f);
@@ -80,11 +84,15 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetFloat("Delay", DelayValue);
         PlayerPrefs.SetFloat("FlowSpeed", Instance.FlowSpeed.value);
         PlayerPrefs.SetFloat("Scale", Instance.Scale.value);
+        PlayerPrefs.SetFloat("BGMVolume", Instance.BGMVolume.value);
+        PlayerPrefs.SetFloat("HitVolume", Instance.HitVolume.value);
         PlayerPrefs.SetString("ExportJudge", ExportJudge.isOn.ToString());
         PlayerPrefs.SetString("NoDead", NoDead.isOn.ToString());
         PlayerPrefs.SetString("NoCustomSnd", NoCustomSnd.isOn.ToString());
         PlayerPrefs.SetInt("JudgeMode", NoFSJudge.isOn ? 1 : 0);
         PlayerPrefs.SetInt("Resolution", Resolution.value);
+        foreach (VolumeSettings vs in VolumeSettings.Volumes)
+            vs.Changed = true;
         if (Resolution.value == 0)
         {
             Screen.fullScreen = true;

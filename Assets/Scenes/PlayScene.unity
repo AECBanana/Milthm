@@ -7779,6 +7779,7 @@ GameObject:
   - component: {fileID: 2067816750}
   - component: {fileID: 2067816751}
   - component: {fileID: 2067816752}
+  - component: {fileID: 2067816753}
   m_Layer: 0
   m_Name: GameLoop
   m_TagString: Untagged
@@ -7959,6 +7960,20 @@ MonoBehaviour:
   Rain: {fileID: 1970262202}
   AutoPlayTip: {fileID: 1003211578}
   lastKey: 
+--- !u!114 &2067816753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067816746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9341fc586a334a9b85089ed2aa364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingName: BGMVolume
+  DefaultVolume: 0.5
 --- !u!1 &2083386007
 GameObject:
   m_ObjectHideFlags: 0

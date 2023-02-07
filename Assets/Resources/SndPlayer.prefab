@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2667348199448660526}
   - component: {fileID: 2667348199448660527}
+  - component: {fileID: 8712089611519918865}
   m_Layer: 0
   m_Name: SndPlayer
   m_TagString: Untagged
@@ -128,3 +129,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8712089611519918865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2667348199448660524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9341fc586a334a9b85089ed2aa364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingName: HitVolume
+  DefaultVolume: 1

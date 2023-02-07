@@ -302,7 +302,7 @@ public class HitJudge : MonoBehaviour
     {
         SndPlayer.Play(GameSettings.HitSnd);
         GameObject go = Instantiate(Perfect2, AniParent);
-        go.transform.localPosition = new Vector3(4.1f, 0, 0);
+        go.transform.localPosition = new Vector3(-1.97f, 0, 0);
         go.SetActive(true);
         return go.GetComponent<Animator>();
     }

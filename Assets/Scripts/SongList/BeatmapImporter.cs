@@ -1,6 +1,6 @@
 using B83.Win32;
 using System;
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 using System.Windows.Forms;
 #endif
 using System.Collections;
@@ -50,7 +50,7 @@ public class BeatmapImporter : MonoBehaviour
     {
         OpenFileDialog dialog = new OpenFileDialog();
         dialog.Title = "导入谱面到Milthm";
-        dialog.Filter = "Milthm谱面|*.mlt|Osu!谱面|*.osz";
+        dialog.Filter = "Milthm谱面|*.mlt|Osu!谱面|*.osz|Malody谱面|*.mcz";
         if (dialog.ShowDialog() == DialogResult.OK)
         {
             ImportBeatmap(dialog.FileName);
@@ -72,7 +72,14 @@ public class BeatmapImporter : MonoBehaviour
 
             foreach (string f in Directory.GetFiles(path))
             {
-                if (f.ToLower().EndsWith(".osu"))
+                if (f.ToLower().EndsWith(".mc"))
+                {
+                    // Malody谱面，开始转换
+                    ImportMalody(path);
+                    Debug.Log("转换成功！");
+                    break;
+                }
+                else if (f.ToLower().EndsWith(".osu"))
                 {
                     string mode = File.ReadAllText(f).Split("[General]")[1].Split("[Editor]")[0].Split("Mode:")[1].Split('\n')[0].Replace("\r", "").Trim();
                     if (mode == "3")
@@ -121,6 +128,18 @@ public class BeatmapImporter : MonoBehaviour
             if (f.ToLower().EndsWith(".osu"))
             {
                 OsuManiaConverter.Convert(f);
+                File.Delete(f);
+            }
+        }
+    }
+
+    void ImportMalody(string path)
+    {
+        foreach (string f in Directory.GetFiles(path))
+        {
+            if (f.ToLower().EndsWith(".mc"))
+            {
+                MalodyConverter.Convert(f);
                 File.Delete(f);
             }
         }
