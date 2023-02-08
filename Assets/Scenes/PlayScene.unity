@@ -1888,7 +1888,7 @@ MonoBehaviour:
   vibrancy: 1.62
   brightness: 0
   flatten: 0.142
-  m_spriteBlending: 0.7
+  m_spriteBlending: 0.86
 --- !u!222 &389113888
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7972,6 +7972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fae9341fc586a334a9b85089ed2aa364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Changed: 0
   SettingName: BGMVolume
   DefaultVolume: 0.5
 --- !u!1 &2083386007

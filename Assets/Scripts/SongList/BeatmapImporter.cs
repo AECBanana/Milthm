@@ -18,7 +18,7 @@ public class BeatmapImporter : MonoBehaviour
 {
 
 #if UNITY_ANDROID
-    void Click()
+    public void Click()
     {
         NativeFilePicker.PickFile((data) =>
         {
@@ -46,7 +46,7 @@ public class BeatmapImporter : MonoBehaviour
         foreach (string file in files)
             ImportBeatmap(file);
     }
-    void Click()
+    public void Click()
     {
         OpenFileDialog dialog = new OpenFileDialog();
         dialog.Title = "导入谱面到Milthm";
