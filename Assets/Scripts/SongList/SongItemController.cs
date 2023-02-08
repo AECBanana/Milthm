@@ -65,6 +65,7 @@ public class SongItemController : MonoBehaviour
         Preview.SongItem = this;
         Preview.Show(Beatmap);
         pressTime = DateTime.MinValue;
+        PlayerPrefs.SetString("LastSong", Beatmap);
     }
 
     public void TouchDown()

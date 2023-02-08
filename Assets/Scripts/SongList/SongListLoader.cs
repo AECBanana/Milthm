@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class SongListLoader : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class SongListLoader : MonoBehaviour
     public static SongListLoader Instance;
     public static SongItemController FirstSong, LastSong;
     public static bool Loaded = false;
+
+    public ScrollViewNevigation Nevigation;
+    public Scrollbar VerSlider;
 
     public static LoadStatus Load(string path, Action<string> LoadComplete)
     {
@@ -158,6 +162,14 @@ public class SongListLoader : MonoBehaviour
         FirstSong.PreSong = LastSong;
         controller.OutDate.SetActive(map.FormatVersion != GameSettings.FormatVersion);
         controller.NextSong = FirstSong;
+        if (PlayerPrefs.GetString("LastSong") == uid)
+        {
+            Nevigation.Nevigate(item.GetComponent<RectTransform>());
+        }
+        if (playAni)
+        {
+            VerSlider.value = 0f;
+        }
     }
 
     private void OnDestroy()
