@@ -71,6 +71,21 @@ public class BeatmapLoader : MonoBehaviour
         LineController.Lines.Clear();
         LineController.UnhitLines.Clear();
         // 初始化
+        #region 载入设置
+        int range = PlayerPrefs.GetInt("JudgeRange", 1);
+        HitJudge.JudgeRange = range;
+        if (range == 0)
+        {
+            GameSettings.Perfect2 = 0.04f; GameSettings.Perect = 0.08f; GameSettings.Good = 0.16f; GameSettings.Bad = 0.18f; 
+        }
+        else if (range == 1)
+        {
+            GameSettings.Perfect2 = 0.03f; GameSettings.Perect = 0.06f; GameSettings.Good = 0.12f; GameSettings.Bad = 0.135f;
+        }
+        else if (range == 2)
+        {
+            GameSettings.Perfect2 = 0.02f; GameSettings.Perect = 0.04f; GameSettings.Good = 0.09f; GameSettings.Bad = 0.1f;
+        }
         GameSettings.NoCustomSnd = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
         if (uid != "")
             SongResources.HitSnd = new Dictionary<string, AudioClip>();
@@ -81,6 +96,7 @@ public class BeatmapLoader : MonoBehaviour
         GameSettings.NoPerfect = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
         HitJudge.NoDead = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
+        #endregion
         HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
         float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f),
               scale = PlayerPrefs.GetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);

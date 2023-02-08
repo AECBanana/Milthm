@@ -11,8 +11,8 @@ public class SettingsController : MonoBehaviour
     static bool updateing = false;
     public GameObject Line;
     public Slider FlowSpeed, Scale, BGMVolume, HitVolume;
-    public Toggle ExportJudge, NoFSJudge, NoDead, NoCustomSnd, NoPerfect;
-    public TMP_Dropdown Resolution;
+    public Toggle ExportJudge, NoDead, NoCustomSnd, NoPerfect;
+    public TMP_Dropdown Resolution, NoFSJudge, JudgeRange;
     public TMP_InputField Delay;
     private void Awake()
     {
@@ -39,7 +39,8 @@ public class SettingsController : MonoBehaviour
         NoDead.isOn = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         NoCustomSnd.isOn = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
         NoPerfect.isOn = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
-        NoFSJudge.isOn = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0) == 1;
+        NoFSJudge.value = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
+        JudgeRange.value = PlayerPrefs.GetInt("JudgeRange", 1);
         Delay.text = DelayValue.ToString();
         Resolution.value = PlayerPrefs.GetInt("Resolution", 0);
         updateing = false;
@@ -57,6 +58,7 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetString("NoPerfect", "False");
         PlayerPrefs.SetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
         PlayerPrefs.SetInt("Resolution", 0);
+        PlayerPrefs.SetInt("JudgeRange", 1);
         Instance.UpdateStatus();
         UpdateLine();
     }
@@ -92,7 +94,8 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetString("NoDead", NoDead.isOn.ToString());
         PlayerPrefs.SetString("NoCustomSnd", NoCustomSnd.isOn.ToString());
         PlayerPrefs.SetString("NoPerfect", NoPerfect.isOn.ToString());
-        PlayerPrefs.SetInt("JudgeMode", NoFSJudge.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("JudgeMode", NoFSJudge.value);
+        PlayerPrefs.SetInt("JudgeRange", JudgeRange.value);
         PlayerPrefs.SetInt("Resolution", Resolution.value);
         foreach (VolumeSettings vs in VolumeSettings.Volumes)
             vs.Changed = true;

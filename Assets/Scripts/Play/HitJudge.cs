@@ -75,7 +75,15 @@ public class HitJudge : MonoBehaviour
             {
                 if (FullCombo == 0)
                     return 0;
-                return (long)((MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000);
+                double orScore = (MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000;
+                double judgeBuff = 1.0;
+                if (JudgeRange == 0)
+                    judgeBuff = 0.8;
+                else if (JudgeRange == 1)
+                    judgeBuff = 1;
+                else if (JudgeRange == 2)
+                    judgeBuff = 1.2;
+                return (long)(orScore * judgeBuff);
             }
         }
         public float Accuracy
@@ -92,6 +100,7 @@ public class HitJudge : MonoBehaviour
     static GameObject Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
     public static float JudgeArea = 0;
+    public static int JudgeRange = 1;
     public static bool Record = false;
     public static bool NoDead = false;
     /// <summary>

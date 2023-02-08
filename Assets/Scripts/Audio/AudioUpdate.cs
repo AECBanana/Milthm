@@ -37,7 +37,7 @@ public class AudioUpdate : MonoBehaviour
             if (!updated)
             {
                 updated = true;
-                if (Audio.time - m_Time >= 0.2f)
+                /**if (Audio.time - m_Time >= 0.2f)
                 {
                     UnityEngine.Debug.Log("Update timer is too slow!!");
                     updateWatch.Restart();
@@ -50,7 +50,7 @@ public class AudioUpdate : MonoBehaviour
                     updateWatch.Restart();
                     b_Time = Audio.time;
                     m_Time = Audio.time;
-                }
+                }**/
                 //DebugInfo.Output("同步状况", m_Time + " -> " + Audio.time);
             }
             // 若尚未开始游戏
