@@ -39,6 +39,7 @@ public class GamePlayAdapter : MonoBehaviour
     /// </summary>
     public void PlaySummaryBGM()
     {
+        Camera.main.transform.localEulerAngles = new Vector3(0, 0, 0);
         BGM.clip = BeatmapLoader.Instance.Audio.clip;
         BGM.Play();
         if (BeatmapLoader.Playing.PreviewTime != -1)

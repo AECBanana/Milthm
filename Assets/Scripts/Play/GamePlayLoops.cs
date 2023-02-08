@@ -12,6 +12,7 @@ using UnityEngine.UIElements;
 public class GamePlayLoops : MonoBehaviour
 {
     public static bool AutoPlay = false;
+    public static bool Vertical = false;
     public static bool PauseBtn = false;
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;

@@ -12,7 +12,7 @@ public class LineController : MonoBehaviour
     public static List<LineController> Lines = new List<LineController>();
     public static List<LineController> UnhitLines = new List<LineController>();
     public Transform JudgePoint;
-    public const float MoveArea = 50f;
+    public const float MoveArea = 70f;
     public float FlowSpeed;
     public int Index;
     public bool Holding = false;

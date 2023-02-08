@@ -72,6 +72,10 @@ public class BeatmapLoader : MonoBehaviour
         LineController.UnhitLines.Clear();
         // 初始化
         #region 载入设置
+        if (GamePlayLoops.Vertical)
+            Camera.main.transform.localEulerAngles = new Vector3(0, 0, 90);
+        else
+            Camera.main.transform.localEulerAngles = new Vector3(0, 0, 0);
         int range = PlayerPrefs.GetInt("JudgeRange", 1);
         HitJudge.JudgeRange = range;
         if (range == 0)
@@ -96,14 +100,13 @@ public class BeatmapLoader : MonoBehaviour
         GameSettings.NoPerfect = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
         HitJudge.NoDead = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
-        #endregion
         HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
         float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f),
               scale = PlayerPrefs.GetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);
         FlowSpeed = Mathf.Pow(0.5f + flowspeed, 1.2f);
-        Playing = map;
         Delay = PlayerPrefs.GetFloat("Delay") / 1000f;
-        DebugInfo.Output("Delay", Delay.ToString() + "s");
+        #endregion
+        Playing = map;
         GameObject line = Resources.Load<GameObject>("Line"),
                    tap = Resources.Load<GameObject>("Tap"),
                    hold = Resources.Load<GameObject>("Hold");
@@ -120,8 +123,17 @@ public class BeatmapLoader : MonoBehaviour
             HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
         // 生成轨道
-        float orSpace = 200f + Mathf.Max(1f - (map.LineList.Count - 4.0f) / 4.0f, 0f) * 100f;
-        float space = Camera.main.ViewportToWorldPoint(new Vector3(orSpace / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
+        float orSpace;
+        if (GamePlayLoops.Vertical)
+            orSpace = 1200f / (map.LineList.Count - 1);
+        else
+            orSpace = 200f + Mathf.Max(1f - (map.LineList.Count - 4.0f) / 4.0f, 0f) * 100f;
+        GameSettings.ScreenW = Mathf.Abs(Camera.main.ViewportToWorldPoint(Vector3.one).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x);
+        GameSettings.ScreenH = Mathf.Abs(Camera.main.ViewportToWorldPoint(Vector3.one).y - Camera.main.ViewportToWorldPoint(Vector3.zero).y);
+        GameSettings.WFactor = GameSettings.ScreenW / 1920f;
+        GameSettings.HFactor = GameSettings.ScreenH / 1080f;
+        Debug.Log("Play Screen Size: " + GameSettings.ScreenW + "x" + GameSettings.ScreenH);
+        float space = orSpace * GameSettings.WFactor;
         float x = -space * (map.LineList.Count - 1) / 2;
         foreach (BeatmapModel.LineData l in map.LineList)
         {
@@ -140,7 +152,7 @@ public class BeatmapLoader : MonoBehaviour
                 go.transform.localEulerAngles = new Vector3(0, 0, 270);
 
             go.transform.localEulerAngles = new Vector3(0, 0, 90);
-            go.transform.localPosition = new Vector3(x, -3.5f, 0);
+            go.transform.localPosition = new Vector3(x, -350 * GameSettings.HFactor, 0);
             x += space;
 
             go.transform.localScale = new Vector3(0.3f * (1.0f + scale), 0.3f * (1.0f + scale), 0.3f * (1.0f + scale));
