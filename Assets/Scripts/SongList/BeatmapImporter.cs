@@ -70,6 +70,16 @@ public class BeatmapImporter : MonoBehaviour
 
             ZipFile.ExtractToDirectory(file, path);
 
+            if (Directory.GetDirectories(path).Length == 1 && Directory.GetFiles(path).Length == 0)
+            {
+                // 可能是.mcz谱面。。。
+                foreach (string f in Directory.GetFiles(Directory.GetDirectories(path)[0]))
+                {
+                    File.Copy(f, Path.Combine(path, Path.GetFileName(f)));
+                    File.Delete(f);
+                }
+            }
+
             foreach (string f in Directory.GetFiles(path))
             {
                 if (f.ToLower().EndsWith(".mc"))
@@ -135,14 +145,18 @@ public class BeatmapImporter : MonoBehaviour
 
     void ImportMalody(string path)
     {
+        int success = 0;
         foreach (string f in Directory.GetFiles(path))
         {
             if (f.ToLower().EndsWith(".mc"))
             {
-                MalodyConverter.Convert(f);
+                if (MalodyConverter.Convert(f) == SongListLoader.LoadStatus.Success)
+                    success++;
                 File.Delete(f);
             }
         }
+        if (success == 0)
+            DialogController.Show("导入谱面失败!", "已识别谱面类型，但暂不支持转换，仅支持Malody 多k谱面。");
     }
 
 }

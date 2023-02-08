@@ -161,6 +161,7 @@ public class BeatmapLoader : MonoBehaviour
             LineController.Lines.Add(controller);
         }
         // ‘ÿ»ÎÀ˘”–note
+        Delay -= map.SongOffset;
         int i = 0;
         foreach (BeatmapModel.NoteData note in map.NoteList)
         {

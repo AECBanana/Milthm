@@ -17,7 +17,7 @@ public class MalodySongMeta
 [Serializable]
 public class MalodyModeExtMeta
 {
-    public int colum;
+    public int column;
     public int bar_begin;
 }
 [Serializable]
@@ -29,6 +29,7 @@ public class MalodyMeta
     public int id;
     public int mode;
     public long time;
+    public long preview;
     public MalodySongMeta song;
     public MalodyModeExtMeta mode_ext;
 }
@@ -42,7 +43,12 @@ public class MalodyTime
 public class MalodyNote
 {
     public int[] beat;
+    public int[] endbeat;
     public int column;
+    public string sound;
+    public float vol;
+    public float offset;
+    public int type;
 }
 [Serializable]
 public class MalodyTest

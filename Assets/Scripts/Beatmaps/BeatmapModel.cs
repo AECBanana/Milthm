@@ -25,6 +25,7 @@ public class BeatmapModel
     public string GameSource;
     public float PreviewTime = -1f;
     public float SongLength = 0;
+    public float SongOffset = 0;
     public string FormatVersion;
     public string SndSet;
     #endregion
