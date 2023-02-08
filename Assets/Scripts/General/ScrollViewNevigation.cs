@@ -29,7 +29,7 @@ public class ScrollViewNevigation : MonoBehaviour
         newNormalizedPosition.x = Mathf.Clamp01(newNormalizedPosition.x);
         newNormalizedPosition.y = Mathf.Clamp01(newNormalizedPosition.y);
 
-        scrollRect.GetComponent<ScrollRect>().normalizedPosition = newNormalizedPosition - new Vector2(0, 120f);
+        scrollRect.GetComponent<ScrollRect>().normalizedPosition = newNormalizedPosition - new Vector2(0, item.sizeDelta.y / 4);
         //DOTween.To(() => scrollRect.GetComponent<ScrollRect>().normalizedPosition, x => scrollRect.GetComponent<ScrollRect>().normalizedPosition = x, newNormalizedPosition, 0.8f);
     }
 

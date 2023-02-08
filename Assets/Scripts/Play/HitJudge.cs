@@ -75,7 +75,7 @@ public class HitJudge : MonoBehaviour
             {
                 if (FullCombo == 0)
                     return 0;
-                double orScore = (MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000;
+                double orScore = OriginScore;
                 double judgeBuff = 1.0;
                 if (JudgeRange == 0)
                     judgeBuff = 0.8;
@@ -84,6 +84,13 @@ public class HitJudge : MonoBehaviour
                 else if (JudgeRange == 2)
                     judgeBuff = 1.2;
                 return (long)(orScore * judgeBuff);
+            }
+        }
+        public double OriginScore
+        {
+            get
+            {
+                return (MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000;
             }
         }
         public float Accuracy
@@ -361,6 +368,7 @@ public class HitJudge : MonoBehaviour
         else if (deltaTime <= GameSettings.Bad)
         {
             Result.Bad++;
+            Result.Combo = -1;
             if (orTime > 0)
             {
                 Result.Late++;

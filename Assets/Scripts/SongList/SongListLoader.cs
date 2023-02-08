@@ -166,7 +166,7 @@ public class SongListLoader : MonoBehaviour
         {
             Nevigation.Nevigate(item.GetComponent<RectTransform>());
         }
-        if (playAni)
+        else if (playAni)
         {
             VerSlider.value = 0f;
         }

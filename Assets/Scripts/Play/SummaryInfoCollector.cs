@@ -49,7 +49,7 @@ public class SummaryInfoCollector : MonoBehaviour
             Source.text = "";
         }
 
-        long score = HitJudge.Result.Score;
+        long score = (long)HitJudge.Result.OriginScore;
         string grade = "";
         Word.sprite = Complete;
         if (HitJudge.Result.Perfect2 == HitJudge.Result.FullCombo)
