@@ -141,7 +141,7 @@ public class GamePlayLoops : MonoBehaviour
             {
                 Skip.gameObject.SetActive(true);
                 Skip.text = "Relax  " + Mathf.Round(time - AudioUpdate.Time - 3) + "s";
-                if (Input.anyKey)
+                if (Input.anyKey && time - AudioUpdate.Time > 4)
                 {
                     if (skipTime == DateTime.MinValue)
                     {

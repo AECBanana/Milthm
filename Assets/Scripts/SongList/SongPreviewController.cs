@@ -4,7 +4,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.TerrainTools;
 
 public class SongPreviewController : MonoBehaviour
 {
@@ -99,6 +98,7 @@ public class SongPreviewController : MonoBehaviour
 
         Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
         Background.sprite = Illustration.sprite;
+        MusicEffectBtn.CurrentSprite = Illustration.sprite;
 
         Title.text = m.Title;
         Description.text = "[Çú]" + m.Composer + " [Æ×]" + m.Beatmapper + " [ÃÀ]" + m.Illustrator;
