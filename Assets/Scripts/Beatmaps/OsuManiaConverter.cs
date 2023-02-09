@@ -35,7 +35,7 @@ public class OsuManiaConverter
         foreach (string line in data)
         {
             // 读取到击打物件时停止
-            if (line == "[HitObjects]")
+            if (line == "[TimingPoints]")
                 break;
             if (line.StartsWith("SampleSet: "))
             {
@@ -80,6 +80,11 @@ public class OsuManiaConverter
                 readBg = true;
                 continue;
             }
+            if (line.StartsWith("[") && readBg)
+            {
+                readBg = false;
+                continue;
+            }
             // 读取背景图片文件名
             if (!line.StartsWith("//") && readBg && !line.StartsWith("Video"))
             {
@@ -95,13 +100,36 @@ public class OsuManiaConverter
                 }
             }
         }
-        // 添加BPM，由于Osu!谱面BPM未知，使用600BPM尽量表示所有音符的时间
-        model.BPMList.Add(new BeatmapModel.BPMData
+        float lstBPM = 0f;
+        bool timingpoint = false;
+        foreach (string line in data)
         {
-            BPM = 600.0f,
-            From = 0f,
-            To = 0
-        });
+            // 读取到击打物件时停止
+            if (line.StartsWith("[") && timingpoint)
+                break;
+            if (line == "[TimingPoints]")
+            {
+                timingpoint = true;
+            }
+            if (timingpoint)
+            {
+                // 1019,480,4,2,1,100,1,0
+                string[] t = line.Split(',');
+                if (t.Length > 2)
+                {
+                    BeatmapModel.BPMData bpm = new BeatmapModel.BPMData
+                    {
+                        BPM = float.Parse(t[1]),
+                        Start = float.Parse(t[0]) / 1000f,
+                    };
+                    if (bpm.BPM < 0)
+                        bpm.BPM = lstBPM * (-1f) * bpm.BPM / 100f;
+                    else
+                        lstBPM = bpm.BPM;
+                    model.BPMList.Add(bpm);
+                }
+            }
+        }
         // 根据轨道数创建轨道
         for(int i = 0;i < lineCount; i++)
         {
@@ -133,6 +161,7 @@ public class OsuManiaConverter
         }
         // 进行排列以从X坐标转换到轨道序号
         xs.Sort((x,y) => x.CompareTo(y));
+        Debug.Log("轨道数：" + model.LineList.Count + ", 实际坐标错乱数：" + xs.Count);
         start = false;
         // 读取notes
         foreach (string line in data)
@@ -143,16 +172,17 @@ public class OsuManiaConverter
                 float from = float.Parse(t[2]) / 1000, to;
                 if (t.Length == 6)
                 {
-                    int l = xs.FindIndex(x => x == int.Parse(t[0]));
+                    int l = Mathf.RoundToInt((int.Parse(t[0]) - xs[0]) * 1.0f / (xs[^1] - xs[0]) * (model.LineList.Count - 1f));
                     to = float.Parse(t[5].Split(':')[0]) / 1000;
                     if (to == 0 || to <= from)
                         to = from;
+                    int bpm = model.DetermineBPM(from);
                     model.NoteList.Add(new BeatmapModel.NoteData
                     {
-                        BPM = 0,
+                        BPM = bpm,
                         Line = l,
-                        From = model.ConvertByBPM(from, 100),
-                        To = model.ConvertByBPM(to, 100),
+                        From = model.ConvertByBPM(from, 16, bpm),
+                        To = model.ConvertByBPM(to, 16, bpm),
                         Snd = t[^1].Split(':')[^1]
                     });
                 }

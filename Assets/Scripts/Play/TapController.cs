@@ -22,9 +22,12 @@ public class TapController : MonoBehaviour
     }
     private void UpdateGraphics()
     {
-        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5, y = 0;
+        //Debug.Log("Total flowspeed: " + Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed);
+        //Debug.Log("Line: " + Line.FlowSpeed  + ", BPM: " + GamePlayLoops.FlowSpeedFactor + ", Beatmap: " + BeatmapLoader.FlowSpeed);
+        //Debug.Log("delta time:" + (Time - AudioUpdate.Time));
+        float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5, y = 0;
         if (AudioUpdate.Instance.PreviewMode)
-            x = (Time - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5;
+            x = (Time - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * Line.FlowSpeed * 5;
         if (x > LineController.MoveArea)
         {
             if (Renderer.color.a != 0)
@@ -107,6 +110,10 @@ public class TapController : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+
+    }
+    private void FixedUpdate()
+    {
         UpdateGraphics();
     }
 }

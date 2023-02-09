@@ -27,13 +27,13 @@ public class HoldController : MonoBehaviour
     }
     private void UpdateGraphics()
     {
-        float x = (From - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5 - 1.66f,
-              x2 = (To - AudioUpdate.Time) * Line.FlowSpeed * BeatmapLoader.FlowSpeed * 5 + 1.66f,
+        float x = (From - AudioUpdate.Time) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5 - 1.66f,
+              x2 = (To - AudioUpdate.Time) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5 + 1.66f,
               y = 0;
         if (AudioUpdate.Instance.PreviewMode)
         {
-            x = (From - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5 - 1.66f;
-            x2 = (To - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * 5 + 1.66f;
+            x = (From - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5 - 1.66f;
+            x2 = (To - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5 + 1.66f;
         }
         if (x < -1.66f)
             x = -1.66f;
@@ -195,6 +195,10 @@ public class HoldController : MonoBehaviour
                 HeadHit = true;
             }
         }
+
+    }
+    private void FixedUpdate()
+    {
         UpdateGraphics();
     }
 }

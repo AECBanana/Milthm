@@ -26,7 +26,6 @@ public class AudioUpdate : MonoBehaviour
     public bool PreviewMode = false;
     public static float m_Time;         // 歌曲播放进度缓存
     public static float b_Time;
-    static bool updated = false;        // 歌曲播放进度更新状态
     static bool playing = false;
     public static Stopwatch updateWatch;
 
@@ -34,31 +33,14 @@ public class AudioUpdate : MonoBehaviour
     {
         get
         {
-            if (!updated)
-            {
-                updated = true;
-                /**if (Audio.time - m_Time >= 0.2f)
-                {
-                    UnityEngine.Debug.Log("Update timer is too slow!!");
-                    updateWatch.Restart();
-                    b_Time = Audio.time;
-                    m_Time = Audio.time;
-                }
-                else if (m_Time - Audio.time >= 0.2f)
-                {
-                    UnityEngine.Debug.Log("Update timer is too fast!!");
-                    updateWatch.Restart();
-                    b_Time = Audio.time;
-                    m_Time = Audio.time;
-                }**/
-                //DebugInfo.Output("同步状况", m_Time + " -> " + Audio.time);
-            }
             // 若尚未开始游戏
             if (!Started && Audio.time == 0 &&!Instance.PreviewMode)
             {
                 // 返回负数时间让谱面正常下落
                 m_Time = (float)(DateTime.Now - StartTime).TotalSeconds - 3.0f;
             }
+            if (m_Time < -3f)
+                m_Time = -3f;
             return m_Time;
         }
     }
@@ -72,13 +54,11 @@ public class AudioUpdate : MonoBehaviour
     {
         updateWatch.Stop();
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        //UnityEngine.Debug.Log("Update delta time: " + UnityEngine.Time.deltaTime);
         if (playing)
         {
             m_Time = b_Time + (float)(updateWatch.ElapsedTicks * 1.0f / Stopwatch.Frequency);
-            updated = false;
         }
         if (Audio.isPlaying)
         {
@@ -99,6 +79,10 @@ public class AudioUpdate : MonoBehaviour
                 m_Time = Audio.time;
             }
         }
+    }
+    private void Update()
+    {
+        //UnityEngine.Debug.Log("Update delta time: " + UnityEngine.Time.deltaTime);
         //m_Time = Audio.time;
 
         // 如果正在暂停

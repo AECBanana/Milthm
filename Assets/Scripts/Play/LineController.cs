@@ -99,11 +99,11 @@ public class LineController : MonoBehaviour
                 float x = 0;
                 if (HitObjects[i] is TapController tap)
                 {
-                    x = (tap.Time - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * 5;
+                    x = (tap.Time - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * GamePlayLoops.FlowSpeedFactor * 5;
                 }
                 else if (HitObjects[i] is HoldController hold)
                 {
-                    x = (hold.From - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * 5 - 1.66f;
+                    x = (hold.From - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * GamePlayLoops.FlowSpeedFactor * 5 - 1.66f;
                 }
                 if (x <= MoveArea)
                 {

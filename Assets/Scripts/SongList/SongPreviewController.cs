@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.TerrainTools;
 
 public class SongPreviewController : MonoBehaviour
 {
@@ -105,6 +106,8 @@ public class SongPreviewController : MonoBehaviour
         BGM.clip = SongResources.Songs[uid];
         if (m.PreviewTime != -1)
             BGM.time = m.PreviewTime;
+        else
+            BGM.time = 0;
         BGM.Play();
 
 

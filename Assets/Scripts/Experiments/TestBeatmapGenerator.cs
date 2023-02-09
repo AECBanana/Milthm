@@ -18,8 +18,7 @@ public class TestBeatmapGenerator : MonoBehaviour
         model.BPMList.Add(new BeatmapModel.BPMData
         {
             BPM = 94.97f,
-            From = 0f,
-            To = 129f
+            Start = 0f
         });
         model.LineList.Add(new BeatmapModel.LineData
         {

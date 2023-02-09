@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 /// </summary>
 public class GamePlayLoops : MonoBehaviour
 {
+    public static float FlowSpeedFactor = 1.0f;
     public static bool AutoPlay = false;
     public static bool Vertical = false;
     public static bool PauseBtn = false;
@@ -107,6 +108,17 @@ public class GamePlayLoops : MonoBehaviour
                 }
             }
         }
+
+        int bpm = 0; float t = AudioUpdate.Time;
+        for (int i = 0;i < BeatmapLoader.Playing.BPMList.Count; i++)
+        {
+            if (t < BeatmapLoader.Playing.BPMList[i].Start)
+                break;
+            else
+                bpm = i;
+        }
+        FlowSpeedFactor = BeatmapLoader.Playing.BPMList[bpm].BPM / 250f;
+        //Debug.Log("Current BPM: " + BeatmapLoader.Playing.BPMList[bpm].BPM + ", flowspeed factor: " + FlowSpeedFactor);
 
         // ÔÝÍ£½çÃæ¿ØÖÆ
         if ((Input.GetKeyUp(KeyCode.Escape) || PauseBtn) && !PauseScreen.activeSelf && !HitJudge.Result.Dead && !HitJudge.Result.Win && AudioUpdate.Started && !CountDown.activeSelf)

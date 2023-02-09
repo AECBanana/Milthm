@@ -34,7 +34,7 @@ public class BeatmapModel
     [Serializable]
     public class BPMData
     {
-        public float From, To;
+        public float Start;
         public float BPM;
     }
     public List<BPMData> BPMList = new List<BPMData>();
@@ -118,9 +118,21 @@ public class BeatmapModel
     public int DetermineBPM(float time)
     {
         if (BPMList.Count == 1)
+        {
             return 0;
+        }
         else
-            return BPMList.FindIndex(x => x.From <= time && x.To >= time);
+        {
+            int ret = 0;
+            for (int i = 0;i < BPMList.Count; i++)
+            {
+                if (time < BPMList[i].Start)
+                    break;
+                else
+                    ret = i;
+            }
+            return ret;
+        }
     }
 
     /// <summary>
@@ -129,14 +141,16 @@ public class BeatmapModel
     /// <param name="time">歌曲时间</param>
     /// <param name="beat">拍数</param>
     /// <returns></returns>
-    public int[] ConvertByBPM(float time, int beat)
+    public int[] ConvertByBPM(float time, int beat, int bpm = -1)
     {
-        BPMData BPM = BPMList[DetermineBPM(time)];
+        if (bpm == -1)
+            bpm = DetermineBPM(time);
+        BPMData BPM = BPMList[bpm];
         float beattime = 60.0f / BPM.BPM;
-        int basebeat = (int)(Math.Floor((time - BPM.From) / beattime));
+        int basebeat = (int)(Math.Floor((time - BPM.Start) / beattime));
         return new int[]{
             basebeat,
-            (int)(Math.Round((time - BPM.From - basebeat * beattime) / (beattime / beat))),
+            (int)(Math.Round((time - BPM.Start - basebeat * beattime) / (beattime / beat))),
             beat
         };
     }
@@ -148,7 +162,7 @@ public class BeatmapModel
     /// <returns>(开始时间,结束时间)</returns>
     public (float, float) ToRealTime(NoteData note)
     {
-        return (BPMList[note.BPM].From + note.FromBeat * (60.0f / BPMList[note.BPM].BPM), BPMList[note.BPM].From + note.ToBeat * (60.0f / BPMList[note.BPM].BPM));
+        return (BPMList[note.BPM].Start + note.FromBeat * (60.0f / BPMList[note.BPM].BPM), BPMList[note.BPM].Start + note.ToBeat * (60.0f / BPMList[note.BPM].BPM));
     }
 
     /// <summary>

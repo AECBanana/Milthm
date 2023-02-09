@@ -46,15 +46,24 @@ public class MalodyConverter : MonoBehaviour
         model.Difficulty = data.meta.version;
         model.BeatmapUID = "Malody-" + data.meta.id;
         model.IllustrationFile = data.meta.background;
+        MalodyTime lstBPM = null;
         foreach(MalodyTime bpm in data.time)
         {
-            model.BPMList.Add(new BeatmapModel.BPMData
+            BeatmapModel.BPMData b = new BeatmapModel.BPMData
             {
                 BPM = bpm.bpm,
-                From = 0f,
-                To = 0f
-            });
-            break;
+                Start = 0
+            };
+            if (lstBPM != null)
+            {
+                b.Start = model.ToRealTime(new BeatmapModel.NoteData
+                {
+                    BPM = model.BPMList.Count - 1,
+                    From = bpm.beat
+                }).Item1;
+            }
+            model.BPMList.Add(b);
+            lstBPM = bpm;
         }
         for(int i = 1; i <= data.meta.mode_ext.column; i++)
         {
