@@ -59,7 +59,8 @@ public class MalodyConverter : MonoBehaviour
                 b.Start = model.ToRealTime(new BeatmapModel.NoteData
                 {
                     BPM = model.BPMList.Count - 1,
-                    From = bpm.beat
+                    From = bpm.beat,
+                    To = bpm.beat
                 }).Item1;
             }
             model.BPMList.Add(b);

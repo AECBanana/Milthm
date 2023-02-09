@@ -39,6 +39,7 @@ public class DifficultyController : MonoBehaviour
             PlayerPrefs.SetInt(uid + ".lastPlay", index);
             BeatmapLoader.Playing = SongResources.Beatmaps[uid][index];
             Loading.Run("PlayScene", "PlayLoadingPrefab");
+            MusicEffectBtn.CurrentSprite = null;
         }
         else
         {
