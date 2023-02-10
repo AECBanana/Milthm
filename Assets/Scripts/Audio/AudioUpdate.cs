@@ -58,7 +58,8 @@ public class AudioUpdate : MonoBehaviour
     {
         if (playing)
         {
-            m_Time = b_Time + (float)(updateWatch.ElapsedTicks * 1.0f / Stopwatch.Frequency);
+            DebugInfo.Tick("TimeUpdate");
+            m_Time = b_Time + updateWatch.ElapsedMilliseconds / 1000f;
         }
         if (Audio.isPlaying)
         {

@@ -44,7 +44,7 @@ public class MalodyConverter : MonoBehaviour
         model.Title = data.meta.song.title;
         model.PreviewTime = data.meta.preview / 1000f;
         model.Difficulty = data.meta.version;
-        model.BeatmapUID = "Malody-" + data.meta.id;
+        model.BeatmapUID = "Malody-" + data.meta.id + "-" + data.meta.song.id;
         model.IllustrationFile = data.meta.background;
         MalodyTime lstBPM = null;
         foreach(MalodyTime bpm in data.time)
