@@ -12,10 +12,11 @@ public class SongPreviewController : MonoBehaviour
     public GameObject DifficultyPrefab;
     public Animator PreviewPanel;
     public TMP_Text Title, Description, From;
-    public Image Illustration, Background, FakeCover;
+    public Image Illustration, Background, FakeCover, Bg2;
     public AudioSource BGM;
     public AudioHighPassFilter Filter;
     public SongItemController SongItem;
+    public Animator PanelAnimator;
     public static bool LeftBtn = false, RightBtn = false;
 
     private void Awake()
@@ -58,6 +59,7 @@ public class SongPreviewController : MonoBehaviour
                 ani.Play("SongToLeft", 0, 0.0f);
                 PreviewPanel.Play("SongFromRight", 0, 0.0f);
             }
+            DifficultyController.Ready = false;
         }
     }
 
@@ -98,6 +100,7 @@ public class SongPreviewController : MonoBehaviour
 
         Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
         Background.sprite = Illustration.sprite;
+        Bg2.sprite = Illustration.sprite;
         MusicEffectBtn.CurrentSprite = Illustration.sprite;
 
         Title.text = m.Title;

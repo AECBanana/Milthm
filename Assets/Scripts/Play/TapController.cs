@@ -110,10 +110,7 @@ public class TapController : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-
-    }
-    private void FixedUpdate()
-    {
         UpdateGraphics();
     }
+
 }

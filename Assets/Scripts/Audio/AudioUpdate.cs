@@ -54,7 +54,7 @@ public class AudioUpdate : MonoBehaviour
     {
         updateWatch.Stop();
     }
-    private void FixedUpdate()
+    private void Update()
     {
         if (playing)
         {
@@ -80,9 +80,6 @@ public class AudioUpdate : MonoBehaviour
                 m_Time = Audio.time;
             }
         }
-    }
-    private void Update()
-    {
         //UnityEngine.Debug.Log("Update delta time: " + UnityEngine.Time.deltaTime);
         //m_Time = Audio.time;
 

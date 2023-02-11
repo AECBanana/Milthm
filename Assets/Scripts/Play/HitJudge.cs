@@ -17,7 +17,7 @@ public class HitJudge : MonoBehaviour
     {
         private long mHP = 100;
         private bool danger_hiding = false;
-        public int MissContinious = 0;
+        public int MissContinuous = 0;
         public int FullCombo;
         public int Perfect2, Perfect, Good, Bad, Miss;
         public int MaxCombo, Combo, Hit;
@@ -396,7 +396,7 @@ public class HitJudge : MonoBehaviour
             miss = true;
             Result.Miss++;
             missed = true;
-            Result.MissContinious++;
+            Result.MissContinuous++;
             if (!NoDead)
                 Result.HP -= 7;
             if (orTime > 0)
@@ -415,7 +415,7 @@ public class HitJudge : MonoBehaviour
             Result.Combo++;
             if (Result.Combo > Result.MaxCombo) 
                 Result.MaxCombo = Result.Combo;
-            Result.MissContinious = 0;
+            Result.MissContinuous = 0;
             if (Result.Combo % 100 == 0 || Result.Combo == 50)
             {
                 GamePlayLoops.Instance.ComboTip.text = Result.Combo + " COMBO";
@@ -471,7 +471,7 @@ public class HitJudge : MonoBehaviour
             else if (note is HoldController hold)
                 RecordLog.AppendLine("[AutoMiss] " + hold.Index + "(Hold): Missed");
         }
-        Result.MissContinious++;
+        Result.MissContinuous++;
         Result.Miss++;
         Result.Hit++;
         Result.Combo = 0;

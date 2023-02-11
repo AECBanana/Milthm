@@ -55,7 +55,7 @@ public class LineController : MonoBehaviour
         if (TouchRaycast.Instance != null)
             TouchRaycast.Instance.Revoke(gameObject);
     }
-    private void FixedUpdate()
+    private void Update()
     {
         if (HitJudge.Result.Dead && !AudioUpdate.Instance.PreviewMode)
         {

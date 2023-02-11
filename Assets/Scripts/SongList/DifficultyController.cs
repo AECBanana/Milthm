@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class DifficultyController : MonoBehaviour
 {
     public static DifficultyController Active;
+    public static bool Ready = false;
     public Image Grade, Back;
-    public TMP_Text Score, Accuracy, Title;
+    public TMP_Text Score, Accuracy, Title, Difficulty, Info;
     public Sprite ActiveSprite, DeactiveSprite;
     public string uid;
     public int index;
@@ -17,9 +19,10 @@ public class DifficultyController : MonoBehaviour
     {
         if (PlayerPrefs.GetString(uid + "." + index + ".grade") == "")
         {
-            Grade.gameObject.SetActive(false);
-            Score.gameObject.SetActive(false);
-            Accuracy.gameObject.SetActive(false);
+            Score.text = "0000000";
+            Accuracy.text = "00.00%";
+            Grade.sprite = Resources.Load<Sprite>("Level\\Unknown");
+            Grade.SetNativeSize();
         }
         else
         {
@@ -28,21 +31,29 @@ public class DifficultyController : MonoBehaviour
             Grade.sprite = Resources.Load<Sprite>("Level\\" + PlayerPrefs.GetString(uid + "." + index + ".grade"));
             Grade.SetNativeSize();
         }
+        double diff = BeatmapDifficulty.Caculate(uid, SongResources.Beatmaps[uid][index]);
+        Difficulty.text = diff.ToString("0.0");
+        TimeSpan length = TimeSpan.FromSeconds(SongResources.Songs[uid].length);
+        Info.text = "物量   " + SongResources.Beatmaps[uid][index].NoteList.Count + "   长度   " + length.Minutes + ":" + length.Seconds.ToString("00");
     }
 
     public void Touch()
     {
         if (Active == this)
         {
-            BeatmapLoader.PlayingUID = uid;
-            BeatmapLoader.PlayingIndex = index;
-            PlayerPrefs.SetInt(uid + ".lastPlay", index);
-            BeatmapLoader.Playing = SongResources.Beatmaps[uid][index];
-            Loading.Run("PlayScene", "PlayLoadingPrefab");
-            MusicEffectBtn.CurrentSprite = null;
+            if (!Ready)
+            {
+                SongPreviewController.Instance.PanelAnimator.Play("ReadyPlay", 0, 0.0f);
+                Ready = true;
+            }
         }
         else
         {
+            if (Ready)
+            {
+                SongPreviewController.Instance.PanelAnimator.Play("CancelPlay", 0, 0.0f);
+                Ready = false;
+            }
             Active.Back.sprite = DeactiveSprite;
             Back.sprite = ActiveSprite;
             Active = this;
@@ -53,6 +64,7 @@ public class DifficultyController : MonoBehaviour
             SongPreviewController.Instance.FakeCover.gameObject.SetActive(true);
             SongPreviewController.Instance.Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
             SongPreviewController.Instance.Background.sprite = SongPreviewController.Instance.Illustration.sprite;
+            SongPreviewController.Instance.Bg2.sprite = SongPreviewController.Instance.Illustration.sprite;
         }
     }
 }

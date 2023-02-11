@@ -195,10 +195,7 @@ public class HoldController : MonoBehaviour
                 HeadHit = true;
             }
         }
-
-    }
-    private void FixedUpdate()
-    {
         UpdateGraphics();
     }
+
 }
