@@ -31,6 +31,8 @@ public class SongItemController : MonoBehaviour
             SongResources.Songs.Remove(Beatmap);
             SongResources.Illustration.Remove(Beatmap);
             SongResources.Beatmaps.Remove(Beatmap);
+            NextSong.PreSong = PreSong;
+            PreSong.NextSong = NextSong;
         }
         catch
         {
