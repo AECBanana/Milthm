@@ -65,6 +65,7 @@ public class SongPreviewController : MonoBehaviour
 
     public void Show(string uid)
     {
+        DifficultyController.Ready = false;
         Transform scroll = DifficultyPrefab.transform.parent;
         for (int i = 0; i < scroll.childCount; i++)
         {

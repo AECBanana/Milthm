@@ -12,7 +12,7 @@ public class SettingsController : MonoBehaviour
     public GameObject Line;
     public Slider FlowSpeed, Scale, BGMVolume, HitVolume;
     public Toggle ExportJudge, NoDead, NoCustomSnd, NoPerfect;
-    public TMP_Dropdown Resolution, NoFSJudge, JudgeRange;
+    public TMP_Dropdown Resolution, NoFSJudge;
     public TMP_InputField Delay;
     private void Awake()
     {
@@ -40,7 +40,6 @@ public class SettingsController : MonoBehaviour
         NoCustomSnd.isOn = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
         NoPerfect.isOn = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
         NoFSJudge.value = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
-        JudgeRange.value = PlayerPrefs.GetInt("JudgeRange", 1);
         Delay.text = DelayValue.ToString();
         Resolution.value = PlayerPrefs.GetInt("Resolution", 0);
         updateing = false;
@@ -95,7 +94,6 @@ public class SettingsController : MonoBehaviour
         PlayerPrefs.SetString("NoCustomSnd", NoCustomSnd.isOn.ToString());
         PlayerPrefs.SetString("NoPerfect", NoPerfect.isOn.ToString());
         PlayerPrefs.SetInt("JudgeMode", NoFSJudge.value);
-        PlayerPrefs.SetInt("JudgeRange", JudgeRange.value);
         PlayerPrefs.SetInt("Resolution", Resolution.value);
         foreach (VolumeSettings vs in VolumeSettings.Volumes)
             vs.Changed = true;

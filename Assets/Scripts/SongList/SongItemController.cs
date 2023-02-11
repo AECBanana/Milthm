@@ -53,17 +53,6 @@ public class SongItemController : MonoBehaviour
 
     public void TouchUp()
     {
-        pressing = false;
-        if ((DateTime.Now - pressTime).TotalSeconds >= 0.5)
-        {
-            DeleteMode();
-            pressTime = DateTime.MinValue;
-            return;
-        }
-        if (pressTime == DateTime.MinValue)
-        {
-            return;
-        }
         Preview.SongItem = this;
         Preview.Show(Beatmap);
         pressTime = DateTime.MinValue;
