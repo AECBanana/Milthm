@@ -11,7 +11,7 @@ public class GameSettings : MonoBehaviour
     // 击打音效
     public static string HitSnd = "milthm";
     // 判定区间
-    public static float Perfect2 = 0.03f, Perect = 0.06f, Good = 0.12f, Bad = 0.135f, Valid = 0.15f, HoldValid = 0.3f;
+    public static float Perfect2 = 0.03f, Perfect = 0.06f, Good = 0.12f, Bad = 0.135f, Valid = 0.15f, HoldValid = 0.3f;
     public static float ScreenW, ScreenH;
     public static float WFactor, HFactor;
     public static bool NoCustomSnd = false;
@@ -21,10 +21,7 @@ public class GameSettings : MonoBehaviour
     private void Awake()
     {
         Cursor.SetCursor(CursorTexture, new Vector2(16, 16), CursorMode.Auto);
-        QualitySettings.vSyncCount = 2;
-        if (Application.platform == RuntimePlatform.Android)
-            Application.targetFrameRate = 120;
-        else
-            Application.targetFrameRate = 300;
+        QualitySettings.vSyncCount = 1;
+        Application.targetFrameRate = Application.platform == RuntimePlatform.Android ? 120 : 300;
     }
 }

@@ -12,33 +12,30 @@ public class TapController : MonoBehaviour
     public string Snd;
     public KeyCode Key;
     public int Index;
-    int holdKey = -1;
-    bool Missed = false;
-    SpriteRenderer Renderer;
+    private int holdKey = -1;
+    private bool missed = false;
+    private SpriteRenderer spriteRenderer;
     private void Awake()
     {
-        Renderer = GetComponent<SpriteRenderer>();
-        Renderer.color = new Color(1f, 1f, 1f, 0f);
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(1f, 1f, 1f, 0f);
     }
     private void UpdateGraphics()
     {
-        //Debug.Log("Total flowspeed: " + Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed);
-        //Debug.Log("Line: " + Line.FlowSpeed  + ", BPM: " + GamePlayLoops.FlowSpeedFactor + ", Beatmap: " + BeatmapLoader.FlowSpeed);
-        //Debug.Log("delta time:" + (Time - AudioUpdate.Time));
         float x = (Time - AudioUpdate.Time) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5, y = 0;
         if (AudioUpdate.Instance.PreviewMode)
             x = (Time - AudioUpdate.Time + SettingsController.DelayValue / 1000f) * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * Line.FlowSpeed * 5;
         if (x > LineController.MoveArea)
         {
-            if (Renderer.color.a != 0)
-                Renderer.color = new Color(1f, 1f, 1f, 0f);
+            if (spriteRenderer.color.a != 0)
+                spriteRenderer.color = new Color(1f, 1f, 1f, 0f);
             return;
         }
-        if (Renderer.color.a == 0)
-            Renderer.color = new Color(1f, 1f, 1f, 1f);
+        if (spriteRenderer.color.a == 0)
+            spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
         if (HitJudge.Result.Dead)
         {
-            Missed = true;
+            missed = true;
             float pass = (float)(DateTime.Now - HitJudge.Result.DeadTime).TotalSeconds;
             x -= pass * (10 + (Time - AudioUpdate.Time) * 10f);
             y -= pass * (Index % 2 == 0 ? 1 : -1);
@@ -49,38 +46,31 @@ public class TapController : MonoBehaviour
         {
             float d = -1 * x / 2f;
             if (d > 1f) d = 1f;
-            Renderer.color = new Color(1f, 1f, 1f, 1f - d);
+            spriteRenderer.color = new Color(1f, 1f, 1f, 1f - d);
         }
     }
-    public void Judge()
+
+    private void Judge()
     {
-        if (AudioUpdate.Time - Time > GameSettings.Bad && !Missed)
+        if (AudioUpdate.Time - Time > GameSettings.Bad && !missed)
         {
             if (HitJudge.Record)
                 HitJudge.RecordLog.AppendLine("[AutoMiss-TooLate] " + Index + "(Tap) Missed <At " + Time + ">");
-            HitJudge.JudgeMiss(transform.parent, this);
-            Missed = true;
+            HitJudge.JudgeMiss(transform.parent, this, 0);
+            missed = true;
             Line.RemainingNote--;
             gameObject.SetActive(false);
             //Destroy(gameObject);
         }
-        if (!Missed && !Hit && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
+        if (!missed && !Hit && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Valid)
         {
             holdKey = HitJudge.IsPress(this);
             if (holdKey != 0)
             {
-                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref Missed);
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref missed, 0);
                 HitJudge.BindNotes[holdKey] = null;
-                if (Missed)
-                {
-                    /**if (HitJudge.Record)
-                        HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Tap) released " + holdKey);
-                    HitJudge.BindNotes[holdKey] = null;**/
-                }
-                else
-                {
+                if (!missed)
                     Hit = true;
-                }
                 Line.RemainingNote--;
                 gameObject.SetActive(false);
                 //Destroy(gameObject);
@@ -88,7 +78,7 @@ public class TapController : MonoBehaviour
         }
         if (GamePlayLoops.AutoPlay && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
-            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref Missed);
+            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref missed, 0);
             Hit = true;
             Line.RemainingNote--;
             gameObject.SetActive(false);
@@ -105,7 +95,7 @@ public class TapController : MonoBehaviour
         {
             if (Mathf.Abs(Time - AudioUpdate.Time + SettingsController.DelayValue / 1000) <= GameSettings.Perfect2)
             {
-                HitJudge.PlayPerfect(transform.parent);
+                HitJudge.PlayPerfect(transform.parent, 0);
                 Line.RemainingNote--;
                 gameObject.SetActive(false);
             }

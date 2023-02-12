@@ -86,7 +86,7 @@ public class GamePlayLoops : MonoBehaviour
             DebugInfo.Output("SongLength", BeatmapLoader.Playing.SongLength.ToString());
             DebugInfo.Output("Hit/FC", HitJudge.Result.Hit + "/" + HitJudge.Result.FullCombo);
             // 未指定歌曲长度则在最后一个note击打后结束
-            if (BeatmapLoader.Playing.SongLength == -1f)
+            if (Math.Abs(BeatmapLoader.Playing.SongLength - (-1f)) < 0.001f)
             {
                 if (LineController.UnhitLines.Count == 0)
                 {
@@ -110,14 +110,14 @@ public class GamePlayLoops : MonoBehaviour
         }
 
         int bpm = 0; float t = AudioUpdate.Time;
-        for (int i = 0;i < BeatmapLoader.Playing.BPMList.Count; i++)
+        for (int i = 0;i < BeatmapLoader.Playing!.BPMList.Count; i++)
         {
             if (t < BeatmapLoader.Playing.BPMList[i].Start)
                 break;
             else
                 bpm = i;
         }
-        FlowSpeedFactor = BeatmapLoader.Playing.BPMList[bpm].BPM / 250f;
+        FlowSpeedFactor = Mathf.Clamp(BeatmapLoader.Playing.BPMList[bpm].BPM / 250f, 0.8f, 1.2f);
         //Debug.Log("Current BPM: " + BeatmapLoader.Playing.BPMList[bpm].BPM + ", flowspeed factor: " + FlowSpeedFactor);
 
         // 暂停界面控制
@@ -132,11 +132,12 @@ public class GamePlayLoops : MonoBehaviour
         // 跳过控制
         if (HitJudge.HitList.Count > 0 && HitJudge.HitList[0].Count > 0 && !HitJudge.Result.Win && !HitJudge.Result.Dead)
         {
-            float time = 0;
-            if (HitJudge.HitList[0][0] is TapController tap)
-                time = tap.Time;
-            else if (HitJudge.HitList[0][0] is HoldController hold)
-                time = hold.From;
+            float time = HitJudge.HitList[0][0] switch
+            {
+                TapController tap => tap.Time,
+                HoldController hold => hold.From,
+                _ => 0
+            };
             if (time - AudioUpdate.Time > 3 && AudioUpdate.Started)
             {
                 Skip.gameObject.SetActive(true);

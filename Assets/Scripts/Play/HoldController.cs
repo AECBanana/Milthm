@@ -13,7 +13,6 @@ public class HoldController : MonoBehaviour
     public float From, To;
     public Sprite DoubleSprite;
     public bool HeadHit = false, EndHit = false;
-    public Animator HitAni = null;
     public string Snd;
     public int Index;
     int holdKey = 0;
@@ -76,7 +75,7 @@ public class HoldController : MonoBehaviour
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
                     if (HitJudge.Record)
                         HitJudge.RecordLog.AppendLine("[AutoMiss-TooLate] " + Index + "(Hold) Missed <From " + From + " to " + To + ">");
-                    HitJudge.JudgeMiss(transform.parent, this);
+                    HitJudge.JudgeMiss(transform.parent, this, 1);
                 }
                 if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
                 {
@@ -88,8 +87,6 @@ public class HoldController : MonoBehaviour
                 HeadHit = false;
                 gameObject.SetActive(false);
                 //Destroy(gameObject);
-                if (HitAni != null)
-                    HitAni.SetFloat("Speed", 1.0f);
             }
         }
     }
@@ -102,30 +99,26 @@ public class HoldController : MonoBehaviour
                 // Miss
                 Missed = true;
                 Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                HitJudge.JudgeMiss(transform.parent, this);
+                HitJudge.JudgeMiss(transform.parent, this, 1);
             }
             if (!Missed && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Valid)
             {
                 if ((holdKey = HitJudge.IsPress(this)) != 0)
                 {
-                    HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed);
+                    HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed, 1);
                     if (Missed)
                     {
                         if (HitJudge.Record)
                             HitJudge.RecordLog.AppendLine("[Release] " + Index + "(Hold) released " + holdKey);
                         HitJudge.BindNotes[holdKey] = null;
                     }
-                    if (HitAni != null)
-                        HitAni.Play("HoldAni", 0, 0.0f);
                     if (!Missed)
                         HeadHit = true;
                 }
             }
             if (GamePlayLoops.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
-                HitAni = HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed);
-                if (HitAni != null)
-                    HitAni.Play("HoldAni", 0, 0.0f);
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed, 1);
                 HeadHit = true;
             }
         }
@@ -150,13 +143,11 @@ public class HoldController : MonoBehaviour
                         // Miss
                         Missed = true;
                         Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                        HitJudge.JudgeMiss(transform.parent, this);
+                        HitJudge.JudgeMiss(transform.parent, this, 1);
                         if (HitJudge.Record)
                             HitJudge.RecordLog.AppendLine("[AutoMiss-NotEnough] " + Index + "(Hold) released too early.");
                     }
                     EndHit = true;
-                    if (HitAni != null)
-                        HitAni.SetFloat("Speed", 1.0f);
                 }
                 if (holdKey != 0 && !HitJudge.IsHolding(holdKey))
                 {
@@ -172,8 +163,6 @@ public class HoldController : MonoBehaviour
                     else
                     {
                         EndHit = true;
-                        if (HitAni != null)
-                            HitAni.SetFloat("Speed", 1.0f);
                     }
                 }
             }
@@ -189,9 +178,7 @@ public class HoldController : MonoBehaviour
         {
             if (!HeadHit && Mathf.Abs(From - AudioUpdate.Time + SettingsController.DelayValue / 1000) <= GameSettings.Perfect2)
             {
-                HitAni = HitJudge.PlayPerfect(transform.parent);
-                if (HitAni != null)
-                    HitAni.Play("HoldAni", 0, 0.0f);
+                HitJudge.PlayPerfect(transform.parent, 1);
                 HeadHit = true;
             }
         }

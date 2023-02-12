@@ -24,10 +24,7 @@ public class HitJudge : MonoBehaviour
         public int Early, Late;
         public long HP
         {
-            get
-            {
-                return mHP;
-            }
+            get => mHP;
             set
             {
                 mHP = value;
@@ -86,13 +83,11 @@ public class HitJudge : MonoBehaviour
                 return (long)(orScore * judgeBuff);
             }
         }
-        public double OriginScore
-        {
-            get
-            {
-                return (MaxCombo * 1.0 / FullCombo) * 110000 + ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + Good * 1.0 / FullCombo * 0.6 + Bad * 1.0 / FullCombo * 0.1) * 900000;
-            }
-        }
+        public double OriginScore => (MaxCombo * 1.0 / FullCombo) * 110000 + 
+                                     ((Perfect2 * 1.1 + Perfect * 1.0) / FullCombo + 
+                                      Good * 1.0 / FullCombo * 0.6 + 
+                                      Bad * 1.0 / FullCombo * 0.1) * 900000;
+
         public float Accuracy
         {
             get
@@ -104,7 +99,7 @@ public class HitJudge : MonoBehaviour
         }
     }
     // 指定判定的特效物体
-    static GameObject Perfect, Good, Miss, Perfect2;
+    private static GameObject[] Perfect, Good, Miss, Perfect2;
     public static ResultData Result = new ResultData();
     public static float JudgeArea = 0;
     public static int JudgeRange = 1;
@@ -114,7 +109,7 @@ public class HitJudge : MonoBehaviour
     /// 判定模式，0=全屏判定，1=非全屏判定(但PC不支持)
     /// </summary>
     public static int JudgeMode = 0;
-    public static StringBuilder RecordLog = new StringBuilder();
+    public static readonly StringBuilder RecordLog = new StringBuilder();
     /// <summary>
     /// 击打列表
     /// </summary>
@@ -130,10 +125,18 @@ public class HitJudge : MonoBehaviour
 
     static HitJudge()
     {
-        Perfect = Resources.Load<GameObject>("Perfect");
-        Perfect2 = Resources.Load<GameObject>("Perfect+");
-        Good = Resources.Load<GameObject>("Good");
-        Miss = Resources.Load<GameObject>("Miss");
+        Perfect2 =  new GameObject[] {
+            Resources.Load<GameObject>("Perfect+"), Resources.Load<GameObject>("Perfect+_Hold")
+        };
+        Perfect =  new GameObject[] {
+            Resources.Load<GameObject>("Perfect"), Resources.Load<GameObject>("Perfect_Hold")
+        };
+        Good =  new GameObject[] {
+            Resources.Load<GameObject>("Good"), Resources.Load<GameObject>("Good_Hold")
+        };
+        Miss =  new GameObject[] {
+            Resources.Load<GameObject>("Miss"), Resources.Load<GameObject>("Miss_Hold")
+        };
     }
     /// <summary>
     /// 查找可用的输入
@@ -146,29 +149,33 @@ public class HitJudge : MonoBehaviour
             return 0;
         if (Record)
             RecordLog.AppendLine("++Start Seeking");
-        for(int i = 0;i < CaptureOnce.Count; i++)
+        foreach (var capture in CaptureOnce)
         {
-            if (BindNotes[CaptureOnce[i]] == null)
+            if (!BindNotes[capture])
             {
                 if (Record)
-                    RecordLog.AppendLine(CaptureOnce[i] + " is AVALIABLE.\n++");
-                BindNotes[CaptureOnce[i]] = note;
-                return CaptureOnce[i];
+                    RecordLog.AppendLine(capture + " is AVALIABLE.\n++");
+                BindNotes[capture] = note;
+                return capture;
             }
             else if (Record)
             {
-                if (BindNotes[CaptureOnce[i]] is TapController tap)
-                    RecordLog.AppendLine(CaptureOnce[i] + " is connected with " + tap.Index + "(Tap)");
-                else if (BindNotes[CaptureOnce[i]] is HoldController hold)
-                    RecordLog.AppendLine(CaptureOnce[i] + " is connected with " + hold.Index + "(Hold)");
+                switch (BindNotes[capture])
+                {
+                    case TapController tap:
+                        RecordLog.AppendLine(capture + " is connected with " + tap.Index + "(Tap)");
+                        break;
+                    case HoldController hold:
+                        RecordLog.AppendLine(capture + " is connected with " + hold.Index + "(Hold)");
+                        break;
+                }
             }
         }
-        if (Record)
-        {
-            if (CaptureOnce.Count == 0)
-                RecordLog.AppendLine("No inputs right now.");
-            RecordLog.AppendLine("++");
-        }
+
+        if (!Record) return 0;
+        if (CaptureOnce.Count == 0)
+            RecordLog.AppendLine("No inputs right now.");
+        RecordLog.AppendLine("++");
         return 0;
     }
     /// <summary>
@@ -178,10 +185,7 @@ public class HitJudge : MonoBehaviour
     /// <returns>非0表示存在有效输入</returns>
     public static int IsPress(MonoBehaviour note)
     {
-        if (Application.platform == RuntimePlatform.Android)
-            return IsPress_Android(note);
-        else
-            return IsPress_Windows(note);
+        return Application.platform == RuntimePlatform.Android ? IsPress_Android(note) : IsPress_Windows(note);
     }
     /// <summary>
     /// 是否输入持续中
@@ -198,7 +202,7 @@ public class HitJudge : MonoBehaviour
             }
             else
             {
-                for (int i = 0; i < Input.touchCount; i++)
+                for (var i = 0; i < Input.touchCount; i++)
                     if (Input.touches[i].fingerId == key - 1 && Input.touches[i].phase != TouchPhase.Ended && Input.touches[i].phase != TouchPhase.Canceled)
                         return true;
                 return false;
@@ -241,7 +245,7 @@ public class HitJudge : MonoBehaviour
                     CaptureOnce.Add(key);
                     return key;
                 }
-                else if (Record)
+                if (Record)
                 {
                     if (Input.GetKeyDown((KeyCode)key))
                         RecordLog.AppendLine("[Log] " + key + " avaliable, but being catched.");
@@ -272,11 +276,12 @@ public class HitJudge : MonoBehaviour
         if (JudgeMode == 1)
         {
             // 非全屏判定
-            LineController line = null;
-            if (note is TapController mtap)
-                line = mtap.Line;
-            else if (note is HoldController mhold)
-                line = mhold.Line;
+            var line = note switch
+            {
+                TapController x => x.Line,
+                HoldController x => x.Line,
+                _ => null
+            };
             if (line.FirstHold && !CaptureOnce.Contains(line.Index + 1))
             {
                 if (!BindNotes.ContainsKey(line.Index + 1))
@@ -291,21 +296,20 @@ public class HitJudge : MonoBehaviour
         {
             foreach (Touch touch in Input.touches)
             {
-                if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled && !CaptureOnce.Contains(touch.fingerId + 1))
+                if (touch.phase is TouchPhase.Ended or TouchPhase.Canceled ||
+                    CaptureOnce.Contains(touch.fingerId + 1)) continue;
+                if (!BindNotes.ContainsKey(touch.fingerId + 1))
+                    BindNotes.Add(touch.fingerId + 1, null);
+                if (Record)
                 {
-                    if (!BindNotes.ContainsKey(touch.fingerId + 1))
-                        BindNotes.Add(touch.fingerId + 1, null);
-                    if (Record)
-                    {
-                        if (note is TapController tap)
-                            RecordLog.AppendLine("[Bind] " + tap.Index + "(Tap) -> Finger " + (touch.fingerId + 1));
-                        else if (note is HoldController hold)
-                            RecordLog.AppendLine("[Bind] " + hold.Index + "(Hold) -> Finger " + (touch.fingerId + 1));
-                    }
-                    BindNotes[touch.fingerId + 1] = note;
-                    CaptureOnce.Add(touch.fingerId + 1);
-                    return touch.fingerId + 1;
+                    if (note is TapController tap)
+                        RecordLog.AppendLine("[Bind] " + tap.Index + "(Tap) -> Finger " + (touch.fingerId + 1));
+                    else if (note is HoldController hold)
+                        RecordLog.AppendLine("[Bind] " + hold.Index + "(Hold) -> Finger " + (touch.fingerId + 1));
                 }
+                BindNotes[touch.fingerId + 1] = note;
+                CaptureOnce.Add(touch.fingerId + 1);
+                return touch.fingerId + 1;
             }
             return 0;
         }
@@ -314,22 +318,21 @@ public class HitJudge : MonoBehaviour
             return 0;
         }
     }
-    public static Animator PlayPerfect(Transform AniParent)
+    public static void PlayPerfect(Transform aniParent, int type)
     {
         SndPlayer.Play(GameSettings.HitSnd);
-        GameObject go = Instantiate(Perfect2, AniParent);
+        var go = Instantiate(Perfect2[type], aniParent);
         go.transform.localPosition = new Vector3(-1.97f, 0, 0);
         go.SetActive(true);
-        return go.GetComponent<Animator>();
     }
     /// <summary>
     /// 判定
     /// </summary>
-    /// <param name="AniParent">判定动画生成位置</param>
+    /// <param name="aniParent">判定动画生成位置</param>
     /// <param name="note">note</param>
     /// <param name="deltaTime">误差时间</param>
     /// <returns>如有判定动画生成，则为非null</returns>
-    public static Animator Judge(Transform AniParent, MonoBehaviour note, float deltaTime, string snd, ref bool missed)
+    public static void Judge(Transform aniParent, MonoBehaviour note, float deltaTime, string snd, ref bool missed, int type)
     {
         GameObject effect = null;
         float orTime = deltaTime;
@@ -337,19 +340,19 @@ public class HitJudge : MonoBehaviour
         bool miss = false;
         if (deltaTime <= GameSettings.Perfect2)
         {
-            effect = Perfect2;
+            effect = Perfect2[type];
             Result.Perfect2++;
             Result.HP += 3;
         }
-        else if (deltaTime <= GameSettings.Perect)
+        else if (deltaTime <= GameSettings.Perfect)
         {
-            effect = Perfect;
+            effect = Perfect[type];
             Result.Perfect++;
             Result.HP += 2;
         }
         else if (deltaTime <= GameSettings.Good)
         {
-            effect = Good;
+            effect = Good[type];
             Result.Good++;
             Result.HP += 1;
             if (orTime > 0)
@@ -391,7 +394,7 @@ public class HitJudge : MonoBehaviour
                 else if (note is HoldController hold)
                     RecordLog.AppendLine("[AutoMiss-TooEarly] " + hold.Index + "(Hold) Missed");
             }
-            effect = Miss;
+            effect = Miss[type];
             Result.Combo = 0;
             miss = true;
             Result.Miss++;
@@ -424,25 +427,25 @@ public class HitJudge : MonoBehaviour
         }
         if (Record)
         {
-            if (note is TapController tap)
-                RecordLog.AppendLine("[Judge] " + tap.Index + "(Tap): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
-            else if (note is HoldController hold)
-                RecordLog.AppendLine("[Judge] " + hold.Index + "(Hold): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
+            switch (note)
+            {
+                case TapController tap:
+                    RecordLog.AppendLine("[Judge] " + tap.Index + "(Tap): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
+                    break;
+                case HoldController hold:
+                    RecordLog.AppendLine("[Judge] " + hold.Index + "(Hold): " + deltaTime * 1000 + "ms <At " + AudioUpdate.Time + ">");
+                    break;
+            }
         }
         Result.Hit++;
         MoveNext(note);
-        if (effect != null)
+        if (effect)
         {
-            if (effect == Perfect && GameSettings.NoPerfect)
-                effect = Perfect2;
-            GameObject go = Instantiate(effect, AniParent);
+            if (effect == Perfect[type] && GameSettings.NoPerfect)
+                effect = Perfect2[type];
+            var go = Instantiate(effect, aniParent);
             go.transform.localPosition = new Vector3(-1.97f, 0, 0); //4.1f
             go.SetActive(true);
-            return go.GetComponent<Animator>();
-        }
-        else
-        {
-            return null;
         }
     }
     /// <summary>
@@ -460,9 +463,10 @@ public class HitJudge : MonoBehaviour
     /// <summary>
     /// 强制判定Miss（过晚、hold过早松开等）
     /// </summary>
-    /// <param name="AniParent"></param>
+    /// <param name="aniParent"></param>
     /// <param name="note"></param>
-    public static void JudgeMiss(Transform AniParent, MonoBehaviour note)
+    /// <param name="aniType"></param>
+    public static void JudgeMiss(Transform aniParent, MonoBehaviour note, int aniType)
     {
         if (Record)
         {
@@ -479,7 +483,7 @@ public class HitJudge : MonoBehaviour
         MoveNext(note);
         if (!NoDead)
             Result.HP -= 7;
-        GameObject go = Instantiate(Miss, AniParent);
+        var go = Instantiate(Miss[aniType], aniParent);
         go.transform.localPosition = new Vector3(-1.97f, 0, 0);
         go.SetActive(true);
     }

@@ -6,8 +6,8 @@ using UnityEngine;
 /// </summary>
 public class SndPlayer : MonoBehaviour
 {
-    public static Dictionary<string, AudioClip> LoadedClips = new Dictionary<string, AudioClip>();
-    public static AudioSource ActiveSndPlayer = null;
+    private static readonly Dictionary<string, AudioClip> LoadedClips = new Dictionary<string, AudioClip>();
+    private static readonly AudioSource _activeSndPlayer = null;
     /// <summary>
     /// 播放音效
     /// </summary>
@@ -22,7 +22,7 @@ public class SndPlayer : MonoBehaviour
         }
         catch
         {
-            Debug.Log("无法播放：" + snd);
+            DebugInfo.Output("无法播放", snd);
         }
     }
     /// <summary>
@@ -31,19 +31,17 @@ public class SndPlayer : MonoBehaviour
     /// <param name="snd">音效资源</param>
     public static void Play(AudioClip snd)
     {
-        if (ActiveSndPlayer != null)
-        {
-            DebugInfo.Tick("Audio Clips/s");
-            ActiveSndPlayer.PlayOneShot(snd);
-            return;
-        }
-        GameObject SndPlayerPrefab = (GameObject)Resources.Load("SndPlayer");
-        GameObject go = Instantiate(SndPlayerPrefab);
-        AudioSource audio = go.GetComponent<AudioSource>();
+        DebugInfo.Tick("Audio Clips/s");
+        _activeSndPlayer.PlayOneShot(snd);
+    }
+
+    static SndPlayer()
+    {
+        var sndPlayerPrefab = (GameObject)Resources.Load("SndPlayer");
+        var go = Instantiate(sndPlayerPrefab);
+        var audio = go.GetComponent<AudioSource>();
         go.SetActive(true);
         DontDestroyOnLoad(go);
-        ActiveSndPlayer = audio;
-        ActiveSndPlayer.PlayOneShot(snd);
-        DebugInfo.Tick("Audio Clips/s");
+        _activeSndPlayer = audio;
     }
 }

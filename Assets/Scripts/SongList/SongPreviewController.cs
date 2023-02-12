@@ -12,7 +12,7 @@ public class SongPreviewController : MonoBehaviour
     public GameObject DifficultyPrefab;
     public Animator PreviewPanel;
     public TMP_Text Title, Description, From;
-    public Image Illustration, Background, FakeCover, Bg2;
+    public Image Illustration, FakeCover, FakeBg, Bg2;
     public AudioSource BGM;
     public AudioHighPassFilter Filter;
     public SongItemController SongItem;
@@ -39,7 +39,7 @@ public class SongPreviewController : MonoBehaviour
         if (s > 0)
         {
             LeftBtn = false; RightBtn = false;
-            FakeCover.sprite = Background.sprite;
+            FakeBg.sprite = Illustration.sprite;
             FakeCover.gameObject.SetActive(false);
             FakeCover.gameObject.SetActive(true);
             GameObject go = Instantiate(PreviewPanel.gameObject, PreviewPanel.transform.parent);
@@ -100,7 +100,6 @@ public class SongPreviewController : MonoBehaviour
         BeatmapModel m = SongResources.Beatmaps[uid][lastPlay];
 
         Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
-        Background.sprite = Illustration.sprite;
         Bg2.sprite = Illustration.sprite;
         MusicEffectBtn.CurrentSprite = Illustration.sprite;
 

@@ -14,8 +14,8 @@ public class SongListLoader : MonoBehaviour
         Success, Duplicated, NotSupported, Failed
     }
     public static SongListLoader Instance;
-    public static SongItemController FirstSong, LastSong;
-    public static bool Loaded = false;
+    private static SongItemController FirstSong, LastSong;
+    private static bool Loaded = false;
 
     public ScrollViewNevigation Nevigation;
     public Scrollbar VerSlider;

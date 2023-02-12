@@ -24,18 +24,6 @@ public class LineController : MonoBehaviour
     public Transform Line;
     bool hide = false;
 
-    public void TouchDown()
-    {
-        Debug.Log("Holding " + Index);
-        Holding = true;
-    }
-
-    public void TouchUp()
-    {
-        Debug.Log("Released " + Index);
-        Holding = false;
-    }
-
     private void Awake()
     {
         if (!(HitJudge.JudgeMode == 1 && Application.platform == RuntimePlatform.Android))
@@ -77,7 +65,7 @@ public class LineController : MonoBehaviour
                 if (AudioUpdate.Time < 0.5f)
                 {
                     RemainingNote = ShowedObjects.Count;
-                    foreach (MonoBehaviour note in ShowedObjects)
+                    foreach (var note in ShowedObjects)
                     {
                         HitObjects.Add(note);
                         note.gameObject.SetActive(false);
@@ -91,32 +79,30 @@ public class LineController : MonoBehaviour
                 GetComponent<Animator>().Play("LineHide", 0, 0.0f);
             }
         }
+
+        float realFlowSpeed = FlowSpeed * BeatmapLoader.FlowSpeed *
+                              GamePlayLoops.FlowSpeedFactor * 5;
         for (int i = 0; i < HitObjects.Count; i++)
         {
             if (i >= HitObjects.Count) break;
-            if (!HitObjects[i].gameObject.activeSelf)
+            if (HitObjects[i].gameObject.activeSelf) continue;
+            float x = HitObjects[i] switch
             {
-                float x = 0;
-                if (HitObjects[i] is TapController tap)
-                {
-                    x = (tap.Time - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * GamePlayLoops.FlowSpeedFactor * 5;
-                }
-                else if (HitObjects[i] is HoldController hold)
-                {
-                    x = (hold.From - AudioUpdate.Time) * FlowSpeed * BeatmapLoader.FlowSpeed * GamePlayLoops.FlowSpeedFactor * 5 - 1.66f;
-                }
-                if (x <= MoveArea)
-                {
-                    HitObjects[i].gameObject.SetActive(true);
-                    if (AudioUpdate.Instance.PreviewMode)
-                        ShowedObjects.Add(HitObjects[i]);
-                    HitObjects.RemoveAt(i);
-                    i--;
-                }
-                else
-                {
-                    return;
-                }
+                TapController tap => (tap.Time - AudioUpdate.Time) * realFlowSpeed,
+                HoldController hold => (hold.From - AudioUpdate.Time) * realFlowSpeed - 1.66f,
+                _ => 0
+            };
+            if (x <= MoveArea)
+            {
+                HitObjects[i].gameObject.SetActive(true);
+                if (AudioUpdate.Instance.PreviewMode)
+                    ShowedObjects.Add(HitObjects[i]);
+                HitObjects.RemoveAt(i);
+                i--;
+            }
+            else
+            {
+                return;
             }
         }
     }

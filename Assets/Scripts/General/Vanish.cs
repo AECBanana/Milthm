@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,27 @@ using UnityEngine;
 /// </summary>
 public class Vanish : MonoBehaviour
 {
+    public Animator Animator;
+
+    private void Awake()
+    {
+        if (!Animator)
+            Animator = GetComponent<Animator>();
+    }
+
+    public void PlayAni(string name)
+    {
+        Animator.Play(name, 0, 0.0f);
+    }
+
+    public void SetBool(string name, bool val)
+    {
+        Animator.SetBool(name, val);
+    }
+    
     public void PauseAni()
     {
-        GetComponent<Animator>().SetFloat("Speed", 0.0f);
+        Animator.SetFloat("Speed", 0.0f);
     }
     public void AniCallback()
     {
@@ -28,10 +47,10 @@ public class Vanish : MonoBehaviour
     }
     public void QuitCanvas()
     {
-        GetComponent<Animator>().Play("CanvasQuit", 0, 0.0f);
+        Animator.Play("CanvasQuit", 0, 0.0f);
     }
     public void HideCanvas()
     {
-        GetComponent<Animator>().Play("CanvasHide", 0, 0.0f);
+        Animator.Play("CanvasHide", 0, 0.0f);
     }
 }

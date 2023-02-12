@@ -5,8 +5,8 @@ using UnityEngine;
 public class TouchRaycast : MonoBehaviour
 {
     public static TouchRaycast Instance;
-    Dictionary<GameObject, LineController> GoLine = new Dictionary<GameObject, LineController>();
-    Camera cam;
+    private Dictionary<GameObject, LineController> GoLine = new Dictionary<GameObject, LineController>();
+    private Camera cam;
 
     private void Awake()
     {
@@ -20,27 +20,25 @@ public class TouchRaycast : MonoBehaviour
     public void Revoke(GameObject go)
         => GoLine.Remove(go);
 
-    void Update()
+    private void Update()
     {
         if (HitJudge.JudgeMode != 1)
             return;
 
-        for (int i = 0; i < Input.touchCount; i++)
+        for (var i = 0; i < Input.touchCount; i++)
         {
-            foreach (RaycastHit2D hit in Physics2D.RaycastAll(cam.ScreenToWorldPoint(Input.touches[i].position), Vector2.zero))
+            foreach (var hit in Physics2D.RaycastAll(cam.ScreenToWorldPoint(Input.touches[i].position), Vector2.zero))
             {
-                GameObject go = hit.collider.gameObject;
-                if (GoLine.ContainsKey(go))
+                var go = hit.collider.gameObject;
+                if (!GoLine.ContainsKey(go)) continue;
+                if (Input.touches[i].phase is TouchPhase.Ended or TouchPhase.Canceled)
                 {
-                    if (Input.touches[i].phase == TouchPhase.Ended || Input.touches[i].phase == TouchPhase.Canceled)
-                    {
-                        GoLine[go].TouchUp();
-                    }
-                    else
-                    {
-                        GoLine[go].TouchDown();
-                        GoLine[go].FirstHold = (Input.touches[i].phase == TouchPhase.Began);
-                    }
+                    GoLine[go].Holding = false;
+                }
+                else
+                {
+                    GoLine[go].Holding = true;
+                    GoLine[go].FirstHold = (Input.touches[i].phase == TouchPhase.Began);
                 }
             }
         }

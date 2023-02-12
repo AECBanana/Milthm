@@ -4358,6 +4358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c662ee2f550d5448e43ae230068de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Animator: {fileID: 0}
 --- !u!1 &5538457948830125327
 GameObject:
   m_ObjectHideFlags: 0
@@ -8012,7 +8013,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "\u5236\u4F5C: Buger404                                                   
-    \u7248\u672C: 0.7.14 alpha\nGithub \u5F00\u6E90: Buger404/Milthm"
+    \u7248\u672C: 0.7.15 alpha\nGithub \u5F00\u6E90: Buger404/Milthm"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7d7a0f33d91db3344a34add3cf1e9d19, type: 2}
   m_sharedMaterial: {fileID: -1860754848416709621, guid: 7d7a0f33d91db3344a34add3cf1e9d19, type: 2}

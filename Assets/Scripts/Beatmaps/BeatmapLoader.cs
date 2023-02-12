@@ -80,15 +80,15 @@ public class BeatmapLoader : MonoBehaviour
         HitJudge.JudgeRange = range;
         if (range == 0)
         {
-            GameSettings.Perfect2 = 0.04f; GameSettings.Perect = 0.08f; GameSettings.Good = 0.16f; GameSettings.Bad = 0.18f; 
+            GameSettings.Perfect2 = 0.04f; GameSettings.Perfect = 0.08f; GameSettings.Good = 0.16f; GameSettings.Bad = 0.18f; 
         }
         else if (range == 1)
         {
-            GameSettings.Perfect2 = 0.03f; GameSettings.Perect = 0.06f; GameSettings.Good = 0.12f; GameSettings.Bad = 0.135f;
+            GameSettings.Perfect2 = 0.03f; GameSettings.Perfect = 0.06f; GameSettings.Good = 0.12f; GameSettings.Bad = 0.135f;
         }
         else if (range == 2)
         {
-            GameSettings.Perfect2 = 0.02f; GameSettings.Perect = 0.04f; GameSettings.Good = 0.09f; GameSettings.Bad = 0.1f;
+            GameSettings.Perfect2 = 0.02f; GameSettings.Perfect = 0.04f; GameSettings.Good = 0.09f; GameSettings.Bad = 0.1f;
         }
         GameSettings.NoCustomSnd = bool.Parse(PlayerPrefs.GetString("NoCustomSnd", "False"));
         if (uid != "")
