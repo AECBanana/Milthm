@@ -10,13 +10,13 @@
 
 * Tap，Hold
 * Windows：A-Z任意键击打
-* Android：全屏判定
+* Android：全屏/垂直判定
 
 谱面：
 
 * 原创谱面格式
 
-* 也支持导入Osu!Mania，Osu!Taiko谱面(仅供娱乐，游戏内将明确标注源谱师、来自Osu!等信息，侵删)
+* 也支持导入Osu!Mania，Malody谱面(仅供娱乐，游戏内将明确标注源谱师、来自Osu!、Malody等信息，侵删)
 
 # 项目进度
 
@@ -32,6 +32,10 @@
 - [x] 输入延迟调节
 
 # 判定机制
+
+分为“宽松”、“普通”、“严格”三种判定。
+
+普通：
 
 * ±30ms：Perfect+
 * ±60ms：Perfect
@@ -49,6 +53,12 @@
 策划/制作/程序/界面设计：Buger404
 
 部分美术：AI技术
+
+# Milthm资源库声明
+
+《Milthm》的出版商、作者和发布者希望向包括但不限于导演、插画师、摄影师、音乐制作人、用户界面设计师、游戏脚本作者和校对在内的个人表示诚挚的感谢，他们为这款游戏的创作贡献了时间、精力和专业知识。我们感谢他们的宝贵资源和建议，这对这个游戏的发展至关重要。
+
+Copyright (C) 2023，Milthm制作组。保留所有权利。未经 "Milthm制作组"事先书面许可，不得以任何形式或通过任何与 "Milthm制作组"没有直接关系的方式使用本资源库中的资源，或将其存储在与 "Milthm制作组"没有直接关系的数据库或检索系统中。任何关于复制或使用本出版物的请求，应以书面形式提交给 "Milthm制作组"。未经原创作者或制作者的许可，任何人不得复制或使用本资源库中的资源，并以原始或修改的形式重新传播，用于商业目的。
 
 # 第三方
 
@@ -106,7 +116,7 @@
 
 * 图标(来自Flaticon)
 
-  Sandglass By Freepik
+  Sandglass  By Freepik
 
   Back  By Freepik
 
@@ -118,9 +128,23 @@
 
   Musical note  By Freepik
 
-  Pause  By Kiranshastry
+  Music note  By Freepik
 
-  Setting  By Freepik
+  World wide web  By Freepik
+
+  Editing  By Freepik
+
+  Christmas stars  By Freepik
+
+  Skip button  By Ranah Pixel Studio
+
+  Trash  By Phoenix Group
+
+  Add  By dmitri13
+
+  Magic wand  By Freepik
+
+  Rotate  By Pixel perfect
 
   许可证：[Flaticon License Certificate](https://media.flaticon.com/license/license.pdf)
 
