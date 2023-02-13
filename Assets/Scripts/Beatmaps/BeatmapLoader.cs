@@ -13,7 +13,7 @@ using UnityEngine.Video;
 /// </summary>
 public class BeatmapLoader : MonoBehaviour
 {
-    public static float FlowSpeed;
+    public static float FlowSpeed = 1f;
     public static BeatmapLoader Instance;
     /// <summary>
     /// Æ×ÃæÑÓ³Ù

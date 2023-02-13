@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using LeTai.Asset.TranslucentImage;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,6 +17,8 @@ public class SongPreviewController : MonoBehaviour
     public AudioHighPassFilter Filter;
     public SongItemController SongItem;
     public Animator PanelAnimator;
+    public Camera TranslucentCamera;
+    public TranslucentImageSource TranslucentSource;
     public static bool LeftBtn = false, RightBtn = false;
 
     private void Awake()
@@ -41,6 +43,9 @@ public class SongPreviewController : MonoBehaviour
             LeftBtn = false; RightBtn = false;
             FakeBg.sprite = Illustration.sprite;
             FakeCover.gameObject.SetActive(false);
+            TranslucentSource.maxUpdateRate = float.PositiveInfinity;
+            TranslucentCamera.Render();
+            TranslucentSource.maxUpdateRate = 0;
             FakeCover.gameObject.SetActive(true);
             GameObject go = Instantiate(PreviewPanel.gameObject, PreviewPanel.transform.parent);
             go.SetActive(true);

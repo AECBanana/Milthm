@@ -56,10 +56,10 @@ public class BeatmapDifficulty : MonoBehaviour
         foreach (BeatmapModel.BPMData bs in map.BPMList)
             bpm += bs.BPM;
         bpm /= map.BPMList.Count;
-        Debug.Log("平均BPM：" + bpm);
+        //Debug.Log("平均BPM：" + bpm);
         // 物件密度
         double p = (map.NoteList.Count - scnt) * 1.0 / (map.ToRealTime(map.NoteList[^1]).Item1 - map.ToRealTime(map.NoteList[0]).Item1);
-        Debug.Log("物量平均密度：" + p + "/s, 配置加成：" + buff);
+        //Debug.Log("物量平均密度：" + p + "/s, 配置加成：" + buff);
 
         ret = Math.Pow(p / 5, 1.3) * (1 + buff) * 10 * Math.Pow(bpm / 300, 0.5);
         //Debug.Log("定数：" + ret);

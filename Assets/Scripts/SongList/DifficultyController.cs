@@ -61,6 +61,9 @@ public class DifficultyController : MonoBehaviour
             SongPreviewController.Instance.Description.text = "[Çú]" + m.Composer + " [Æ×]" + m.Beatmapper + " [ÃÀ]" + m.Illustrator;
             SongPreviewController.Instance.FakeBg.sprite = SongPreviewController.Instance.Illustration.sprite;
             SongPreviewController.Instance.FakeCover.gameObject.SetActive(false);
+            SongPreviewController.Instance.TranslucentSource.maxUpdateRate = float.PositiveInfinity;
+            SongPreviewController.Instance.TranslucentCamera.Render();
+            SongPreviewController.Instance.TranslucentSource.maxUpdateRate = 0;
             SongPreviewController.Instance.FakeCover.gameObject.SetActive(true);
             SongPreviewController.Instance.Illustration.sprite = SongResources.Illustration[uid][m.IllustrationFile];
             SongPreviewController.Instance.Bg2.sprite = SongPreviewController.Instance.Illustration.sprite;
