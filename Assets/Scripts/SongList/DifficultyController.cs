@@ -35,6 +35,8 @@ public class DifficultyController : MonoBehaviour
         Difficulty.text = diff.ToString("0.0");
         TimeSpan length = TimeSpan.FromSeconds(SongResources.Songs[uid].length);
         Info.text = "物量   " + SongResources.Beatmaps[uid][index].NoteList.Count + "   长度   " + length.Minutes + ":" + length.Seconds.ToString("00");
+        if (Title.text == "")
+            Title.text = "未命名的谱面";
     }
 
     public void Touch()

@@ -130,7 +130,7 @@ public class HoldController : MonoBehaviour
                 {
                     if (HitJudge.Record)
                         HitJudge.RecordLog.AppendLine("[Rebind] " + Index + "(Hold) seeking proper inputs...");
-                    holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                    holdKey = HitJudge.GetAvailableHoldingKey(this);
                     if (holdKey == 0)
                         failFrames++;
                     else
@@ -158,7 +158,7 @@ public class HoldController : MonoBehaviour
                     HitJudge.BindNotes[holdKey] = null;
                     if (Mathf.Abs(To - AudioUpdate.Time) > GameSettings.HoldValid)
                     {
-                        holdKey = HitJudge.GetAvaliableHoldingKey(this);
+                        holdKey = HitJudge.GetAvailableHoldingKey(this);
                     }
                     else
                     {

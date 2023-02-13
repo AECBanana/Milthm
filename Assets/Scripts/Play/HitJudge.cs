@@ -99,7 +99,7 @@ public class HitJudge : MonoBehaviour
         }
     }
     // 指定判定的特效物体
-    private static GameObject[] Perfect, Good, Miss, Perfect2;
+    private static GameObject[] Perfect, Good, Bad, Perfect2;
     public static ResultData Result = new ResultData();
     public static float JudgeArea = 0;
     public static int JudgeRange = 1;
@@ -134,8 +134,8 @@ public class HitJudge : MonoBehaviour
         Good =  new GameObject[] {
             Resources.Load<GameObject>("Good"), Resources.Load<GameObject>("Good_Hold")
         };
-        Miss =  new GameObject[] {
-            Resources.Load<GameObject>("Miss"), Resources.Load<GameObject>("Miss_Hold")
+        Bad =  new GameObject[] {
+            Resources.Load<GameObject>("Bad"), Resources.Load<GameObject>("Bad_Hold")
         };
     }
     /// <summary>
@@ -143,7 +143,7 @@ public class HitJudge : MonoBehaviour
     /// </summary>
     /// <param name="note">note</param>
     /// <returns>0为无可用输入</returns>
-    public static int GetAvaliableHoldingKey(MonoBehaviour note)
+    public static int GetAvailableHoldingKey(MonoBehaviour note)
     {
         if (JudgeMode == 1 && Application.platform == RuntimePlatform.Android)
             return 0;
@@ -154,7 +154,7 @@ public class HitJudge : MonoBehaviour
             if (!BindNotes[capture])
             {
                 if (Record)
-                    RecordLog.AppendLine(capture + " is AVALIABLE.\n++");
+                    RecordLog.AppendLine(capture + " is AVAILABLE.\n++");
                 BindNotes[capture] = note;
                 return capture;
             }
@@ -384,6 +384,7 @@ public class HitJudge : MonoBehaviour
                 GamePlayLoops.Instance.Early.SetActive(false);
                 GamePlayLoops.Instance.Early.SetActive(true);
             }
+            effect = Bad[type];
         }
         else
         {
@@ -394,7 +395,6 @@ public class HitJudge : MonoBehaviour
                 else if (note is HoldController hold)
                     RecordLog.AppendLine("[AutoMiss-TooEarly] " + hold.Index + "(Hold) Missed");
             }
-            effect = Miss[type];
             Result.Combo = 0;
             miss = true;
             Result.Miss++;
@@ -483,9 +483,6 @@ public class HitJudge : MonoBehaviour
         MoveNext(note);
         if (!NoDead)
             Result.HP -= 7;
-        var go = Instantiate(Miss[aniType], aniParent);
-        go.transform.localPosition = new Vector3(-1.97f, 0, 0);
-        go.SetActive(true);
     }
 
 }
