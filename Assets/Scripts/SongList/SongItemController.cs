@@ -5,7 +5,8 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class SongItemController : MonoBehaviour
 {
@@ -17,9 +18,7 @@ public class SongItemController : MonoBehaviour
     public SongItemController PreSong;
     public GameObject OutDate;
     public GameObject RemoveBtn;
-    Animator animator;
-    bool pressing = false;
-    DateTime pressTime = DateTime.MinValue;
+    public Animator animator;
 
     public void DeleteSong()
     {
@@ -51,49 +50,9 @@ public class SongItemController : MonoBehaviour
         animator.SetBool("DeleteMode", true);
     }
 
-    public void TouchUp()
-    {
-        Preview.SongItem = this;
-        Preview.Show(Beatmap);
-        pressTime = DateTime.MinValue;
-        PlayerPrefs.SetString("LastSong", Beatmap);
-    }
-
-    public void TouchDown()
-    {
-        if (pressTime == DateTime.MinValue)
-        {
-            pressTime = DateTime.Now;
-            if (Input.GetMouseButton(1))
-                pressTime -= TimeSpan.FromMinutes(1);
-        }
-        pressing = true;
-        if ((DateTime.Now - pressTime).TotalSeconds >= 0.5 && !RemoveBtn.activeSelf)
-        {
-            Debug.Log("Occurred.");
-            DeleteMode();
-            pressTime = DateTime.MinValue;
-            return;
-        }
-    }
-
-    public void MouseIn()
-    {
-        if (RemoveBtn.activeSelf)
-            return;
-        animator.SetBool("MouseIn", true);
-    }
-
-    public void MouseOut()
-    {
-        if (RemoveBtn.activeSelf)
-            return;
-        animator.SetBool("MouseIn", false);
-    }
-
     private void Update()
     {
-        if (RemoveBtn.activeSelf && Input.anyKey && EventSystem.current.currentSelectedGameObject != RemoveBtn && !pressing)
+        if (RemoveBtn.activeSelf && Input.anyKey && EventSystem.current.currentSelectedGameObject != RemoveBtn)
         {
             RemoveBtn.SetActive(false);
             animator.SetBool("MouseIn", false);
