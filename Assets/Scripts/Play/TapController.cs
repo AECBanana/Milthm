@@ -85,7 +85,7 @@ public class TapController : MonoBehaviour
             //Destroy(gameObject);
         }
     }
-    private void Update()
+    private void LateUpdate()
     {
         if (!AudioUpdate.Instance.PreviewMode)
         {

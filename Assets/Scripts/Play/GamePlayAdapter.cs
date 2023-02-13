@@ -42,6 +42,7 @@ public class GamePlayAdapter : MonoBehaviour
         Camera.main.transform.localEulerAngles = new Vector3(0, 0, 0);
         BGM.clip = BeatmapLoader.Instance.Audio.clip;
         BGM.Play();
+        AudioUpdate.Audio.Pause();
         if (BeatmapLoader.Playing.PreviewTime != -1)
             BGM.time = BeatmapLoader.Playing.PreviewTime;
         GameObject rain = Instantiate(GamePlayLoops.Instance.Rain, GamePlayLoops.Instance.Rain.transform.parent);

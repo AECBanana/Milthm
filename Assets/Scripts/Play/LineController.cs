@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -22,6 +23,7 @@ public class LineController : MonoBehaviour
     public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
     public List<MonoBehaviour> ShowedObjects = new List<MonoBehaviour>();
     public Transform Line;
+    private SpriteRenderer lineRender;
     bool hide = false;
 
     private void Awake()
@@ -31,6 +33,7 @@ public class LineController : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
         }
         UnhitLines.Add(this);
+        lineRender = GetComponent<SpriteRenderer>();
     }
     private void Start()
     {
@@ -43,7 +46,7 @@ public class LineController : MonoBehaviour
         if (TouchRaycast.Instance != null)
             TouchRaycast.Instance.Revoke(gameObject);
     }
-    private void Update()
+    private void LateUpdate()
     {
         if (HitJudge.Result.Dead && !AudioUpdate.Instance.PreviewMode)
         {
@@ -54,10 +57,22 @@ public class LineController : MonoBehaviour
             }
             float pass = (float)(DateTime.Now - HitJudge.Result.DeadTime).TotalSeconds / 1f;
             if (pass > 1f) pass = 1f;
-            GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
+            lineRender.color = new Color(1f, 1f, 1f, 1f - pass);
             Line.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
             transform.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f - pass);
         }
+        /**if (FirstHold)
+        {
+            lineRender.color = Color.red;
+        }
+        else if (Holding)
+        {
+            lineRender.color = Color.green;
+        }
+        else
+        {
+            lineRender.color = Color.white;
+        }**/
         if (RemainingNote == 0 && !hide)
         {
             if (AudioUpdate.Instance.PreviewMode)
