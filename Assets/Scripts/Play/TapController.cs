@@ -76,7 +76,7 @@ public class TapController : MonoBehaviour
                 //Destroy(gameObject);
             }
         }
-        if (GamePlayLoops.AutoPlay && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
+        if (Mods.Data[Mod.AutoPlay] && Mathf.Abs(Time - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
             HitJudge.Judge(transform.parent, this, AudioUpdate.Time - Time, Snd, ref missed, 0);
             Hit = true;

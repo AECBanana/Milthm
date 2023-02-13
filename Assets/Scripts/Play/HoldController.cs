@@ -116,7 +116,7 @@ public class HoldController : MonoBehaviour
                         HeadHit = true;
                 }
             }
-            if (GamePlayLoops.AutoPlay && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
+            if (Mods.Data[Mod.AutoPlay] && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
                 HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed, 1);
                 HeadHit = true;
@@ -124,7 +124,7 @@ public class HoldController : MonoBehaviour
         }
         if (HeadHit && !Missed && !EndHit)
         {
-            if (AudioUpdate.Audio.isPlaying && !GamePlayLoops.AutoPlay)
+            if (AudioUpdate.Audio.isPlaying && !Mods.Data[Mod.AutoPlay])
             {
                 if (holdKey == 0)
                 {

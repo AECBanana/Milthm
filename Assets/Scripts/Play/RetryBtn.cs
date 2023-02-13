@@ -8,7 +8,7 @@ public class RetryBtn : MonoBehaviour
     public void Click()
     {
         if (HitJudge.Result.DeadTime == DateTime.MinValue)
-            GamePlayLoops.Instance.BlackScreen.SetActive(true);
+            GamePlayAdapter.Instance.Retry();
     }
     public void LoadRetry()
     {

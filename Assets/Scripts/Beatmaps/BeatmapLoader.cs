@@ -72,10 +72,13 @@ public class BeatmapLoader : MonoBehaviour
         LineController.UnhitLines.Clear();
         // 初始化
         #region 载入设置
-        if (GamePlayLoops.Vertical)
-            Camera.main.transform.localEulerAngles = new Vector3(0, 0, 90);
-        else
-            Camera.main.transform.localEulerAngles = new Vector3(0, 0, 0);
+        Transform cam = Camera.main.transform;
+        Vector3 camRotation = cam.localEulerAngles, camPos = cam.localPosition;
+        camRotation.z = Mods.Data[Mod.Vertical] ? 90 : 0;
+        camRotation.x = Mods.Data[Mod.Mirror] ? 180 : 0;
+        camPos.z = Mods.Data[Mod.Mirror] ? 10 : -10;
+        cam.localEulerAngles = camRotation;
+        cam.localPosition = camPos;
         int range = PlayerPrefs.GetInt("JudgeRange", 1);
         HitJudge.JudgeRange = range;
         if (range == 0)
@@ -98,9 +101,8 @@ public class BeatmapLoader : MonoBehaviour
         else
             GameSettings.HitSnd = map.SndSet;
         GameSettings.NoPerfect = bool.Parse(PlayerPrefs.GetString("NoPerfect", "False"));
-        HitJudge.NoDead = bool.Parse(PlayerPrefs.GetString("NoDead", "False"));
         HitJudge.JudgeMode = PlayerPrefs.GetInt("JudgeMode", Application.platform == RuntimePlatform.Android ? 1 : 0);
-        HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
+        //HitJudge.JudgeArea = Camera.main.ViewportToWorldPoint(new Vector3(180f / 1920f, 0, 0)).x - Camera.main.ViewportToWorldPoint(Vector3.zero).x;
         float flowspeed = PlayerPrefs.GetFloat("FlowSpeed", Application.platform == RuntimePlatform.Android ? 0.25f : 0.5f),
               scale = PlayerPrefs.GetFloat("Scale", Application.platform == RuntimePlatform.Android ? 0.45f : 0.0f);
         FlowSpeed = Mathf.Pow(0.5f + flowspeed, 1.2f);
@@ -124,7 +126,7 @@ public class BeatmapLoader : MonoBehaviour
         lines.Clear();
         // 生成轨道
         float orSpace;
-        if (GamePlayLoops.Vertical)
+        if (Mods.Data[Mod.Vertical])
             orSpace = 1200f / (map.LineList.Count - 1);
         else
             orSpace = 200f + Mathf.Max(1f - (map.LineList.Count - 4.0f) / 4.0f, 0f) * 100f;

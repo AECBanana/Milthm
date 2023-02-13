@@ -101,10 +101,9 @@ public class HitJudge : MonoBehaviour
     // 指定判定的特效物体
     private static GameObject[] Perfect, Good, Bad, Perfect2;
     public static ResultData Result = new ResultData();
-    public static float JudgeArea = 0;
     public static int JudgeRange = 1;
     public static bool Record = false;
-    public static bool NoDead = false;
+
     /// <summary>
     /// 判定模式，0=全屏判定，1=非全屏判定(但PC不支持)
     /// </summary>
@@ -218,7 +217,7 @@ public class HitJudge : MonoBehaviour
     /// <returns></returns>
     static int IsPress_Windows(MonoBehaviour note)
     {
-        if (GamePlayLoops.AutoPlay)
+        if (Mods.Data[Mod.AutoPlay])
             return 0;
         if (!AudioUpdate.Audio.isPlaying)
             return 0;
@@ -265,7 +264,7 @@ public class HitJudge : MonoBehaviour
     /// <returns></returns>
     static int IsPress_Android(MonoBehaviour note)
     {
-        if (GamePlayLoops.AutoPlay)
+        if (Mods.Data[Mod.AutoPlay])
             return 0;
         if (!AudioUpdate.Audio.isPlaying)
             return 0;
@@ -349,9 +348,13 @@ public class HitJudge : MonoBehaviour
             effect = Perfect[type];
             Result.Perfect++;
             Result.HP += 2;
+            if (Mods.Data[Mod.PerfectionismIII])
+                GamePlayAdapter.Instance.Retry();
         }
         else if (deltaTime <= GameSettings.Good)
         {
+            if (Mods.Data[Mod.PerfectionismII] || Mods.Data[Mod.PerfectionismIII])
+                GamePlayAdapter.Instance.Retry();
             effect = Good[type];
             Result.Good++;
             Result.HP += 1;
@@ -370,6 +373,8 @@ public class HitJudge : MonoBehaviour
         }
         else if (deltaTime <= GameSettings.Bad)
         {
+            if (Mods.Data[Mod.PerfectionismII] || Mods.Data[Mod.PerfectionismIII])
+                GamePlayAdapter.Instance.Retry();
             Result.Bad++;
             Result.Combo = -1;
             if (orTime > 0)
@@ -400,12 +405,14 @@ public class HitJudge : MonoBehaviour
             Result.Miss++;
             missed = true;
             Result.MissContinuous++;
-            if (!NoDead)
+            if (!Mods.Data[Mod.NoDead])
                 Result.HP -= 7;
             if (orTime > 0)
                 Result.Late++;
             else
                 Result.Early++;
+            if (Mods.Data[Mod.PerfectionismI] || Mods.Data[Mod.PerfectionismII] || Mods.Data[Mod.PerfectionismIII])
+                GamePlayAdapter.Instance.Retry();
         }
         if (!miss)
         {
@@ -481,8 +488,10 @@ public class HitJudge : MonoBehaviour
         Result.Combo = 0;
         Result.Late++;
         MoveNext(note);
-        if (!NoDead)
+        if (!Mods.Data[Mod.NoDead])
             Result.HP -= 7;
+        if (Mods.Data[Mod.PerfectionismI] || Mods.Data[Mod.PerfectionismII] || Mods.Data[Mod.PerfectionismIII])
+            GamePlayAdapter.Instance.Retry();
     }
 
 }

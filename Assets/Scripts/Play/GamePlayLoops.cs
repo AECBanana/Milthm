@@ -12,8 +12,6 @@ using UnityEngine.UIElements;
 public class GamePlayLoops : MonoBehaviour
 {
     public static float FlowSpeedFactor = 1.0f;
-    public static bool AutoPlay = false;
-    public static bool Vertical = false;
     public static bool PauseBtn = false;
     public static GamePlayLoops Instance;
     public Transform ProgressBar, HPBar;
@@ -30,7 +28,7 @@ public class GamePlayLoops : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        AutoPlayTip.SetActive(AutoPlay);
+        AutoPlayTip.SetActive(Mods.Data[Mod.AutoPlay]);
         HitJudge.Record = bool.Parse(PlayerPrefs.GetString("ExportJudge", "False"));
     }
     private void OnDestroy()

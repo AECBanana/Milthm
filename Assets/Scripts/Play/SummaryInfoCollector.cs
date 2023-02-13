@@ -104,8 +104,8 @@ public class SummaryInfoCollector : MonoBehaviour
         Level.SetNativeSize();
         Word.SetNativeSize();
 
-        AutoPlayTip.SetActive(GamePlayLoops.AutoPlay);
-        if (GamePlayLoops.AutoPlay)
+        AutoPlayTip.SetActive(Mods.Data[Mod.AutoPlay]);
+        if (Mods.Data[Mod.AutoPlay])
         {
             NewRecord.SetActive(false);
             return;

@@ -7,6 +7,7 @@ public class StartPlay : MonoBehaviour
 {
     public void Click()
     {
+        SndPlayer.Play("UI_Buttons_Pack2\\Button_15_Pack2");
         DifficultyController.Ready = false;
         BeatmapLoader.PlayingUID = DifficultyController.Active.uid;
         BeatmapLoader.PlayingIndex = DifficultyController.Active.index;

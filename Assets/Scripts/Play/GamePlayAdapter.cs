@@ -66,4 +66,11 @@ public class GamePlayAdapter : MonoBehaviour
             Destroy(go);
         Rains.Clear();
     }
+
+    public void Retry()
+    {
+        HitJudge.CaptureOnce.Clear();
+        AudioUpdate.Audio.Pause();
+        GamePlayLoops.Instance.BlackScreen.SetActive(true);
+    }
 }
