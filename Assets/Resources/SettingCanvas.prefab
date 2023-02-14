@@ -6452,7 +6452,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5538457949616500062}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.14670943
+  m_Size: 0.1481717
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8013,7 +8013,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "\u5236\u4F5C: Buger404                                                   
-    \u7248\u672C: 0.7.16 alpha\nGithub \u5F00\u6E90: Buger404/Milthm"
+    \u7248\u672C: 0.7.17 alpha\nGithub \u5F00\u6E90: Buger404/Milthm"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cfc7058410b818646983921e61c088fc, type: 2}
   m_sharedMaterial: {fileID: 2614722351553187686, guid: cfc7058410b818646983921e61c088fc, type: 2}

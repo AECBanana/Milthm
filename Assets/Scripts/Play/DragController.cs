@@ -67,7 +67,7 @@ public class DragController : HitObject
                 ok = Input.anyKey;
             if (ok)
             {
-                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref missed);
+                HitJudge.Judge(transform.parent, this, 0f, ref missed);
                 if (!missed)
                     Hit = true;
                 Line.RemainingNote--;
@@ -76,7 +76,7 @@ public class DragController : HitObject
         }
         if (Mods.Data[Mod.AutoPlay] && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
         {
-            HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref missed);
+            HitJudge.Judge(transform.parent, this, 0f, ref missed);
             Hit = true;
             Line.RemainingNote--;
             gameObject.SetActive(false);

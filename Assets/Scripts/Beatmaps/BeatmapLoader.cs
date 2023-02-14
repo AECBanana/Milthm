@@ -174,7 +174,7 @@ public class BeatmapLoader : MonoBehaviour
         GameObject line = Resources.Load<GameObject>("Line"),
                    tap = Resources.Load<GameObject>("Tap"),
                    hold = Resources.Load<GameObject>("Hold"),
-                   drag = hold = Resources.Load<GameObject>("Drag");
+                   drag = Resources.Load<GameObject>("Drag");
         Audio.time = 0;
         GamePlayLoops.Instance.SummaryAni.Play("PlayEnterAni", 0, 0.0f);
         HitJudge.Result = new HitJudge.ResultData
@@ -246,7 +246,7 @@ public class BeatmapLoader : MonoBehaviour
             }
             var notePrefab = note.Type switch
             {
-                0 => (note.FromBeat == note.ToBeat ? hold : tap),
+                0 => (note.FromBeat != note.ToBeat ? hold : tap),
                 1 => drag,
                 _ => null
             };
