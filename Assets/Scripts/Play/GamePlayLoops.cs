@@ -132,7 +132,7 @@ public class GamePlayLoops : MonoBehaviour
         {
             float time = HitJudge.HitList[0][0] switch
             {
-                TapController tap => tap.Time,
+                TapController tap => tap.From,
                 HoldController hold => hold.From,
                 _ => 0
             };

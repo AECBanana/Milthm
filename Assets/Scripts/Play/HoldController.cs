@@ -7,23 +7,12 @@ using UnityEngine;
 /// <summary>
 /// ³¤Ìõ¿ØÖÆÆ÷
 /// </summary>
-public class HoldController : MonoBehaviour
+public class HoldController : HitObject
 {
-    public LineController Line;
-    public float From, To;
-    public Sprite DoubleSprite;
     public bool HeadHit = false, EndHit = false;
-    public string Snd;
-    public int Index;
     int holdKey = 0;
     int failFrames = 0;
     bool Missed = false;
-    SpriteRenderer Renderer;
-    private void Awake()
-    {
-        Renderer = GetComponent<SpriteRenderer>();
-        Renderer.color = new Color(1f, 1f, 1f, 0f);
-    }
     private void UpdateGraphics()
     {
         float x = (From - AudioUpdate.Time) * Line.FlowSpeed * GamePlayLoops.FlowSpeedFactor * BeatmapLoader.FlowSpeed * 5 - 1.66f,
@@ -84,7 +73,7 @@ public class HoldController : MonoBehaviour
                     Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
                     if (HitJudge.Record)
                         HitJudge.RecordLog.AppendLine("[AutoMiss-TooLate] " + Index + "(Hold) Missed <From " + From + " to " + To + ">");
-                    HitJudge.JudgeMiss(transform.parent, this, 1);
+                    HitJudge.JudgeMiss(this);
                 }
                 if (holdKey != 0 && HitJudge.BindNotes[holdKey] == this)
                 {
@@ -108,13 +97,13 @@ public class HoldController : MonoBehaviour
                 // Miss
                 Missed = true;
                 Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                HitJudge.JudgeMiss(transform.parent, this, 1);
+                HitJudge.JudgeMiss(this);
             }
             if (!Missed && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Valid)
             {
                 if ((holdKey = HitJudge.IsPress(this)) != 0)
                 {
-                    HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed, 1);
+                    HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
                     if (Missed)
                     {
                         if (HitJudge.Record)
@@ -127,7 +116,7 @@ public class HoldController : MonoBehaviour
             }
             if (Mods.Data[Mod.AutoPlay] && Mathf.Abs(From - AudioUpdate.Time) <= GameSettings.Perfect2)
             {
-                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, Snd, ref Missed, 1);
+                HitJudge.Judge(transform.parent, this, AudioUpdate.Time - From, ref Missed);
                 HeadHit = true;
             }
         }
@@ -152,7 +141,7 @@ public class HoldController : MonoBehaviour
                         // Miss
                         Missed = true;
                         Renderer.color = new Color(0.8f, 0.7f, 0.7f, 0.3f);
-                        HitJudge.JudgeMiss(transform.parent, this, 1);
+                        HitJudge.JudgeMiss(this);
                         if (HitJudge.Record)
                             HitJudge.RecordLog.AppendLine("[AutoMiss-NotEnough] " + Index + "(Hold) released too early.");
                     }
@@ -188,6 +177,7 @@ public class HoldController : MonoBehaviour
             if (!HeadHit && Mathf.Abs(From - AudioUpdate.Time + SettingsController.DelayValue / 1000) <= GameSettings.Perfect2)
             {
                 HitJudge.PlayPerfect(transform.parent, 1);
+                Line.RemainingNote--;
                 HeadHit = true;
             }
         }

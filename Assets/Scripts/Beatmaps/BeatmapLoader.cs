@@ -38,24 +38,6 @@ public class BeatmapLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// 取得note所在轨道序号
-    /// </summary>
-    /// <param name="note">note</param>
-    /// <returns>轨道序号</returns>
-    public int GetLineIndex(MonoBehaviour note)
-    {
-        if (note is TapController tap)
-        {
-            return tap.Line.Index;
-        }
-        else if (note is HoldController hold)
-        {
-            return hold.Line.Index;
-        }
-        return 0;
-    }
-
-    /// <summary>
     /// 载入谱面
     /// </summary>
     /// <param name="map">谱面数据模型</param>
@@ -119,9 +101,9 @@ public class BeatmapLoader : MonoBehaviour
         {
             FullCombo = map.NoteList.Count
         };
-        HitJudge.HitList = new List<List<MonoBehaviour>>();
+        HitJudge.HitList = new List<List<HitObject>>();
         HitJudge.CaptureOnce = new List<int>();
-        HitJudge.BindNotes = new Dictionary<int, MonoBehaviour>();
+        HitJudge.BindNotes = new Dictionary<int, HitObject>();
         for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
             HitJudge.BindNotes.Add((int)key, null);
         lines.Clear();
@@ -166,44 +148,25 @@ public class BeatmapLoader : MonoBehaviour
         // 载入所有note
         Delay -= map.SongOffset;
         int i = 0;
-        foreach (BeatmapModel.NoteData note in map.NoteList)
+        foreach (var note in map.NoteList)
         {
-            float from; MonoBehaviour noteController;
-            string snd = "";
+            var snd = "";
             if (!GameSettings.NoCustomSnd)
                 snd = note.Snd;
             // 如果开始时间和结束时间一致，为tap
-            if (note.FromBeat == note.ToBeat)
-            {
-                GameObject go = Instantiate(tap, lines[note.Line].transform);
-                TapController controller = go.GetComponent<TapController>();
-                controller.Line = lines[note.Line];
-                controller.Index = i;
-                controller.Snd = snd;
-                from = map.ToRealTime(note).Item1;
-                controller.Time = from + Delay;
-                if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
-                    controller.GetComponent<SpriteRenderer>().sprite = controller.DoubleSprite;
-                lines[note.Line].HitObjects.Add(controller);
-                go.SetActive(false);
-                noteController = controller;
-            }
-            else
-            {
-                GameObject go = Instantiate(hold, lines[note.Line].transform);
-                HoldController controller = go.GetComponent<HoldController>();
-                controller.Index = i;
-                controller.Snd = snd;
-                controller.Line = lines[note.Line];
-                controller.From = map.ToRealTime(note).Item1 + Delay;
-                controller.To = map.ToRealTime(note).Item2 + Delay;
-                from = map.ToRealTime(note).Item1;
-                if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
-                    controller.GetComponent<SpriteRenderer>().sprite = controller.DoubleSprite;
-                lines[note.Line].HitObjects.Add(controller);
-                go.SetActive(false);
-                noteController = controller;
-            }
+            var go = Instantiate(note.FromBeat == note.ToBeat ? tap : hold, lines[note.Line].transform);
+            var controller = go.GetComponent<HitObject>();
+            controller.Index = i;
+            controller.Snd = snd;
+            controller.Line = lines[note.Line];
+            controller.From = map.ToRealTime(note).Item1 + Delay;
+            controller.To = map.ToRealTime(note).Item2 + Delay;
+            var from = map.ToRealTime(note).Item1;
+            if (map.NoteList.FindAll(x => map.ToRealTime(x).Item1 == from).Count >= 2)
+                controller.GetComponent<SpriteRenderer>().sprite = controller.DoubleSprite;
+            lines[note.Line].HitObjects.Add(controller);
+            go.SetActive(false);
+            var noteController = controller;
             lines[note.Line].RemainingNote++;
             // 音效处理
             if (uid != "" && !string.IsNullOrEmpty(snd))
@@ -246,41 +209,27 @@ public class BeatmapLoader : MonoBehaviour
             // 加入待击打列表
             if (HitJudge.HitList.Count == 0)
             {
-                HitJudge.HitList.Add(new List<MonoBehaviour>() { noteController });
+                HitJudge.HitList.Add(new List<HitObject>() { noteController });
             }
             else
             {
                 // 多押处理
-                if (HitJudge.HitList[^1][0] is TapController mtap)
+                if (HitJudge.HitList[^1][0].From == from + Delay)
                 {
-                    if (mtap.Time == from + Delay)
-                    {
-                        HitJudge.HitList[^1].Add(noteController);
-                    }
-                    else
-                    {
-                        HitJudge.HitList.Add(new List<MonoBehaviour>() { noteController });
-                    }
+                    HitJudge.HitList[^1].Add(noteController);
                 }
-                else if (HitJudge.HitList[^1][0] is HoldController mhold)
+                else
                 {
-                    if (mhold.From == from + Delay)
-                    {
-                        HitJudge.HitList[^1].Add(noteController);
-                    }
-                    else
-                    {
-                        HitJudge.HitList.Add(new List<MonoBehaviour>() { noteController });
-                    }
+                    HitJudge.HitList.Add(new List<HitObject>() { noteController });
                 }
             }
             i++;
         }
 
         // 根据轨道序号排序击打列表
-        for(int j = 0;j < HitJudge.HitList.Count; j++)
+        foreach (var t in HitJudge.HitList)
         {
-            HitJudge.HitList[j].Sort((x, y) => GetLineIndex(x).CompareTo(GetLineIndex(y)));
+            t.Sort((x, y) => x.Line.Index.CompareTo(y.Line.Index));
         }
 
         Debug.Log("待击打列表：" + HitJudge.HitList.Count);

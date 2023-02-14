@@ -103,7 +103,7 @@ public class LineController : MonoBehaviour
             if (HitObjects[i].gameObject.activeSelf) continue;
             float x = HitObjects[i] switch
             {
-                TapController tap => (tap.Time - AudioUpdate.Time) * realFlowSpeed,
+                TapController tap => (tap.From - AudioUpdate.Time) * realFlowSpeed,
                 HoldController hold => (hold.From - AudioUpdate.Time) * realFlowSpeed - 1.66f,
                 _ => 0
             };
