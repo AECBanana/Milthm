@@ -74,8 +74,9 @@ public class BeatmapLoader : MonoBehaviour
         #region ‘ÿ»Î…Ë÷√
         Transform cam = Camera.main.transform;
         Vector3 camRotation = cam.localEulerAngles, camPos = cam.localPosition;
+        camRotation.x = Mods.Data[Mod.Mirror] && Mods.Data[Mod.Vertical] ? 180 : 0;
+        camRotation.y = Mods.Data[Mod.Mirror] && !Mods.Data[Mod.Vertical] ? 180 : 0;
         camRotation.z = Mods.Data[Mod.Vertical] ? 90 : 0;
-        camRotation.x = Mods.Data[Mod.Mirror] ? 180 : 0;
         camPos.z = Mods.Data[Mod.Mirror] ? 10 : -10;
         cam.localEulerAngles = camRotation;
         cam.localPosition = camPos;
