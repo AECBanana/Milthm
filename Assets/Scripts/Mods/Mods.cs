@@ -5,7 +5,9 @@ using UnityEngine;
 
 public enum Mod
 {
-    AutoPlay, Vertical, NoDead, Mirror, PerfectionismI, PerfectionismII, PerfectionismIII, Invisible, Dance
+    AutoPlay, Vertical, NoDead, Mirror, 
+    PerfectionismI, PerfectionismII, PerfectionismIII, 
+    Invisible, Dance, Bed
 }
 
 public static class Mods
@@ -24,7 +26,8 @@ public static class Mods
             [Mod.PerfectionismII] = false,
             [Mod.PerfectionismIII] = false,
             [Mod.Invisible] = false,
-            [Mod.Dance] = false
+            [Mod.Dance] = false,
+            [Mod.Bed] = false
         };
     }
 }

@@ -47,21 +47,11 @@ public class BeatmapModel
         public int Line;
         public int[] From, To;
         public int BPM;
+        public int Type;
         public string Snd;
-        public float FromBeat
-        {
-            get
-            {
-                return From[0] + From[1] * 1.0f / From[2];
-            }
-        }
-        public float ToBeat
-        {
-            get
-            {
-                return To[0] + To[1] * 1.0f / To[2];
-            }
-        }
+        public float FromBeat => From[0] + From[1] * 1.0f / From[2];
+
+        public float ToBeat => To[0] + To[1] * 1.0f / To[2];
     }
     public List<NoteData> NoteList = new List<NoteData>();
     #endregion
@@ -121,18 +111,14 @@ public class BeatmapModel
         {
             return 0;
         }
-        else
+        var ret = 0;
+        for (var i = 0;i < BPMList.Count; i++)
         {
-            int ret = 0;
-            for (int i = 0;i < BPMList.Count; i++)
-            {
-                if (time < BPMList[i].Start)
-                    break;
-                else
-                    ret = i;
-            }
-            return ret;
+            if (time < BPMList[i].Start)
+                break;
+            ret = i;
         }
+        return ret;
     }
 
     /// <summary>
@@ -145,9 +131,9 @@ public class BeatmapModel
     {
         if (bpm == -1)
             bpm = DetermineBPM(time);
-        BPMData BPM = BPMList[bpm];
-        float beattime = 60.0f / BPM.BPM;
-        int basebeat = (int)(Math.Floor((time - BPM.Start) / beattime));
+        var BPM = BPMList[bpm];
+        var beattime = 60.0f / BPM.BPM;
+        var basebeat = (int)(Math.Floor((time - BPM.Start) / beattime));
         return new int[]{
             basebeat,
             (int)(Math.Round((time - BPM.Start - basebeat * beattime) / (beattime / beat))),

@@ -130,12 +130,7 @@ public class GamePlayLoops : MonoBehaviour
         // Ìø¹ý¿ØÖÆ
         if (HitJudge.HitList.Count > 0 && HitJudge.HitList[0].Count > 0 && !HitJudge.Result.Win && !HitJudge.Result.Dead)
         {
-            float time = HitJudge.HitList[0][0] switch
-            {
-                TapController tap => tap.From,
-                HoldController hold => hold.From,
-                _ => 0
-            };
+            float time = HitJudge.HitList[0][0].From;
             if (time - AudioUpdate.Time > 3 && AudioUpdate.Started)
             {
                 Skip.gameObject.SetActive(true);

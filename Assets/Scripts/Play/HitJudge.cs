@@ -125,16 +125,24 @@ public class HitJudge : MonoBehaviour
     static HitJudge()
     {
         Perfect2 =  new GameObject[] {
-            Resources.Load<GameObject>("Perfect+"), Resources.Load<GameObject>("Perfect+_Hold")
+            Resources.Load<GameObject>("Perfect+"), 
+            Resources.Load<GameObject>("Perfect+_Hold"),
+            Resources.Load<GameObject>("Perfect+")
         };
         Perfect =  new GameObject[] {
-            Resources.Load<GameObject>("Perfect"), Resources.Load<GameObject>("Perfect_Hold")
+            Resources.Load<GameObject>("Perfect"), 
+            Resources.Load<GameObject>("Perfect_Hold"),
+            Resources.Load<GameObject>("Perfect")
         };
         Good =  new GameObject[] {
-            Resources.Load<GameObject>("Good"), Resources.Load<GameObject>("Good_Hold")
+            Resources.Load<GameObject>("Good"), 
+            Resources.Load<GameObject>("Good_Hold"),
+            Resources.Load<GameObject>("Good")
         };
         Bad =  new GameObject[] {
-            Resources.Load<GameObject>("Bad"), Resources.Load<GameObject>("Bad_Hold")
+            Resources.Load<GameObject>("Bad"), 
+            Resources.Load<GameObject>("Bad_Hold"),
+            Resources.Load<GameObject>("Bad")
         };
     }
     /// <summary>
@@ -208,7 +216,7 @@ public class HitJudge : MonoBehaviour
     /// </summary>
     /// <param name="note"></param>
     /// <returns></returns>
-    static int IsPress_Windows(HitObject note)
+    private static int IsPress_Windows(HitObject note)
     {
         if (Mods.Data[Mod.AutoPlay])
             return 0;
@@ -396,10 +404,10 @@ public class HitJudge : MonoBehaviour
         }
         if (!miss)
         {
-            string snd = note.Snd;
+            var snd = note.Snd;
             if (string.IsNullOrEmpty(snd))
-                SndPlayer.Play(GameSettings.HitSnd);
-            else if (SongResources.HitSnd[snd] == null)
+                SndPlayer.Play(note.Type == HitType.Drag ? "drag" : GameSettings.HitSnd);
+            else if (!SongResources.HitSnd[snd])
                 SndPlayer.Play(GameSettings.HitSnd);
             else
                 SndPlayer.Play(SongResources.HitSnd[snd]);
@@ -432,7 +440,7 @@ public class HitJudge : MonoBehaviour
     /// 将判定移动到下一个note
     /// </summary>
     /// <param name="note"></param>
-    public static void MoveNext(HitObject note)
+    private static void MoveNext(HitObject note)
     {
         if (HitList.Count == 0)
             return;

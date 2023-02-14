@@ -20,8 +20,8 @@ public class LineController : MonoBehaviour
     public bool FirstHold = false;
     public BeatmapModel.LineDirection Direction;
     public int RemainingNote = 0;
-    public List<MonoBehaviour> HitObjects = new List<MonoBehaviour>();
-    public List<MonoBehaviour> ShowedObjects = new List<MonoBehaviour>();
+    public List<HitObject> HitObjects = new ();
+    public List<HitObject> ShowedObjects = new ();
     public Transform Line;
     private SpriteRenderer lineRender;
     bool hide = false;
@@ -101,11 +101,10 @@ public class LineController : MonoBehaviour
         {
             if (i >= HitObjects.Count) break;
             if (HitObjects[i].gameObject.activeSelf) continue;
-            float x = HitObjects[i] switch
+            float x = HitObjects[i].Type switch
             {
-                TapController tap => (tap.From - AudioUpdate.Time) * realFlowSpeed,
-                HoldController hold => (hold.From - AudioUpdate.Time) * realFlowSpeed - 1.66f,
-                _ => 0
+                HitType.Hold => (HitObjects[i].From - AudioUpdate.Time) * realFlowSpeed - 1.66f,
+                _ => (HitObjects[i].From - AudioUpdate.Time) * realFlowSpeed
             };
             if (x <= MoveArea)
             {

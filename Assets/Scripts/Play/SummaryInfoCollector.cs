@@ -105,7 +105,7 @@ public class SummaryInfoCollector : MonoBehaviour
         Word.SetNativeSize();
 
         AutoPlayTip.SetActive(Mods.Data[Mod.AutoPlay]);
-        if (Mods.Data[Mod.AutoPlay])
+        if (Mods.Data[Mod.AutoPlay] || Mods.Data[Mod.Bed])
         {
             NewRecord.SetActive(false);
             return;
