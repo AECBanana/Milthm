@@ -44,6 +44,15 @@ public class HoldController : MonoBehaviour
         }
         if (Renderer.color.a == 0)
             Renderer.color = new Color(1f, 1f, 1f, 1f);
+        if (Mods.Data[Mod.Invisible])
+        {
+            float p = Mathf.Clamp((x - LineController.MoveArea * 0.1f) / (LineController.MoveArea * 0.4f), 0f, 1f);
+            Renderer.color = new Color(1f, 1f, 1f, p);
+        }
+        if (Mods.Data[Mod.Dance])
+        {
+            y = Mathf.Sin(Index + x / 10f) * (Mathf.Max(0f,x) / LineController.MoveArea * 20f);
+        }
         float w = (x2 - x) * (Renderer.size.y / 1.66f / 2);
         if (w < Renderer.size.y) w = Renderer.size.y;
         Renderer.size = new Vector2(w, Renderer.size.y);

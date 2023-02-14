@@ -72,7 +72,7 @@ public class BeatmapLoader : MonoBehaviour
         LineController.UnhitLines.Clear();
         // 初始化
         #region 载入设置
-        Transform cam = Camera.main.transform;
+        var cam = Camera.main.transform;
         Vector3 camRotation = cam.localEulerAngles, camPos = cam.localPosition;
         camRotation.x = Mods.Data[Mod.Mirror] && Mods.Data[Mod.Vertical] ? 180 : 0;
         camRotation.y = Mods.Data[Mod.Mirror] && !Mods.Data[Mod.Vertical] ? 180 : 0;
