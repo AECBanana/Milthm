@@ -61,7 +61,7 @@ public class BeatmapLoader : MonoBehaviour
         {
             if (!SongResources.HitSnd.ContainsKey(note.Snd))
             {
-                string f = "file:///" + SongResources.Path[uid].Replace("\\", "//") + "//" + note.Snd.Replace(" ", "%20").Replace("#", "%23");
+                string f = "file:///" + SongResources.Path[uid].Replace("\\", "/") + "/" + note.Snd.Replace(" ", "%20").Replace("#", "%23");
                 Debug.Log("Loading snd: " + f);
                 string extension = Path.GetExtension(note.Snd).ToLower();
                 AudioType type = AudioType.UNKNOWN;

@@ -9,7 +9,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.Device;
+using Application = UnityEngine.Application;
 #if UNITY_ANDROID
 using NativeFilePickerNamespace;
 #endif
@@ -20,10 +22,7 @@ public class BeatmapImporter : MonoBehaviour
 #if UNITY_ANDROID
     public void Click()
     {
-        NativeFilePicker.PickFile((data) =>
-        {
-            ImportBeatmap(data);
-        }, "*/*");
+        NativeFilePicker.PickFile(ImportBeatmap, "*/*");
     }
 #else
     void OnEnable()
@@ -65,10 +64,22 @@ public class BeatmapImporter : MonoBehaviour
         while (Directory.Exists(path))
             path = SongResources.DataPath + "/" + Guid.NewGuid().ToString();
 
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
+                Permission.RequestUserPermission(Permission.ExternalStorageRead);
+            if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+                Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+        }
+        
         try
         {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
 
-            ZipFile.ExtractToDirectory(file, path);
+            string zipFile = SongResources.DataPath + "/tmp.zip";
+            File.Copy(file,zipFile, true);
+            ZipFile.ExtractToDirectory(zipFile, path, true);
 
             if (Directory.GetDirectories(path).Length == 1 && Directory.GetFiles(path).Length == 0)
             {
@@ -89,7 +100,8 @@ public class BeatmapImporter : MonoBehaviour
                     Debug.Log("转换成功！");
                     break;
                 }
-                else if (f.ToLower().EndsWith(".osu"))
+
+                if (f.ToLower().EndsWith(".osu"))
                 {
                     string mode = File.ReadAllText(f).Split("[General]")[1].Split("[Editor]")[0].Split("Mode:")[1].Split('\n')[0].Replace("\r", "").Trim();
                     if (mode == "3")
@@ -111,10 +123,12 @@ public class BeatmapImporter : MonoBehaviour
                 status = SongListLoader.Load(path, null);
             else
                 status = SongListLoader.Load(path, SongListLoader.Instance.LoadToUIWithAni);
+            
+            File.Delete(zipFile);
         }
         catch(Exception err)
         {
-            Debug.Log("导入谱面时发生错误：" + err.Message + "\n" + err.StackTrace);
+            File.AppendAllText(Application.persistentDataPath + "/import.txt", err.Message + "\n" + err.StackTrace + "\n");
             status = SongListLoader.LoadStatus.Failed;
         }
 
@@ -122,7 +136,7 @@ public class BeatmapImporter : MonoBehaviour
         {
             Directory.Delete(path, true);
         }
-
+        
         if (status == SongListLoader.LoadStatus.NotSupported)
             DialogController.Show("导入谱面失败!", "已识别谱面类型，但暂不支持转换。");
         else if (status == SongListLoader.LoadStatus.Duplicated)

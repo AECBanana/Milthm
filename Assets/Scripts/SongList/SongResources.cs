@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class SongResources : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class SongResources : MonoBehaviour
                 if (Application.platform == RuntimePlatform.Android)
                 {
                     mDirectory = Application.persistentDataPath + "/Songs";
+                    if (!Directory.Exists(mDirectory))
+                        Directory.CreateDirectory(mDirectory);
                 }
                 else
                 {
