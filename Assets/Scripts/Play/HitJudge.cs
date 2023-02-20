@@ -415,7 +415,7 @@ public class HitJudge : MonoBehaviour
             if (Result.Combo > Result.MaxCombo) 
                 Result.MaxCombo = Result.Combo;
             Result.MissContinuous = 0;
-            if (Result.Combo % 100 == 0 || Result.Combo == 50)
+            if ((Result.Combo % 100 == 0 || Result.Combo == 50) && Result.Combo != 0)
             {
                 GamePlayLoops.Instance.ComboTip.text = Result.Combo + " COMBO";
                 GamePlayLoops.Instance.ComboTip.gameObject.SetActive(true);
