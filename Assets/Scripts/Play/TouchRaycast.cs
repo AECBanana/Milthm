@@ -6,7 +6,7 @@ using UnityEngine;
 public class TouchRaycast : MonoBehaviour
 {
     public static TouchRaycast Instance;
-    private Dictionary<GameObject, LineController> GoLine = new Dictionary<GameObject, LineController>();
+    private Dictionary<GameObject, LineController> GoLine = new ();
     private Camera cam;
 
     private void Awake()
@@ -36,6 +36,22 @@ public class TouchRaycast : MonoBehaviour
         {
             Vector2 pos = cam.ScreenToWorldPoint(Input.touches[i].position);
             var min = float.MaxValue;
+            foreach (var hit in Physics2D.RaycastAll(pos, Vector2.zero))
+            {
+                var go = hit.collider.gameObject;
+                if (!GoLine.ContainsKey(go)) continue;
+                if (Input.touches[i].phase is not (TouchPhase.Ended or TouchPhase.Canceled))
+                {
+                    GoLine[go].Holding = true;
+                    GoLine[go].FirstHold |= (Input.touches[i].phase == TouchPhase.Began);
+                }
+            }
+        }
+        
+        /**for (var i = 0; i < Input.touchCount; i++)
+        {
+            Vector2 pos = cam.ScreenToWorldPoint(Input.touches[i].position);
+            var min = float.MaxValue;
             LineController line = null;
             foreach (var hit in Physics2D.RaycastAll(pos, Vector2.zero))
             {
@@ -56,6 +72,6 @@ public class TouchRaycast : MonoBehaviour
                 line.Holding = true;
                 line.FirstHold |= (Input.touches[i].phase == TouchPhase.Began);
             }
-        }
+        }**/
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class SummaryInfoCollector : MonoBehaviour
 {
     public GameObject NewRecord, AutoPlayTip;
-    public TMP_Text Perfect2, Perfect, Good, Bad, Miss, Score, Accuracy, Title, Credits, Early, Late, Source, MaxCombo;
+    public TMP_Text Perfect2, Perfect, Good, BadAndMiss, Score, Accuracy, Title, Credits, EarlyAndLate, Difficulty, MaxCombo;
     public Image Word, Level;
     public Sprite R, SS, S, A, B, C, F, FC, FCW, AP, Complete, Fail, ROR;
 
@@ -24,30 +24,16 @@ public class SummaryInfoCollector : MonoBehaviour
         Perfect2.text = HitJudge.Result.Perfect2.ToString();
         Perfect.text = HitJudge.Result.Perfect.ToString();
         Good.text = HitJudge.Result.Good.ToString();
-        Bad.text = HitJudge.Result.Bad.ToString();
-        Miss.text = HitJudge.Result.Miss.ToString();
+        BadAndMiss.text = HitJudge.Result.Bad + "/" + HitJudge.Result.Miss;
         MaxCombo.text = HitJudge.Result.MaxCombo.ToString();
         Score.text = HitJudge.Result.Score.ToString("0000000");
         Accuracy.text = HitJudge.Result.Accuracy.ToString("P");
         Title.text = BeatmapLoader.Playing.Title;
-        Early.text = HitJudge.Result.Early.ToString();
-        Late.text = HitJudge.Result.Late.ToString();
-        Credits.text = BeatmapLoader.Playing.Difficulty + (BeatmapLoader.Playing.DifficultyValue == -1f ? "" : " (" + BeatmapLoader.Playing.DifficultyValue + ")");
+        EarlyAndLate.text = HitJudge.Result.Early + "/" + HitJudge.Result.Late;
+        Credits.text = BeatmapLoader.Playing.Composer;
         string source = "";
-
-        if (BeatmapLoader.Playing.Source != "")
-            source += " / " + BeatmapLoader.Playing.Source;
-        if (BeatmapLoader.Playing.GameSource != "")
-            source += " / " + BeatmapLoader.Playing.GameSource;
-
-        if (source.Length > 0)
-        {
-            Source.text = "From " + source.Substring(3);
-        }
-        else
-        {
-            Source.text = "";
-        }
+        
+        Difficulty.text = $"{BeatmapLoader.Playing.Difficulty}    <b>{BeatmapLoader.Playing.DifficultyValue}</b>";
 
         long score = (long)HitJudge.Result.OriginScore;
         string grade = "";
